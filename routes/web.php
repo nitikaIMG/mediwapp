@@ -2,14 +2,67 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SliderController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return redirect('login');
 });
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::middleware('auth')->group(function(){
+
+
 // Category Routes
 Route::resource('category',CategoryController::class);
+Route::post('display_category',[CategoryController::class,'display_category'])->name('display_cat');
+Route::get('enable_disable_category/{id}',[CategoryController::class,'enable_disable_category'])->name('enable_disable_category');
+Route::get('delete_all',[CategoryController::class,'delete_all'])->name('delete_all');
+
+//Brand Routes
+Route::resource('brand',BrandController::class);
+Route::post('display_brand',[BrandController::class,'display_brand'])->name('display_brand');
+Route::get('enable_disable_brand/{id}',[CategoryController::class,'enable_disable_brand'])->name('enable_disable_brand');
+Route::get('brand_multiple_delete',[BrandController::class,'brand_multiple_delete'])->name('brand_multiple_delete');
+
+
+//Subcategory Route
+Route::resource('subcategory',SubcategoryController::class);
+Route::post('display_subcategory',[SubcategoryController::class,'display_subcategory'])->name('display_subcategory');
+Route::get('enable_dispbale_subcat/{id}',[SubcategoryController::class,'enable_dispbale_subcat'])->name('enable_dispbale_subcat');
+Route::get('multiple_delete',[SubcategoryController::class,'multiple_delete'])->name('multiple_delete');
+
+//product route
+Route::resource('product',ProductController::class);
+Route::post('display_product',[ProductController::class,'display_product'])->name('display_product');
+Route::get('enable_disable_product/{id}',[ProductController::class,'enable_disable_product'])->name('enable_disable_product');
+Route::get('multiple_delete_product',[ProductController::class,'multiple_delete_product'])->name('multiple_delete_product');
+
+
+//Slider Route
+Route::resource('slider',SliderController::class);
+Route::post('display_sldier',[SliderController::class,'display_sldier'])->name('display_sldier');
+Route::get('enable_dispbale_slider/{id}',[SliderController::class,'enable_dispbale_slider'])->name('enable_dispbale_slider');
+Route::get('multiple_delete_slider',[SliderController::class,'multiple_delete_slider'])->name('multiple_delete_slider');
+
+//user Route
+Route::resource('user',UserController::class);
+Route::post('display_user',[UserController::class,'display_user'])->name('display_user');
+Route::post('enable_dispbale_user',[UserController::class,'enable_dispbale_user'])->name('enable_dispbale_user');
+Route::get('multiple_delete_user',[UserController::class,'multiple_delete_user'])->name('multiple_delete_user');
+
+//Order Route
+Route::resource('order',OrderController::class);
+Route::post('display_order',[OrderController::class,'display_order'])->name('display_order');
+Route::post('enable_disable_order',[UserController::class,'enable_disable_order'])->name('enable_disable_order');
+Route::any('/status_update/{val}/{id}',[OrderController::class,'status_update']);
+
+
+
+});

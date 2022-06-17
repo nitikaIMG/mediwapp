@@ -1,10 +1,9 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
       <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="{{url('/home')}}">
           <i class="typcn typcn-device-desktop menu-icon"></i>
           <span class="menu-title">Dashboard</span>
-         
         </a>
       </li>
       <li class="nav-item">
@@ -16,8 +15,18 @@
         <div class="collapse" id="ui-basic">
           <ul class="nav flex-column sub-menu">
             <li class="nav-item"> <a class="nav-link" href="{{route('category.index')}}">All Category</a></li>
-            {{-- <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/ui-features/dropdowns.html')}}">Dropdowns</a></li>
-            <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/ui-features/typography.html')}}">Typography</a></li> --}}
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#subcategory_id" aria-expanded="false" aria-controls="ui- ">
+          <i class="typcn typcn-document-text menu-icon"></i>
+          <span class="menu-title">Subcategory</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="subcategory_id">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{route('subcategory.index')}}">All Subcategory</a></li>
           </ul>
         </div>
       </li>
@@ -29,7 +38,7 @@
         </a>
         <div class="collapse" id="form-elements">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"><a class="nav-link" href="{{asset('public/pages/forms/basic_elements.html')}}">All Brands</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{route('brand.index')}}">All Brands</a></li>
           </ul>
         </div>
       </li>
@@ -41,7 +50,7 @@
         </a>
         <div class="collapse" id="charts">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/charts/chartjs.html')}}">All Products</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{route('product.index')}}">View Products</a></li>
           </ul>
         </div>
       </li>
@@ -68,7 +77,7 @@
         </a>
         <div class="collapse" id="icons">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/icons/mdi.html')}}">All Orders</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{route('order.index')}}">All Orders</a></li>
           </ul>
         </div>
       </li>
@@ -106,20 +115,20 @@
           </a>
           <div class="collapse" id="slider">
             <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/samples/error-404.html')}}">All Sliders </a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{route('slider.index')}}">All Sliders </a></li>
               
             </ul>
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#user" aria-expanded="false" aria-controls="user">
+          <a class="nav-link" data-toggle="collapse" href="#users" aria-expanded="false" aria-controls="user">
             <i class="typcn typcn-globe-outline menu-icon"></i>
             <span class="menu-title">Users</span>
             <i class="menu-arrow"></i>
           </a>
           <div class="collapse" id="users">
             <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/samples/error-404.html')}}">All Sliders </a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{url('user')}}">View Users </a></li>
               
             </ul>
           </div>

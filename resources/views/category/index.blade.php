@@ -1,153 +1,183 @@
 @extends('layouts.home')
 @section('content')
-<div class="col-lg-12 grid-margin stretch-card">
+@php
+$cat_name="";
+if(isset($_GET['cat_name'])){
+  $cat_name=$_GET['cat_name'];
+}  
+$cat_type="";
+if(isset($_GET['cat_type'])){
+  $cat_type=$_GET['cat_type'];
+}  
+@endphp
+<div class="col-lg-10 grid-margin stretch-card">
               <div class="card">
+                  <div class="card-header">
+                    Category Filteration
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <form>
+                        <div class="row">
+                          <div class="col">
+                            <input type="text" name="cat_name"  id="cat_name" value="{{$cat_name}}" class="form-control" placeholder="Category name">
+                          </div>
+                          <div class="col">
+                            <input type="text" name="cat_type" id="cat_type" value="{{$cat_type}}" class="form-control" placeholder="Category name">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col text-right pt-4">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                            <button type="reset" class="btn btn-secondary">reset</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                <h5 class="card-header">Category</h5>
+                  <div class="dropdown" >
+                    <button class="btn btn-secondary dropdown-toggle" style="float:right; margin:10px 20px 0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      ADD-DELETE
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="{{route('category.create')}}">ADD</a>
+                      <a class="dropdown-item delete_all" href="#">MULTIPLE DELETE</a>
+                    </div>
+                  </div>
                 <div class="card-body">
-                  <h4 class="card-title">Striped Table</h4>
-                  <p class="card-description">
-                    Add class <code>.table-striped</code>
-                  </p>
+                  
                   <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-bordered table-striped table-hover text-nowrap" id="display_cat" width="100%" cellspacing="0">
                       <thead>
-                        <tr>
-                          <th>
-                            User
-                          </th>
-                          <th>
-                            First name
-                          </th>
-                          <th>
-                            Progress
-                          </th>
-                          <th>
-                            Amount
-                          </th>
-                          <th>
-                            Deadline
-                          </th>
-                        </tr>
+                          <tr>
+                              <th><input type="checkbox" name=" chk_box" id="mult_del"></th>
+                              <th>Sno.</th>
+                              <th>Category Image</th>
+                              <th>Category Name</th>
+                              <th>Category Type</th>
+                              <th>Action</th>
+                          </tr>
                       </thead>
+                      <tfoot>
+                          <tr>
+                            <th>#D</th>
+                            <th>Sno.</th>
+                            <th>Category Image</th>
+                            <th>Category Name</th>
+                            <th>Category Type</th>
+                            <th>Action</th>
+                          </tr>
+                      </tfoot>
                       <tbody>
-                        
-                        <tr>
-                          <td class="py-1">
-                            <img src="../../images/faces/face2.jpg" alt="image"/>
-                          </td>
-                          <td>
-                            Messsy Adam
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $245.30
-                          </td>
-                          <td>
-                            July 1, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="py-1">
-                            <img src="../../images/faces/face3.jpg" alt="image"/>
-                          </td>
-                          <td>
-                            John Richards
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-warning" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $138.00
-                          </td>
-                          <td>
-                            Apr 12, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="py-1">
-                            <img src="../../images/faces/face4.jpg" alt="image"/>
-                          </td>
-                          <td>
-                            Peter Meggik
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-primary" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $ 77.99
-                          </td>
-                          <td>
-                            May 15, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="py-1">
-                            <img src="../../images/faces/face5.jpg" alt="image"/>
-                          </td>
-                          <td>
-                            Edward
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-danger" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $ 160.25
-                          </td>
-                          <td>
-                            May 03, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="py-1">
-                            <img src="../../images/faces/face6.jpg" alt="image"/>
-                          </td>
-                          <td>
-                            John Doe
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-info" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $ 123.21
-                          </td>
-                          <td>
-                            April 05, 2015
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="py-1">
-                            <img src="../../images/faces/face7.jpg" alt="image"/>
-                          </td>
-                          <td>
-                            Henry Tom
-                          </td>
-                          <td>
-                            <div class="progress">
-                              <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                          </td>
-                          <td>
-                            $ 150.00
-                          </td>
-                          <td>
-                            June 16, 2015
-                          </td>
-                        </tr>
                       </tbody>
-                    </table>
+                  </table>
                   </div>
                 </div>
               </div>
             </div>
-            @endsection
+
+            <script type="text/javascript">
+              $(document).ready(function() {
+                let arr=[];
+                var cat_type=$('#cat_type').val();
+                var cat_name=$('#cat_name').val();
+              $.fn.dataTable.ext.errMode = 'none';
+                  $('#display_cat').DataTable({
+                      'responsive': true,
+                      "bFilter" : false,
+                "processing": true,
+                
+                    "serverSide": true,
+                      "ajax":{
+                               "url": '{{route('display_cat')}}?cat_name='+cat_name+'&cat_type='+cat_type,
+                               "dataType": "json",
+                               "type": "POST",
+                               "data":{ _token: "{{csrf_token()}}"},
+                             },
+                             "dom": 'lBfrtip',
+                             "lengthMenu": [[10, 25, 50,100,1000,10000 ], [10, 25, 50,100,1000,10000]],
+                      "buttons": [
+                         {
+                             extend: 'collection',
+                             text: 'Export',
+                             buttons: [
+                                 'copy',
+                                 'excel',
+                                 'csv',
+                                 'pdf',
+                                 'print'
+                             ]
+                         }
+                     ],
+                      "columns": [
+                          { "data": "multidelete" },
+                          { "data": "id" },
+                          { "data": "category_image" },
+                          { "data": "category_name" },
+                          { "data": "category_type" },
+                          { "data": "action" },
+                      ],
+                      'columnDefs': [ {
+                      'targets': [0],
+                      'orderable': false,
+                  }]
+            
+                  }); 
+            });
+            </script>
+            <script type="text/javascript">
+              $(document).ready(function () {
+                  $('#mult_del').on('click', function(e) {
+                   if($(this).is(':checked',true))  
+                   {
+                      $(".sub_chk").prop('checked', true);  
+                   } else {  
+                      $(".sub_chk").prop('checked',false);  
+                   }  
+                  });
+                  $('.delete_all').on('click', function(e) {
+                      var allVals = [];  
+                      $(".sub_chk:checked").each(function() {  
+                          allVals.push($(this).attr('data-id'));
+                      });  
+                      if(allVals.length <=0)  
+                      {  
+                          alert("Please select row.");  
+                      }  else {  
+                          var check = confirm("Are you sure you want to delete this row?");  
+                          if(check == true){  
+                              var join_selected_values = allVals.join(",");
+                              $.ajax({
+                                  url: '{{route('delete_all')}}',
+                                  type: 'GET',
+                                  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                  data: 'ids='+join_selected_values,
+                                  success: function (data) {
+                                      if (data['success']) {
+                                          $(".sub_chk:checked").each(function() {  
+                                              $(this).parents("tr").remove();
+                                          });
+                                          alert(data['success']);
+                                      } else if (data['error']) {
+                                          alert(data['error']);
+                                      } else {
+                                          alert('Whoops Something went wrong!!');
+                                      }
+                                  },
+                                  error: function (data) {
+                                      alert(data.responseText);
+                                  }
+                              });
+                            $.each(allVals, function( index, value ) {
+                                $('table tr').filter("[data-row-id='" + value + "']").remove();
+                            });
+                          }  
+                      }  
+                  });
+                 
+                  
+              });
+          </script>
+@endsection
+

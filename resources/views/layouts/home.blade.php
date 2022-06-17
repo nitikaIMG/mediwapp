@@ -10,6 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     <script src="{{ asset('public/js/app.js') }}" defer></script>
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
     <link href="{{asset('https://fonts.googleapis.com/css?family=Nunito')}}" rel="stylesheet">
     <link href="{{ asset('public/css/app.css') }}" rel="stylesheet">
     <meta charset="utf-8">
@@ -19,6 +20,9 @@
     <link rel="stylesheet" href="{{asset('public/vendors/css/vendor.bundle.base.css')}}">
     <link rel="stylesheet" href="{{asset('public/css/vertical-layout-light/style.css')}}">
     <link rel="shortcut icon" href="{{asset('public/images/favicon.png')}}" />
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+
 
 </head>
 <body>
@@ -191,17 +195,17 @@
                 </li>
               </ul>
             </div>
-            <!-- chat tab ends -->
-          </div>
+           </div>
         </div>
-        <!-- partial -->
-        <!-- partial:partials/_sidebar.html -->
-         @include('layouts.sidebar')
-        <!-- partial -->
-          @yield('content')
-        <!-- main-panel ends -->
+        @include('layouts.sidebar')
+        @yield('content')
+        
       </div>
-      <!-- page-body-wrapper ends -->
+      <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+    {{-- @include('layouts.footer')   --}}
+    <!-- partial -->
+  </div>
     </div>
     
     <script src="{{asset('public/vendors/js/vendor.bundle.base.js')}}"></script>
@@ -215,7 +219,57 @@
     <script src="{{asset('public/js/todolist.js')}}"></script>
     
     <script src="{{asset('public/js/dashboard.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+    <script src="//cdn.ckeditor.com/4.19.0/standard/ckeditor.js"></script>
   
+
+    <link rel="stylesheet" type="text/css" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script>
+        @if(count($errors) > 0)
+        @foreach($errors->all() as $error)
+            toastr.error("{{ $error }}");
+        @endforeach
+        @endif
+      @if(Session::has('message'))
+      toastr.options =
+      {
+        "closeButton" : true,
+        "progressBar" : true
+      }
+          toastr.success("{{ session('message') }}");
+      @endif
+    
+      @if(Session::has('error'))
+      toastr.options =
+      {
+        "closeButton" : true,
+        "progressBar" : true
+      }
+          toastr.error("{{ session('error') }}");
+      @endif
+    
+      @if(Session::has('success'))
+      toastr.options =
+      {
+        "closeButton" : true,
+        "progressBar" : true
+      }
+          toastr.success("{{ session('success') }}");
+      @endif
+    
+      @if(Session::has('warning'))
+      toastr.options =
+      {
+        "closeButton" : true,
+        "progressBar" : true
+      }
+          toastr.warning("{{ session('warning') }}");
+      @endif
+    </script>
   </body>
   </html>
+
