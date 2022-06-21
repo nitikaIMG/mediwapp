@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CategoryModel;
 use App\Models\CategoryModel as ModelsCategoryModel;
-use DB;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 class CategoryController extends Controller
 {
         // public function __construct()
@@ -29,21 +30,28 @@ class CategoryController extends Controller
         $data =  $request->except('_token');
         $validated = $request->validate([
             'category_name' => 'required|max:255',
-            'subcategory_id' => 'required',
             'category_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'category_type' => 'required',
+            'meta_title' => 'required',
+            'meta_description' => 'required',
+            'meta_keyword' => 'required',
+            'banner' => 'required',
             'cat_desc' => 'required',
             'cat_status' => 'required',
         ],[
             'category_name.required' => 'The category name field is required.',
-            'subcategory_id.required' => 'The Subcategory name field is required.',
             'category_image.required' => 'Please Select Image',
             'category_type.required' => 'The category type field is required.',
+            'meta_title.required' => 'The meta title field is required.',
+            'meta_description.required' => 'The meta description field is required.',
+            'meta_keyword.required' => 'The meta keyword field is required.',
+            'banner.required' => 'The banner  field is required.',
             'cat_desc.required' => 'The category Descripction field is required.',
             'cat_status.required' => 'The cat status field is required.',
         ]);
       
        $img=[];
+       $banner_img=[];
         if ($request->hasFile('category_image')) {
             $image = $request->file('category_image');
             foreach ($image as $files) {
@@ -54,12 +62,24 @@ class CategoryController extends Controller
             }
         }
         $image_string=implode(',',$img);
+
+        if ($request->hasFile('banner')) {
+            $banner_image = $request->file('banner');
+            $destination = 'public/banner/';
+            $banner_file_name = time() . "." . $banner_image->getClientOriginalName();
+            $banner_image->move($destination, $banner_file_name);
+            $banner_img[] = $banner_file_name;
+        }
+        $banner_image_string=implode(',',$banner_img);
         $model = new CategoryModel;
         $model->category_name=$validated['category_name'];
-        $model->subcategory_id=$validated['subcategory_id'];
         $model->category_image=$image_string;
+        $model->banner=$banner_image_string;
         $model->category_type=$validated['category_type'];
         $model->cat_desc=$validated['cat_desc'];
+        $model->meta_title=$validated['meta_title'];
+        $model->meta_keyword=$validated['meta_keyword'];
+        $model->meta_description=$validated['meta_description'];
         $model->cat_status=$validated['cat_status'];
         $model->save();
         return redirect()->back()->with('success', 'Data Inserted');   
@@ -86,19 +106,25 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'category_name' => 'required|max:255',
             'subcategory_id' => 'required',
-            // 'category_image' => 'mimes:jpeg,png,jpg,gif,svg,JPEG|max:2048',
             'category_type' => 'required',
+            'meta_title' => 'required',
+            'meta_description' => 'required',
+            'meta_keyword' => 'required',
+            'banner' => 'required',
             'cat_desc' => 'required',
             'cat_status' => 'required',
         ],[
             'category_name.required' => 'The category name field is required.',
             'subcategory_id.required' => 'The Subcategory name field is required.',
-            // 'category_image.required' => 'Please Select Image',
             'category_type.required' => 'The category type field is required.',
+            'meta_title.required' => 'The meta title field is required.',
+            'meta_description.required' => 'The meta description field is required.',
+            'meta_keyword.required' => 'The meta keyword field is required.',
+            'banner.required' => 'The banner  field is required.',
             'cat_desc.required' => 'The category Descripction field is required.',
             'cat_status.required' => 'The cat status field is required.',
         ]);
-      
+       $banner_img=[];
        $img=[];
         if ($request->hasFile('category_image')) {
             $image = $request->file('category_image');
@@ -113,6 +139,21 @@ class CategoryController extends Controller
         }else{
             unset($data['category_image']);
         }
+
+        if ($request->hasFile('banner')) {
+           if ($request->hasFile('banner')) {
+            $banner_image = $request->file('banner');
+            $destination = 'public/banner/';
+            $banner_file_name = time() . "." . $banner_image->getClientOriginalName();
+            $banner_image->move($destination, $banner_file_name);
+            $banner_img[] = $banner_file_name;
+            $data['banner']=implode(',',$banner_img);
+
+        }
+        }else{
+            unset($data['banner']);
+        }
+
         CategoryModel::where('id',$id)->update($data);
         return redirect()->back()->with('success', 'Data Updated');
     }
@@ -258,6 +299,15 @@ class CategoryController extends Controller
             }
         }
         return response()->json(['success' => ' Data has been deleted!']);
+    }
+    public function create_pdf_category(Request $request){
+        $category_data=CategoryModel::get()->toArray();
+        view()->share('employee',$category_data);
+        $pdf = PDF::loadView('category.categorypdf', compact('category_data'))->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->download('category.pdf');
+    }
+    public function create_csv_category(){
+        return Excel::download(new CategoryModel(), 'category.xlsx');
     }
     
 }

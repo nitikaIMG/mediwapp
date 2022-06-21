@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductModel;
 use Illuminate\Http\Request;
-
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 class ProductController extends Controller
 {
     
@@ -26,22 +27,35 @@ class ProductController extends Controller
         $validated = $request->validate([
             'product_name' => 'required|max:255',
             'category_id' => 'required',
-            'product_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'product_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'subcategory_id' => 'required',
-            'purchase_price' => 'required',
-            'sale_price' => 'required',
             'prod_desc' => 'required',
+            'price' => 'required',
+            'opening_quantity' => 'required',
+            'min_quantity' => 'required',
+            'package_type' => 'required',
+            'brand_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'validate_date' => 'required',
+            'offer' => 'required',
+            'offer_type' => 'required',
         ],[
-            'product_name.required' => 'The category name field is required.',
-            'category_id.required' => 'The Subcategory name field is required.',
-            'product_image.required' => 'Please Select Image',
-            'subcategory_id.required' => 'The category type field is required.',
-            'purchase_price.required' => 'The category Descripction field is required.',
-            'sale_price.required' => 'The category Descripction field is required.',
-            'prod_desc.required' => 'The cat status field is required.',
+            'product_name.required' => 'The Product name field is required.',
+            'category_id.required' => 'The category name field is required.',
+            // 'product_image.required' => 'Please Select Image',
+            'subcategory_id.required' => 'The subcategory type field is required.',
+            'price.required' => 'The price  field is required.',
+            'opening_quantity.required' => 'The opening quantity field is required.',
+            'prod_desc.required' => 'The product description field is required.',
+            'min_quantity.required' => 'The min quantity field is required.',
+            'package_type.required' => 'The package type field is required.',
+            'brand_image.required' => 'The brand image field is required.',
+            'validate_date.required' => 'The validate date field is required.',
+            'offer.required' => 'The offer field is required.',
+            'offer_type.required' => 'The offer type field is required.',
         ]);
       
        $img=[];
+       $brand_image=[];
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
             foreach ($image as $files) {
@@ -51,16 +65,17 @@ class ProductController extends Controller
                 $img[] = $file_name;
             }
         }
-        $image_string=implode(',',$img);
-        $model = new ProductModel();
-        $model->product_name=$validated['product_name'];
-        $model->category_id=$validated['category_id'];
-        $model->product_image=$image_string;
-        $model->subcategory_id=$validated['subcategory_id'];
-        $model->prod_desc=$validated['prod_desc'];
-        $model->purchase_price=$validated['purchase_price'];
-        $model->sale_price=$validated['sale_price'];
-        $model->save();
+
+        if ($request->hasFile('brand_image')) {
+            $brand_image = $request->file('brand_image');
+                $destination = 'public/brand_image/';
+                $fil = time() . "." . $brand_image->getClientOriginalName();
+                $brand_image->move($destination, $fil);
+                $brand_image = $fil;
+        }
+        $data['product_image']=implode(',',$img);
+        $data['brand_image']=$brand_image;
+        ProductModel::create($data);
         return redirect()->back()->with('success', 'Data Inserted');
     }
 
@@ -84,20 +99,46 @@ class ProductController extends Controller
         $validated = $request->validate([
             'product_name' => 'required|max:255',
             'category_id' => 'required',
+            // 'product_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'subcategory_id' => 'required',
-            'purchase_price' => 'required',
-            'sale_price' => 'required',
             'prod_desc' => 'required',
+            'price' => 'required',
+            'opening_quantity' => 'required',
+            'min_quantity' => 'required',
+            'package_type' => 'required',
+            // 'brand_image' => 'required',
+            'validate_date' => 'required',
+            'offer' => 'required',
+            'offer_type' => 'required',
         ],[
-            'product_name.required' => 'The category name field is required.',
-            'category_id.required' => 'The Subcategory name field is required.',
-            'subcategory_id.required' => 'The category type field is required.',
-            'purchase_price.required' => 'The purchase price field is required.',
-            'sale_price.required' => 'The sale price field is required.',
-            'prod_desc.required' => 'The cat status field is required.',
+            'product_name.required' => 'The Product name field is required.',
+            'category_id.required' => 'The category name field is required.',
+            // 'product_image.required' => 'Please Select Image',
+            'subcategory_id.required' => 'The subcategory type field is required.',
+            'price.required' => 'The price  field is required.',
+            'opening_quantity.required' => 'The opening quantity field is required.',
+            'prod_desc.required' => 'The product description field is required.',
+            'min_quantity.required' => 'The min quantity field is required.',
+            'package_type.required' => 'The package type field is required.',
+            // 'brand_image.required' => 'The brand image field is required.',
+            'validate_date.required' => 'The validate date field is required.',
+            'offer.required' => 'The offer field is required.',
+            'offer_type.required' => 'The offer type  field is required.',
         ]);
       
        $img=[];
+       $brand_image=[];
+       if ($request->hasFile('brand_image')) {
+        $brand_image = $request->file('brand_image');
+            $destination = 'public/brand_image/';
+            $fil = time() . "." . $brand_image->getClientOriginalName();
+            $brand_image->move($destination, $fil);
+            $brand_image = $fil;
+            $data['brand_image']=$brand_image;
+        }else{
+            unset($data['brand_image']);
+        }
+
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
             foreach ($image as $files) {
@@ -161,7 +202,7 @@ class ProductController extends Controller
          }
 
         $count = $query->count();
-        $titles = $query->select('id','product_name','subcategory_id','product_image','category_id','status','sale_price','purchase_price')
+        $titles = $query->select('id','product_name','subcategory_id','product_image','category_id','status','price','package_type')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, 'DESC')
@@ -215,8 +256,7 @@ class ProductController extends Controller
                 $nestedData['product_name'] = $title->product_name;
                 $nestedData['category_id'] = $title->category_id;
                 $nestedData['subcategory_id'] = $title->subcategory_id;
-                $nestedData['sale_price'] = $title->sale_price;
-                $nestedData['purchase_price'] = $title->purchase_price;
+                $nestedData['price'] = $title->price;
                 $data[] = $nestedData;
                 
                 if( $request->input('order.0.column') == '0' and $request->input('order.0.dir') == 'desc') {
@@ -259,6 +299,15 @@ class ProductController extends Controller
             }
         }
         return response()->json(['success' => ' Data has been deleted!']);
+    }
+    public function create_pdf_product(Request $request){
+        $product=ProductModel::get()->toArray();
+        view()->share('employee',$product);
+        $pdf = PDF::loadView('product.productpdf', compact('product'))->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->download('product.pdf');
+    }
+    public function create_csv_product(){
+        return Excel::download(new ProductModel(), 'category.xlsx');
     }
 
 }

@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="{{asset('public/vendors/css/vendor.bundle.base.css')}}">
     <link rel="stylesheet" href="{{asset('public/css/vertical-layout-light/style.css')}}">
     <link rel="shortcut icon" href="{{asset('public/images/favicon.png')}}" />
+
+    <!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
 

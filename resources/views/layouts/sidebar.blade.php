@@ -89,8 +89,8 @@
         </a>
         <div class="collapse" id="auth">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/samples/login.html')}}">User Base </a></li>
-            <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/samples/register.html')}}"> Product Base  </a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{route('salesreport.index')}}">User Base </a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{route('salesreport.index')}}"> Product Base  </a></li>
           </ul>
         </div>
       </li>
@@ -102,8 +102,8 @@
         </a>
         <div class="collapse" id="error">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/samples/error-404.html')}}"> Add Quantity </a></li>
-            <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/samples/error-500.html')}}"> All Products Quantity </a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{route('productstock.create')}}"> Add Quantity </a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{route('productstock.index')}}"> All Products Quantity </a></li>
           </ul>
         </div>
       </li>

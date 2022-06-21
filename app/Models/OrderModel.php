@@ -11,6 +11,6 @@ class OrderModel extends Model
     protected $table = 'orders';
 
     protected $fillable =[
-        'user_id','order_id','product','order_status','payment_status','prescription','address','payment_id','status','del_status'
+        'user_id','order_id','product','order_status','payment_status','prescription','address','payment_id','status','del_status','order_amount'
     ];
 }

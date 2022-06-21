@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserModel;
+use App\Models\OrderModel;
+use App\Models\ProductModel;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
+
 class UserController extends Controller
 {
     
@@ -125,6 +130,7 @@ class UserController extends Controller
                 $enbdisu =route('enable_dispbale_subcat',$title->id);
                 $edit_subcategory =route('user.edit',$title->id);
                 $delete_brand =route('user.destroy',$title->id);
+                $order_detail =url('user_order_detail',$title->id);
                 
                 if($title->status == 0){
                     $statuss = '<a class="dropdown-item waves-light waves-effect" href="'.$enbdisu.'">Enable</a>';
@@ -143,6 +149,7 @@ class UserController extends Controller
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item waves-light waves-effect" href="'.$edit_subcategory.'">Edit</a></li>
                     <li>'.$statuss.'</li>
+                    <li><a class="dropdown-item waves-light waves-effect" href="'.$order_detail.'">Order Deatils</a></li>
                     <form action="'.$delete_brand.'" method="post" id="form-'.$title->id.'">
                         <input type="hidden" name="_token" value="'.csrf_token().'" />
                         <input type="hidden" name="_method" value="DELETE" />
@@ -259,5 +266,28 @@ class UserController extends Controller
             UserModel::where('id',$id)->update(['status' =>'1']);
         }
         return redirect()->back()->with('success','Status Updated');
+    }
+
+    public function user_order_detail($id){
+        $user_order_data=OrderModel::where('user_id',$id)->get();
+        return view('user.order_detail',compact('user_order_data'));
+    }
+
+    public function create_order($id){
+        $user_order_data=OrderModel::where('user_id',$id)->get();
+        $user=UserModel::where('id',$id)->first();
+        $product=ProductModel::select('product_name','id')->get();
+        $product_name=json_decode($product);
+        return view('user.create_order',compact('user_order_data','product_name','user'));
+    }
+
+    public function create_pdf_user(Request $request){
+        $user_data=UserModel::get()->toArray();
+        view()->share('employee',$user_data);
+        $pdf = PDF::loadView('user.userpdf', compact('user_data'))->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->download('user.pdf');
+    }
+    public function create_csv_user(){
+        return Excel::download(new UserModel(), 'category.xlsx');
     }
 }

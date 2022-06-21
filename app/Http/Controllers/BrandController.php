@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\BrandModel;
 use Illuminate\Http\Request;
+use PDF;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BrandController extends Controller
 {
@@ -234,5 +236,14 @@ class BrandController extends Controller
             }
         }
         return response()->json(['success' => ' Data has been deleted!']);
+    }
+    public function create_pdf_brand(Request $request){
+        $brand_data=BrandModel::get()->toArray();
+        view()->share('employee',$brand_data);
+        $pdf = PDF::loadView('brand.brandpdf', compact('brand_data'))->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->download('brand.pdf');
+    }
+    public function create_csv_brand(){
+        return Excel::download(new BrandModel(), 'category.xlsx');
     }
 }

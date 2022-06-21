@@ -11,7 +11,7 @@ class ProductModel extends Model
     protected $table = 'product';
 
     protected $fillable =[
-        'product_name','product_image','category_id','subcategory_id','status','prod_desc','sale_price','purchase_price'
+        'product_name','min_quantity','product_image','category_id','subcategory_id','status','prod_desc','price','package_type','opening_quantity','brand_image','validate_date','offer','offer_type'
     ];
 }
 

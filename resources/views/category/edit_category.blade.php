@@ -50,7 +50,30 @@
                     @endforeach
                 </div>
             </div>
-          
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Meta Title</label>
+                    <input type="text" name="meta_title" class="form-control"  value="{{$edit_data['meta_title']}}" id="exampleInputName1"  placeholder=" Meta Title">
+                    
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Meta Keyword</label>
+                    <input type="text" name="meta_keyword" class="form-control"  value="{{$edit_data['meta_keyword']}}" id="exampleInputName1"  placeholder=" Meta Keyword">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Meta Description</label>
+                    <input type="text" name="meta_description" class="form-control"  value="{{$edit_data['meta_description']}}" id="exampleInputName1"  placeholder=" Meta Description">
+                    
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="formFileMultiple" class="form-label">Banner</label>
+                    <input class="form-control" name="banner" type="file" id="formFileMultiple">
+                    <img src="{{ asset('public/banner/'.$edit_data['banner'])}}" alt="Image Alternative text" title="Image Title" width="50" height="50">
+
+                </div>
+            </div>
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="exampleSelectGender">Category Status</label>

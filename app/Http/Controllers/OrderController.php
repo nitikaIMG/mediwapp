@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 use App\Models\OrderModel;
 use App\Models\UserModel;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class OrderController extends Controller
 {
@@ -22,44 +25,45 @@ class OrderController extends Controller
     
     public function store(Request $request)
     {
+    
+        $unique_order_id='MED'.random_int(100000, 999999);
         $data =  $request->except('_token');
+        // dd($data);
         $validated = $request->validate([
-            'order_id' => 'required|max:255',
-            'order_status' => 'required',
-            'product_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'suborder_status' => 'required',
-            'purchase_price' => 'required',
-            'sale_price' => 'required',
-            'prod_desc' => 'required',
+            'product_name' => 'required|max:255',
+            'order_amount' => 'required',
+            'priscription.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'user_id' => 'required',
+            'user_address' => 'required',
+           
         ],[
-            'order_id.required' => 'The category name field is required.',
-            'order_status.required' => 'The Subcategory name field is required.',
-            'product_image.required' => 'Please Select Image',
-            'suborder_status.required' => 'The category type field is required.',
-            'purchase_price.required' => 'The category Descripction field is required.',
-            'sale_price.required' => 'The category Descripction field is required.',
-            'prod_desc.required' => 'The cat status field is required.',
+            'product_name.required' => 'The Product name field is required.',
+            'order_amount.required' => 'The Order amount name field is required.',
+            'priscription.required' => 'Please Select Image',
+            'user_address.required' => 'The Addresss is required.',
+            'user_id.required' => 'The user id field is required.',
         ]);
-      
-       $img=[];
-        if ($request->hasFile('product_image')) {
-            $image = $request->file('product_image');
-            foreach ($image as $files) {
-                $destinationPath = 'public/product_image/';
-                $file_name = time() . "." . $files->getClientOriginalName();
-                $files->move($destinationPath, $file_name);
+        foreach($request['product_name'] as $p_name){
+            $product_name=$p_name;
+        }
+        $img=[];
+        if ($request->hasFile('priscription')){
+        
+            $image = $request->file('priscription');
+                $destinationPath = 'public/pricription/';
+                $file_name = time() . "." . $image->getClientOriginalName();
+                $image->move($destinationPath, $file_name);
                 $img[] = $file_name;
-            }
         }
         $image_string=implode(',',$img);
+        
         $model = new OrderModel();
-        $model->order_id=$validated['order_id'];
-        $model->order_status=$validated['order_status'];
-        $model->product_image=$image_string;
-        $model->suborder_status=$validated['suborder_status'];
-        $model->prod_desc=$validated['prod_desc'];
-        $model->purchase_price=$validated['purchase_price'];
-        $model->sale_price=$validated['sale_price'];
+        $model->order_id=$unique_order_id;
+        $model->product=$product_name;
+        $model->prescription=$image_string;
+        $model->order_amount=$validated['order_amount'];
+        $model->address=$validated['user_address'];
+        $model->user_id=$validated['user_id'];
         $model->save();
         return redirect()->back()->with('success', 'Data Inserted');
     }
@@ -98,18 +102,18 @@ class OrderController extends Controller
         ]);
       
        $img=[];
-        if ($request->hasFile('product_image')) {
-            $image = $request->file('product_image');
+        if ($request->hasFile('prescription')) {
+            $image = $request->file('prescription');
             foreach ($image as $files) {
-                $destinationPath = 'public/product_image/';
+                $destinationPath = 'public/prescription/';
                 $file_name = time() . "." . $files->getClientOriginalName();
                 $files->move($destinationPath, $file_name);
                 $img[] = $file_name;
-                $data['product_image']=implode(',',$img);
+                $data['prescription']=implode(',',$img);
 
             }
         }else{
-            unset($data['product_image']);
+            unset($data['prescription']);
         }
         OrderModel::where('id',$id)->update($data);
         return redirect()->back()->with('success', 'Data Updated');
@@ -266,5 +270,14 @@ class OrderController extends Controller
         
         OrderModel::where('order_id',$order_id)->update(['order_status' =>$id]);
         return redirect()->back()->with('success','Order Status Updated');      
+    }
+    public function create_pdf_order(Request $request){
+        $order_data=OrderModel::get()->toArray();
+        view()->share('employee',$order_data);
+        $pdf = PDF::loadView('order.orderpdf', compact('order_data'))->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->download('order.pdf');
+    }
+    public function create_csv_order(){
+        return Excel::download(new OrderModel(), 'category.xlsx');
     }
 }

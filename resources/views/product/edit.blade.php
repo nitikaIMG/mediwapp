@@ -61,20 +61,52 @@
                     </select>
                     
                 </div>
-                <label for="exampleSelectGender">Category Description</label>
-                <textarea class="ckeditor form-control" id="ck" name="prod_desc">{{$edit_data['prod_desc']}}</textarea>
-            </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputName1">Price</label>
+                        <input type="text" name="price" class="form-control"  value="{{$edit_data['price']}}" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"  id="exampleInputName1"  placeholder=" Product Price">
+                    </div>
+                        
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputName1">Opening Quantity</label>
+                        <input type="text" name="opening_quantity" class="form-control"  value="{{$edit_data['opening_quantity']}}" id="exampleInputName1"  placeholder="Opening Quantity">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputName1">Min quantity</label>
+                        <input type="text" name="min_quantity" class="form-control"  value="{{$edit_data['min_quantity']}}" id="exampleInputName1"  placeholder=" Min Quantity">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputName1">Package Type</label>
+                        <input type="text" name="package_type" class="form-control"  value="{{$edit_data['package_type']}}" id="exampleInputName1"  placeholder=" Package Type">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="formFileMultiple" class="form-label">Brand Image</label>
+                        <input class="form-control" name="brand_image" type="file" id="formFileMultiple">
+                    <img src="{{ asset('public/brand_image/'.$edit_data['brand_image'])}}" alt="Image Alternative text" title="Image Title" width="50" height="50">
 
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="exampleInputName1">Purchase Price</label>
-                    <input type="text" name="purchase_price" class="form-control"  value="{{$edit_data['purchase_price']}}" id="exampleInputName1"  placeholder=" Product Price">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputName1">Validate Date</label>
+                        <input type="date" name="validate_date" class="form-control"  value="{{$edit_data['validate_date']}}" id="exampleInputName1"  placeholder=" Validate Date">
+                    </div>
                 </div>
-                    
-                <div class="form-group col-md-6">
-                    <label for="exampleInputName1">Sale Price</label>
-                    <input type="text" name="sale_price" class="form-control"  value="{{$edit_data['sale_price']}}" id="exampleInputName1"  placeholder=" Sale Price">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputName1">Offer</label>
+                        <input type="text" name="offer" class="form-control"  value="{{$edit_data['offer']}}" id="exampleInputName1"  placeholder="Offer">
+                    </div>
+                        
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputName1">Offer Type</label>
+                        <input type="text" name="offer_type" class="form-control"  value="{{$edit_data['offer_type']}}" id="exampleInputName1"  placeholder=" Offer Type">
+                    </div>
                 </div>
+                <label for="exampleSelectGender">Product Description</label>
+                <textarea class="ckeditor form-control" id="ck" name="prod_desc">{{$edit_data['prod_desc']}}</textarea>
             </div>
         <button type="submit" class="btn btn-primary mr-2 mt-2">Submit</button>
         </form>

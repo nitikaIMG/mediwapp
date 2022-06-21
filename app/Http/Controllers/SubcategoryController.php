@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\SubcategoryModel;
 use Illuminate\Http\Request;
-
+use PDF;
+use Maatwebsite\Excel\Facades\Excel;
 class SubcategoryController extends Controller
 {
     
@@ -230,5 +231,19 @@ class SubcategoryController extends Controller
             SubcategoryModel::where('id',$id)->update(['status' =>'1']);
         }
         return redirect()->back()->with('success','Status Updated');
+    }
+    public function create_pdf_subcategory(Request $request){
+        $subcategory=SubcategoryModel::get()->toArray();
+        if(!empty($subcategory)){
+            view()->share('employee',$subcategory);
+            $pdf = PDF::loadView('subcategory.subcategorypdf', compact('subcategory'))->setOptions(['defaultFont' => 'sans-serif']);
+            return $pdf->download('subcategory.pdf');
+        }else{
+            return redirect()->back()->with('danger','No Data in Table');
+        }
+        
+    }
+    public function create_csv_subcategory(){
+        return Excel::download(new SubcategoryModel(), 'category.xlsx');
     }
 }

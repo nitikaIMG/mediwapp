@@ -26,7 +26,7 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="exampleSelectGender">Category Type</label>
+                    <label for="exampleSelectGender">Subcategory</label>
                     <select name="subcategory_id" class="form-control" id="exampleSelectGender">
                         <option disabled selected value> -- select an option -- </option>
                         <option {{ old('subcategory_id') == 1 ? "selected" : "" }} value="1" >Food</option>
@@ -45,13 +45,44 @@
 
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="exampleInputName1">Purchase Price</label>
-                    <input type="text" name="purchase_price" class="form-control"  value="{{old('purchase_price')}}" id="exampleInputName1"  placeholder=" Product Price">
+                    <label for="exampleInputName1">Price</label>
+                    <input type="text" name="price" class="form-control"  onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"  value="{{old('price')}}" id="exampleInputName1"  placeholder=" Product Price">
                 </div>
                     
                 <div class="form-group col-md-6">
-                    <label for="exampleInputName1">Sale Price</label>
-                    <input type="text" name="sale_price" class="form-control"  value="{{old('sale_price')}}" id="exampleInputName1"  placeholder=" Sale Price">
+                    <label for="exampleInputName1">Opening Quantity</label>
+                    <input type="text" name="opening_quantity" class="form-control"  value="{{old('opening_quantity')}}" id="exampleInputName1"  placeholder="Opening Quantity">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Min quantity</label>
+                    <input type="text" name="min_quantity" class="form-control"  value="{{old('min_quantity')}}" id="exampleInputName1"  placeholder=" Min Quantity">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Package Type</label>
+                    <input type="text" name="package_type" class="form-control"  value="{{old('package_type')}}" id="exampleInputName1"  placeholder=" Package Type">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="formFileMultiple" class="form-label">Brand Image</label>
+                    <input class="form-control" name="brand_image" type="file" id="formFileMultiple">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Validate Date</label>
+                    <input type="text" name="validate_date" class="form-control"  value="{{old('validate_date')}}" id="exampleInputName1"  placeholder=" Validate Date">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Offer</label>
+                    <input type="text" name="offer" class="form-control"  value="{{old('offer')}}" id="exampleInputName1"  placeholder="Offer">
+                </div>
+                    
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Offer Type</label>
+                    <input type="text" name="offer_type" class="form-control"  value="{{old('offer_type')}}" id="exampleInputName1"  placeholder=" Sale Price">
                 </div>
             </div>
             <div class="row">

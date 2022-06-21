@@ -11040,34 +11040,34 @@ fieldset:disabled .ajax-upload-dragdrop a.ajax-file-upload,
 
 .btn-primary {
   color: #fff;
-  background-color: #844fc1;
-  border-color: #844fc1;
+  background-color: #f16f23;
+  border-color: #f16f23;
 }
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #713dad;
-  border-color: #6b3aa3;
+  background-color: #dd6119;
+  border-color: #dd6119;
 }
 
 .btn-primary:focus, .btn-primary.focus {
   color: #fff;
-  background-color: #713dad;
-  border-color: #6b3aa3;
+  background-color: #f16f23;
+  border-color: #f16f23;
   box-shadow: 0 0 0 0.2rem rgba(150, 105, 202, 0.5);
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
   color: #fff;
-  background-color: #844fc1;
-  border-color: #844fc1;
+  background-color: #f16f23;
+  border-color: #f16f23;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
 .show > .btn-primary.dropdown-toggle {
   color: #fff;
-  background-color: #6b3aa3;
-  border-color: #65369a;
+  background-color: #f16f23;
+  border-color: #f16f23;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
@@ -24404,7 +24404,7 @@ div.tagsinput span.tag a {
   -webkit-transition: background 0.25s ease;
   -moz-transition: background 0.25s ease;
   -ms-transition: background 0.25s ease;
-  border-bottom: 4px solid #844fc1;
+  /* border-bottom: 4px solid #844fc1; */
   /* Navbar color variations */
 }
 
@@ -25090,7 +25090,7 @@ div.tagsinput span.tag a {
 }
 
 .navbar-breadcrumb {
-  background: #00c8bf;
+  background: #156696 !important;
   margin-top: 4.625rem;
 }
 

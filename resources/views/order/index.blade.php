@@ -36,7 +36,15 @@ if(isset($_GET['order_status'])){
                         </div>
                         </div>
                         <div class="row">
-                          <div class="col text-right pt-4">
+                          <div class="col-md-3 pt-4">
+                            <a class="btn" href="{{url('create_pdf_order')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-file-pdf-o text-white"></i></a>
+                            <a class="btn" href="{{url('create_csv_order')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-file-excel-o text-white"></i></a>
+                          </div>
+                          <div class="col-md-6">
+                            {{-- blank --}}
+                          </div>
+                          <div class="col-md-3 text-right pt-4">
+                            
                             <button type="submit" class="btn btn-primary">Search</button>
                             <button type="reset" class="btn btn-secondary">reset</button>
                           </div>
@@ -45,15 +53,6 @@ if(isset($_GET['order_status'])){
                     </div>
                   </div>
                 <h5 class="card-header">Orders</h5>
-                  <div class="dropdown" >
-                    <button class="btn btn-secondary dropdown-toggle" style="float:right; margin:10px 20px 0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      DELETE
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      {{-- <a class="dropdown-item" href="{{route('order.create')}}">Create Order</a> --}}
-                      <a class="dropdown-item multiple_delete" href="#">MULTIPLE DELETE</a>
-                    </div>
-                  </div>
                 <div class="card-body">
                   
                   <div class="table-responsive">
