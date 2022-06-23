@@ -10,11 +10,16 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\SalesReport;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return redirect('login');
 });
-Auth::routes();
+Route::any('/register',function(){
+    return redirect('/login');
+});
+Auth::routes(['register'=>false]);
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
