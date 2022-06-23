@@ -10,17 +10,17 @@
             @method('PUT')
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="exampleInputName1">Category Name</label>
+                    <label for="exampleInputName1">Subcategory Name</label>
                     <input type="text" name="subcategory_name" class="form-control" id="exampleInputName1"  value="{{$edit_subcategory['subcategory_name']}}" placeholder=" Category Name">
                     
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="exampleSelectGender">Select Subcategory</label>
+                    <label for="exampleSelectGender">Category</label>
                     <select name="category_id" class="form-control" id="exampleSelectGender">
                         <option disabled selected value> -- select an option -- </option>
-                        <option value="1" {{ $edit_subcategory['category_id'] == 1 ? 'selected' : '' }}>PainKiller</option>
-                        <option value="2" {{ $edit_subcategory['category_id'] == 2 ? 'selected' : '' }}>Headache</option>
-                        <option value="3" {{ $edit_subcategory['category_id'] == 3 ? 'selected' : '' }}>Stomach Pain</option>
+                        @foreach($category as $cat)
+                        <option value="{{$cat->id}}" {{ $edit_subcategory['category_id'] == $cat->id ? 'selected' : '' }}>{{$cat->category_name}}</option>
+                        @endforeach
                     </select>
                    
                 </div>
@@ -33,7 +33,7 @@
                 </div>
             </div>
           
-            <div class="row">
+            {{-- <div class="row">
                 <div class="form-group col-md-6">
                     <label for="exampleSelectGender">Category Status</label>
                     <select name="status" class="form-control" id="exampleSelectGender">
@@ -43,7 +43,7 @@
                     </select>
                     
                 </div>
-            </div>
+            </div> --}}
         <button type="submit" class="btn btn-primary mr-2 mt-2">Submit</button>
         </form>
       </div>

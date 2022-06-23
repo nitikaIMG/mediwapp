@@ -90,7 +90,7 @@
         <div class="collapse" id="auth">
           <ul class="nav flex-column sub-menu">
             <li class="nav-item"> <a class="nav-link" href="{{route('salesreport.index')}}">User Base </a></li>
-            <li class="nav-item"> <a class="nav-link" href="{{route('salesreport.index')}}"> Product Base  </a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{route('salesreport.create')}}"> Product Base  </a></li>
           </ul>
         </div>
       </li>

@@ -59,8 +59,8 @@ if(isset($_GET['category_id'])){
                               <th>Product Name</th>
                               <th>Category Name</th>
                               <th>Subcategory Name</th>
-                              <th>Sale Price</th>
-                              <th>Purchase Price</th>
+                              <th>Price</th>
+                              <th>Package Type</th>
                               <th>Action</th>
                           </tr>
                       </thead>
@@ -72,8 +72,8 @@ if(isset($_GET['category_id'])){
                               <th>Product Name</th>
                               <th>Category Name</th>
                               <th>Subcategory Name</th>
-                              <th>Sale Price</th>
-                              <th>Purchase Price</th>
+                              <th>Price</th>
+                              <th>Package Type</th>
                               <th>Action</th>
                           </tr>
                       </tfoot>
@@ -123,8 +123,8 @@ if(isset($_GET['category_id'])){
                           { "data": "id" },
                           { "data": "product_image" },
                           { "data": "product_name" },
-                          { "data": "category_id" },
-                          { "data": "subcategory_id" },
+                          { "data": "category_name" },
+                          { "data": "subcategory_name" },
                           { "data": "price" },
                           { "data": "package_type" },
                           { "data": "action" },

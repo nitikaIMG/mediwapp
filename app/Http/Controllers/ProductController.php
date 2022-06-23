@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryModel;
 use App\Models\ProductModel;
+use App\Models\SubcategoryModel;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
@@ -17,7 +19,9 @@ class ProductController extends Controller
     
     public function create()
     {
-        return view('product.add');
+        $category=CategoryModel::all();
+        $subcategory=SubcategoryModel::all();
+        return view('product.add',compact('category','subcategory'));
     }
 
    
@@ -87,9 +91,11 @@ class ProductController extends Controller
 
     public function edit($id)
     {
+        $category=CategoryModel::all();
+        $subcategory=SubcategoryModel::all();
         $edit_data=ProductModel::where('id',$id)->first()->toArray();
         $file=ProductModel::where('id',$id)->pluck('product_image');
-        return view('product.edit',compact('edit_data','file'));
+        return view('product.edit',compact('edit_data','file','subcategory','category'));
     }
 
     
@@ -187,7 +193,7 @@ class ProductController extends Controller
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
-        $query =ProductModel::where('del_status','1');
+        $query =ProductModel::where('product.del_status','1');
         if(isset($_GET['product_name'])){
            $name=$_GET['product_name'];
            if($name!=""){
@@ -202,7 +208,7 @@ class ProductController extends Controller
          }
 
         $count = $query->count();
-        $titles = $query->select('id','product_name','subcategory_id','product_image','category_id','status','price','package_type')
+        $titles = $query->join('category','category.id','product.category_id')->join('subcategory','subcategory.id','product.subcategory_id')->select('product.id','product_name','product.subcategory_id','subcategory.subcategory_name','category.category_name','product_image','product.category_id','product.status','price','package_type')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, 'DESC')
@@ -254,8 +260,8 @@ class ProductController extends Controller
                 </ul>
             </div>';
                 $nestedData['product_name'] = $title->product_name;
-                $nestedData['category_id'] = $title->category_id;
-                $nestedData['subcategory_id'] = $title->subcategory_id;
+                $nestedData['category_name'] = $title->category_name;
+                $nestedData['subcategory_name'] = $title->subcategory_name;
                 $nestedData['price'] = $title->price;
                 $data[] = $nestedData;
                 

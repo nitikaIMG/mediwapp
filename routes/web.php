@@ -88,5 +88,7 @@ Route::get('create_csv_productstock',[ProductStockController::class,'create_csv_
 
 //Sales Report
 Route::resource('salesreport',SalesReport::class);
+Route::post('display_usersalesreport',[SalesReport::class,'display_usersalesreport'])->name('display_usersalesreport');
+Route::post('display_productsalesreport',[SalesReport::class,'display_productsalesreport'])->name('display_productsalesreport');
 
 });

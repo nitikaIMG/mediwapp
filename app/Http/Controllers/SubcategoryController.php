@@ -1,10 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\CategoryModel;
 use App\Models\SubcategoryModel;
+use category;
 use Illuminate\Http\Request;
 use PDF;
 use Maatwebsite\Excel\Facades\Excel;
+use Subcategory;
+
 class SubcategoryController extends Controller
 {
     
@@ -16,7 +21,8 @@ class SubcategoryController extends Controller
     
     public function create()
     {
-        return view('subcategory.add');
+        $category=CategoryModel::all();
+        return view('subcategory.add',compact('category'));
     }
 
     
@@ -63,7 +69,7 @@ class SubcategoryController extends Controller
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
-        $query = SubcategoryModel::where('del_status','1');
+        $query = SubcategoryModel::where('subcategory.del_status','1');
         if(isset($_GET['subcat_name'])){
            $name=$_GET['subcat_name'];
            if($name!=""){
@@ -76,9 +82,9 @@ class SubcategoryController extends Controller
                  $query=  $query->where('category_id', 'LIKE', '%'.$cat_name.'%');
              }
          }
-
+         
         $count = $query->count();
-        $titles = $query->select('id','subcategory_name','category_id','subcategory_image','status')
+        $titles = $query->join('category','subcategory.category_id','category.id')->select('subcategory.id','subcategory_name','category_id','subcategory_image','subcategory.status','category_name')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, 'DESC')
@@ -128,7 +134,7 @@ class SubcategoryController extends Controller
                 </ul>
             </div>';
                 $nestedData['subcat_name'] = $title->subcategory_name;
-                $nestedData['category_id'] = $title->category_id;
+                $nestedData['category_id'] = $title->category_name;
                 $data[] = $nestedData;
                 if( $request->input('order.0.column') == '0' and $request->input('order.0.dir') == 'desc') {
                     $count--;
@@ -155,8 +161,9 @@ class SubcategoryController extends Controller
    
     public function edit($id)
     {
+        $category=CategoryModel::all();
         $edit_subcategory=SubcategoryModel::where('id',$id)->first();
-        return view('subcategory.edit',compact('edit_subcategory'));
+        return view('subcategory.edit',compact('edit_subcategory','category'));
     }
 
     

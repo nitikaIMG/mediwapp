@@ -28,7 +28,6 @@ class OrderController extends Controller
     
         $unique_order_id='MED'.random_int(100000, 999999);
         $data =  $request->except('_token');
-        // dd($data);
         $validated = $request->validate([
             'product_name' => 'required|max:255',
             'order_amount' => 'required',
@@ -43,9 +42,7 @@ class OrderController extends Controller
             'user_address.required' => 'The Addresss is required.',
             'user_id.required' => 'The user id field is required.',
         ]);
-        foreach($request['product_name'] as $p_name){
-            $product_name=$p_name;
-        }
+            $product_name=implode(',',($request['product_name']));
         $img=[];
         if ($request->hasFile('priscription')){
         
@@ -115,6 +112,7 @@ class OrderController extends Controller
         }else{
             unset($data['prescription']);
         }
+        $data['product']=implode(',',($request['product_name']));
         OrderModel::where('id',$id)->update($data);
         return redirect()->back()->with('success', 'Data Updated');
     }

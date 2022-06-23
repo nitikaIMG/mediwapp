@@ -17,9 +17,9 @@
                     <label for="exampleSelectGender">Select Category</label>
                     <select name="category_id" class="form-control" id="exampleSelectGender">
                         <option disabled selected value> -- select an option -- </option>
-                        <option {{ old('category_id') == 1 ? "selected" : "" }} value="1" > 1</option>
-                        <option {{ old('category_id') == 2 ? "selected" : "" }} value="2" >2</option>
-                        <option {{ old('category_id') == 3 ? "selected" : "" }} value="3" >3</option>
+                        @foreach($category as $cat)
+                        <option {{ old('category_id') == $cat->id ? "selected" : "" }} value="{{$cat->id}}" >{{$cat->category_name}}</option>
+                        @endforeach
                     </select>
                    
                 </div>
@@ -29,9 +29,9 @@
                     <label for="exampleSelectGender">Subcategory</label>
                     <select name="subcategory_id" class="form-control" id="exampleSelectGender">
                         <option disabled selected value> -- select an option -- </option>
-                        <option {{ old('subcategory_id') == 1 ? "selected" : "" }} value="1" >Food</option>
-                        <option {{ old('subcategory_id') == 2 ? "selected" : "" }} value="1" >Cosmetics</option>
-                        <option {{ old('subcategory_id') == 3 ? "selected" : "" }} value="1" >Medicine</option>
+                        @foreach($subcategory as $subcat)
+                        <option {{ old('subcategory_id') == $subcat->id ? "selected" : "" }} value="{{$subcat->id}}" >{{$subcat->subcategory_name}}</option>
+                        @endforeach
                     </select>
                     
                 </div>

@@ -1,48 +1,44 @@
 @extends('layouts.home')
 @section('content')
 @php
-$subcat_name="";
-if(isset($_GET['subcat_name'])){
-  $subcat_name=$_GET['subcat_name'];
+$product_name="";
+if(isset($_GET['product_name'])){
+  $product_name=$_GET['product_name'];
 }  
-$catname="";
-if(isset($_GET['catname'])){
-  $catname=$_GET['catname'];
+$user_name="";
+if(isset($_GET['user_name'])){
+  $user_name=$_GET['user_name'];
 }  
 @endphp
 <div class="col-lg-10 grid-margin stretch-card">
               <div class="card">
                   <div class="card-header">
-                    Subcategory Filteration
+                    Sales Report
                   </div>
                   <div class="card-body">
                     <div class="row">
                       <form>
                         <div class="row">
                           <div class="col">
-                            <input type="text" name="subcat_name"  id="subcat_name" value="{{$subcat_name}}" class="form-control" placeholder="Subcategory name">
+                            <input type="text" name="product_name"  id="product_name" value="{{$product_name}}" class="form-control" placeholder="Product name">
                           </div>
-                          <div class="col">
-                            <input type="text" name="catname" id="catname" value="{{$catname}}" class="form-control" placeholder="Category name">
-                          </div>
+                          
                         </div>
                         <div class="row">
-                          <div class="col text-right pt-4">
+                          <div class="col-md-3 pt-4">
+                            <a class="btn" href="{{url('create_pdf_product')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-file-pdf-o text-white"></i></a>
+                            <a class="btn" href="{{url('create_csv_product')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-file-excel-o text-white"></i></a>
+                          </div>
+                          <div class="col-md-6">
+                            {{-- blank --}}
+                          </div>
+                          <div class="col-md-3 text-right pt-4">
+                            
                             <button type="submit" class="btn btn-primary">Search</button>
                             <button type="reset" class="btn btn-secondary">reset</button>
                           </div>
                         </div>
                       </form>
-                    </div>
-                  </div>
-                <h5 class="card-header">Category</h5>
-                  <div class="dropdown" >
-                    <button class="btn btn-secondary dropdown-toggle" style="float:right; margin:10px 20px 0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      ADD-DELETE
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item" href="{{route('subcategory.create')}}">ADD</a>
-                      <a class="dropdown-item multiple_delete" href="#">MULTIPLE DELETE</a>
                     </div>
                   </div>
                 <div class="card-body">
@@ -51,22 +47,16 @@ if(isset($_GET['catname'])){
                     <table class="table table-bordered table-striped table-hover text-nowrap" id="display_cat" width="100%" cellspacing="0">
                       <thead>
                           <tr>
-                              <th><input type="checkbox" name=" chk_box" id="mult_del"></th>
                               <th>Sno.</th>
-                              <th>Subcategory Image</th>
-                              <th>Subcategory Name</th>
-                              <th>Category Name</th>
-                              <th>Action</th>
+                              <th>Product Name</th>
+                              <th>Sold Quantity</th>
                           </tr>
                       </thead>
                       <tfoot>
                           <tr>
-                            <th>#D</th>
-                            <th>Sno.</th>
-                            <th>Subcategory Image</th>
-                            <th>Subcategory Name</th>
-                            <th>Category Name</th>
-                            <th>Action</th>
+                              <th>Sno.</th>
+                              <th>Product Name</th>
+                              <th>Sold Quantity</th>
                           </tr>
                       </tfoot>
                       <tbody>
@@ -80,8 +70,8 @@ if(isset($_GET['catname'])){
             <script type="text/javascript">
               $(document).ready(function() {
                 let arr=[];
-                var catname=$('#catname').val();
-                var subcat_name=$('#subcat_name').val();
+                var user_name=$('#user_name').val();
+                var product_name=$('#product_name').val();
               $.fn.dataTable.ext.errMode = 'none';
                   $('#display_cat').DataTable({
                       'responsive': true,
@@ -90,7 +80,7 @@ if(isset($_GET['catname'])){
                 
                     "serverSide": true,
                       "ajax":{
-                               "url": '{{route('display_subcategory')}}?subcat_name='+subcat_name+'&catname='+catname,
+                               "url": '{{route('display_productsalesreport')}}?product_name='+product_name+'&user_name='+user_name,
                                "dataType": "json",
                                "type": "POST",
                                "data":{ _token: "{{csrf_token()}}"},
@@ -111,12 +101,9 @@ if(isset($_GET['catname'])){
                          }
                      ],
                       "columns": [
-                        { "data": "multidelete" },
                         { "data": "id" },
-                        { "data": "subcategory_image" },
-                        { "data": "subcat_name" },
-                        { "data": "category_id" },
-                        { "data": "action" },
+                        { "data": "product_name" },
+                        { "data": "cnt" },
                       ],
                       'columnDefs': [ {
                       'targets': [0],

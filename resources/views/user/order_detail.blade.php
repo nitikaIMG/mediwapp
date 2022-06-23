@@ -10,19 +10,19 @@ if(isset($_GET['order_status'])){
   $order_status=$_GET['order_status'];
 }  
 @endphp
-
 <div class="col-lg-10 grid-margin stretch-card">
               <div class="card">
                 <h5 class="card-header">Orders</h5>
                 <div class="card-body">
                     <div class="mb-4" style="float:right;">
-                        <a href="{{url('create_order/'.$user_order_data[0]->id)}}" class="btn btn-primary">Create Order</a>
+                        <a href="{{url('create_order/'.request('id'))}}" class="btn btn-primary">Create Order</a>
                     </div>
                 @php
                  $order_status='';
                  $payment_status='';
                  $i=1;
                 @endphp
+                @if($user_order_data->isNotEmpty())
                   @foreach($user_order_data as $ord_status)
                     @php
                     if($ord_status == '1'){
@@ -62,7 +62,7 @@ if(isset($_GET['order_status'])){
                       <tfoot>
                           <tr>
                             <td>{{$i++}}</td>
-                            <td>{{$user_order_data[0]['product']}}</td>
+                            <td>{{$user_order_data[0]['order_id']}}</td>
                             <td>{{$order_status}}</td>
                             <td>{{$payment_status}}</td>
                             <td><div class="dropdown" >
@@ -88,8 +88,12 @@ if(isset($_GET['order_status'])){
                       <tbody>
                       </tbody>
                   </table>
-
                   </div>
+                @else
+                  <div class="mt-3">
+                    <h4>No Order Data</h4>
+                  </div>
+                @endif
                 </div>
               </div>
             </div>

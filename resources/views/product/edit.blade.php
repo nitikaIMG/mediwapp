@@ -18,9 +18,9 @@
                     <label for="exampleSelectGender">Select Category</label>
                     <select name="category_id" class="form-control" id="exampleSelectGender">
                         <option disabled selected value> -- select an option -- </option>
-                        <option value="1" {{ $edit_data['category_id'] == 1 ? 'selected' : '' }}>PainKiller</option>
-                        <option value="2" {{ $edit_data['category_id'] == 2 ? 'selected' : '' }}>Headache</option>
-                        <option value="3" {{ $edit_data['category_id'] == 3 ? 'selected' : '' }}>Stomach Pain</option>
+                        @foreach($category as $cat)
+                        <option value="{{$cat->id}}" {{$edit_data['category_id']==$cat->id ? 'selected':''}}>{{$cat->category_name}}</option>
+                        @endforeach
                     </select>
                    
                 </div>
@@ -30,9 +30,9 @@
                     <label for="exampleSelectGender">Select Subcategory</label>
                     <select name="subcategory_id" class="form-control" id="exampleSelectGender">
                         <option disabled selected value> -- select an option -- </option>
-                        <option value="1" {{ $edit_data['subcategory_id'] == 1 ? 'selected' : '' }}>FOOD</option>
-                        <option value="2" {{ $edit_data['subcategory_id'] == 2 ? 'selected' : '' }}>Health</option>
-                        <option value="3" {{ $edit_data['subcategory_id'] == 3 ? 'selected' : '' }}>Study</option>
+                        @foreach($subcategory as $subcat)
+                        <option value="{{$subcat->id}}" {{ $edit_data['subcategory_id'] == $subcat->id ? 'selected' : '' }}>{{$subcat->subcategory_name}}</option>
+                        @endforeach
                     </select>
                     
                 </div>
@@ -52,15 +52,16 @@
             </div>
           
             <div class="row">
-                <div class="form-group col-md-6">
+                {{-- <div class="form-group col-md-6">
                     <label for="exampleSelectGender">Category Name</label>
                     <select name="category_id" class="form-control" id="exampleSelectGender">
                         <option disabled selected value> -- select an option -- </option>
-                        <option value="1" {{$edit_data['category_id']==1 ? 'selected':''}}>Active</option>
-                        <option value="0" {{$edit_data['category_id']==0 ? 'selected':''}}>Deactive</option>
+                        @foreach($category as $cat)
+                        <option value="{{$cat->id}}" {{$edit_data['category_id']==$cat->id ? 'selected':''}}>{{$cat->category_name}}</option>
+                        @endforeach
                     </select>
                     
-                </div>
+                </div> --}}
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="exampleInputName1">Price</label>
