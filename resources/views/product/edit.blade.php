@@ -16,7 +16,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="exampleSelectGender">Select Category</label>
-                    <select name="category_id" class="form-control" id="exampleSelectGender">
+                    <select name="category_id" onchange="select_subcategory();" class="form-control" id="cat">
                         <option disabled selected value> -- select an option -- </option>
                         @foreach($category as $cat)
                         <option value="{{$cat->id}}" {{$edit_data['category_id']==$cat->id ? 'selected':''}}>{{$cat->category_name}}</option>
@@ -27,12 +27,10 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="exampleSelectGender">Select Subcategory</label>
-                    <select name="subcategory_id" class="form-control" id="exampleSelectGender">
+                    <label for="sub_cat_id">Select Subcategory</label>
+                    <select name="subcategory_id" class="form-control" id="sub_cat_id">
                         <option disabled selected value> -- select an option -- </option>
-                        @foreach($subcategory as $subcat)
-                        <option value="{{$subcat->id}}" {{ $edit_data['subcategory_id'] == $subcat->id ? 'selected' : '' }}>{{$subcat->subcategory_name}}</option>
-                        @endforeach
+                        <option value="{{$edit_data['subcategory_id']}}" {{ $edit_data['subcategory_id'] == $edit_data['subcategory_id'] ? 'selected' : '' }}>{{$edit_data['subcategory_name']}}</option>
                     </select>
                     
                 </div>
@@ -45,23 +43,14 @@
                             $images=explode(",",$data);
                         }
                     @endphp
-                    @foreach ($images as  $img )
+                    @foreach ($images as $key=>$img )
                     <img src="{{ asset('public/product_image/'.$img)}}" alt="Image Alternative text" title="Image Title" width="50" height="50">
+                        <a href="{{url('delete_multiple_image/'.$key.'/'.$edit_data["id"])}}"><i class="fa fa-trash"></i></a>
                     @endforeach
                 </div>
             </div>
           
             <div class="row">
-                {{-- <div class="form-group col-md-6">
-                    <label for="exampleSelectGender">Category Name</label>
-                    <select name="category_id" class="form-control" id="exampleSelectGender">
-                        <option disabled selected value> -- select an option -- </option>
-                        @foreach($category as $cat)
-                        <option value="{{$cat->id}}" {{$edit_data['category_id']==$cat->id ? 'selected':''}}>{{$cat->category_name}}</option>
-                        @endforeach
-                    </select>
-                    
-                </div> --}}
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="exampleInputName1">Price</label>
@@ -85,10 +74,14 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="formFileMultiple" class="form-label">Brand Image</label>
-                        <input class="form-control" name="brand_image" type="file" id="formFileMultiple">
-                    <img src="{{ asset('public/brand_image/'.$edit_data['brand_image'])}}" alt="Image Alternative text" title="Image Title" width="50" height="50">
-
+                        <label for="exampleSelectGender">Brand Name</label>
+                        <select name="brand_image" class="form-control" id="">
+                            <option disabled selected value> -- select an option -- </option>
+                            @foreach($brand_name as $brand)
+                            <option {{ $edit_data['brand_image'] == $brand->id ? "selected" : "" }} value="{{$brand->id}}" >{{$brand->brand_name}}</option>
+                            @endforeach
+                        </select>
+                        
                     </div>
                     <div class="form-group col-md-6">
                         <label for="exampleInputName1">Validate Date</label>
@@ -115,10 +108,34 @@
     </div>
   </div>
 
-  <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
   <script type="text/javascript">
-      $(document).ready(function() {
-         $('#ck').ckeditor();
-      });
-  </script>
+    $(document).ready(function() {
+       $('#ck').ckeditor();
+    });
+</script>
+<script>
+    function select_subcategory(){
+       var cat_val=$('#cat').val();
+       $.ajax({
+           url:"{{route('get_subcat')}}",
+           data:{
+             'id': cat_val,
+             "_token": "{{ csrf_token() }}"  
+           },
+           type:'post',
+           datatype:'json',
+           success:function(data){
+              if(data.data.length==0){
+                $('#sub_cat_id').empty()
+              }else{
+                $.each(data.data,function(index,subcategory){
+                $('#sub_cat_id').empty()
+                $('#sub_cat_id').append('<option value="'+subcategory.id+'">'+subcategory.subcategory_name+'</option>');
+               })
+              }
+              
+           }
+       });
+    }
+</script>
 @endsection

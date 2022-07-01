@@ -43,8 +43,14 @@ class SalesReport extends Controller
                 $query=  $query->where('user_firstname', 'LIKE', '%'.$name.'%');
             }
         }
+        if(isset($_GET['user_email'])){
+            $user_email=$_GET['user_email'];
+            if($user_email!=""){
+                 $query=  $query->where('user_email', 'LIKE', '%'.$user_email.'%');
+             }
+         }
         $count = $query->count();
-        $titles = $query->select('id','user_firstname','status')
+        $titles = $query->select('id','user_firstname','user_email','status')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, 'DESC')
@@ -84,6 +90,7 @@ class SalesReport extends Controller
             </div>';
                 $u_order=OrderModel::where('user_id',$title->id)->count();
                 $nestedData['user_name'] = $title->user_firstname;
+                $nestedData['user_email'] = $title->user_email;
                 $nestedData['cnt'] =(isset($u_order))?$u_order:0;
                 $data[] = $nestedData;
                 if( $request->input('order.0.column') == '0' and $request->input('order.0.dir') == 'desc') {

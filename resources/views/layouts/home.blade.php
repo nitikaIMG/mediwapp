@@ -7,7 +7,7 @@
   
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Mediwapp</title>
     <script src="{{ asset('public/js/app.js') }}" defer></script>
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{{asset('public/vendors/typicons/typicons.css')}}">
     <link rel="stylesheet" href="{{asset('public/vendors/css/vendor.bundle.base.css')}}">
     <link rel="stylesheet" href="{{asset('public/css/vertical-layout-light/style.css')}}">
-    <link rel="shortcut icon" href="{{asset('public/images/favicon.png')}}" />
+    <link rel="shortcut icon" href="{{asset('public/images/mediwappicon.jpeg')}}" />
 
     <!-- Add icon library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -225,7 +225,6 @@
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
     <script src="//cdn.ckeditor.com/4.19.0/standard/ckeditor.js"></script>
-  
 
     <link rel="stylesheet" type="text/css" 
     href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">

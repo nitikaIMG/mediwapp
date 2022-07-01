@@ -31,23 +31,19 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'category_name' => 'required|max:255',
             'category_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_type' => 'required',
             'meta_title' => 'required',
             'meta_description' => 'required',
             'meta_keyword' => 'required',
             'banner' => 'required',
             'cat_desc' => 'required',
-            'cat_status' => 'required',
         ],[
             'category_name.required' => 'The category name field is required.',
             'category_image.required' => 'Please Select Image',
-            'category_type.required' => 'The category type field is required.',
             'meta_title.required' => 'The meta title field is required.',
             'meta_description.required' => 'The meta description field is required.',
             'meta_keyword.required' => 'The meta keyword field is required.',
             'banner.required' => 'The banner  field is required.',
             'cat_desc.required' => 'The category Descripction field is required.',
-            'cat_status.required' => 'The cat status field is required.',
         ]);
       
        $img=[];
@@ -105,24 +101,18 @@ class CategoryController extends Controller
         $data =  $request->except('_token','_method');
         $validated = $request->validate([
             'category_name' => 'required|max:255',
-            'subcategory_id' => 'required',
-            'category_type' => 'required',
             'meta_title' => 'required',
             'meta_description' => 'required',
             'meta_keyword' => 'required',
-            'banner' => 'required',
+            // 'banner' => 'required',
             'cat_desc' => 'required',
-            'cat_status' => 'required',
         ],[
             'category_name.required' => 'The category name field is required.',
-            'subcategory_id.required' => 'The Subcategory name field is required.',
-            'category_type.required' => 'The category type field is required.',
             'meta_title.required' => 'The meta title field is required.',
             'meta_description.required' => 'The meta description field is required.',
             'meta_keyword.required' => 'The meta keyword field is required.',
-            'banner.required' => 'The banner  field is required.',
+            // 'banner.required' => 'The banner  field is required.',
             'cat_desc.required' => 'The category Descripction field is required.',
-            'cat_status.required' => 'The cat status field is required.',
         ]);
        $banner_img=[];
        $img=[];
@@ -196,15 +186,10 @@ class CategoryController extends Controller
                 $query=  $query->where('category_name', 'LIKE', '%'.$name.'%');
             }
         }
-        if(isset($_GET['cat_type'])){
-            $cat_type=$_GET['cat_type'];
-            if($cat_type!=""){
-                 $query=  $query->where('cat_type', 'LIKE', '%'.$cat_type.'%');
-             }
-         }
+       
 
         $count = $query->count();
-        $titles = $query->select('id','category_name','subcategory_id','category_image','category_type','cat_desc','cat_status')
+        $titles = $query->select('id','category_name','subcategory_id','category_image','cat_desc','cat_status')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, 'DESC')
@@ -256,7 +241,7 @@ class CategoryController extends Controller
                 </ul>
             </div>';
                 $nestedData['category_name'] = $title->category_name;
-                $nestedData['category_type'] = $title->category_type;
+                $nestedData['meta_title'] = $title->meta_title;
                 $data[] = $nestedData;
                 
                 if( $request->input('order.0.column') == '0' and $request->input('order.0.dir') == 'desc') {

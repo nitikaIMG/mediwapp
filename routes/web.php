@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BannerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
@@ -12,8 +13,8 @@ use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\SalesReport;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    return redirect('login');
+Route::any('/', function () {
+    return redirect()->route('login');
 });
 Route::any('/register',function(){
     return redirect('/login');
@@ -57,6 +58,8 @@ Route::get('enable_disable_product/{id}',[ProductController::class,'enable_disab
 Route::get('multiple_delete_product',[ProductController::class,'multiple_delete_product'])->name('multiple_delete_product');
 Route::get('create_pdf_product',[ProductController::class,'create_pdf_product']);
 Route::get('create_csv_product',[ProductController::class,'create_csv_product']);
+Route::post('get_subcat',[ProductController::class,'get_subcat'])->name('get_subcat');
+Route::get('delete_multiple_image/{key}/{id}', [ProductController::class, 'deletemulimg']);
 
 //Slider Route
 Route::resource('slider',SliderController::class);
@@ -96,4 +99,7 @@ Route::resource('salesreport',SalesReport::class);
 Route::post('display_usersalesreport',[SalesReport::class,'display_usersalesreport'])->name('display_usersalesreport');
 Route::post('display_productsalesreport',[SalesReport::class,'display_productsalesreport'])->name('display_productsalesreport');
 
+
+//banner
+Route::resource('banner',BannerController::class);
 });

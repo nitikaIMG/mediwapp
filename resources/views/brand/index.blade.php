@@ -22,9 +22,9 @@ if(isset($_GET['category_id'])){
                           <div class="col">
                             <input type="text" name="brand_name"  id="brand_name" value="{{$brand_name}}" class="form-control" placeholder="Brand name">
                           </div>
-                          <div class="col">
+                          {{-- <div class="col">
                             <input type="text" name="category_id" id="category_id" value="{{$category_id}}" class="form-control" placeholder="Category name">
-                          </div>
+                          </div> --}}
                         </div>
                         <div class="row">
                           <div class="col-md-3 pt-4">
@@ -45,15 +45,6 @@ if(isset($_GET['category_id'])){
                       </form>
                     </div>
                   </div>
-                  {{-- <div class="dropdown" >
-                    <button class="btn btn-secondary dropdown-toggle" style="float:right; margin:10px 20px 0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      ADD-DELETE
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item" href="{{route('brand.create')}}">ADD</a>
-                      <a class="dropdown-item brand_multiple_delete" href="#">MULTIPLE DELETE</a>
-                    </div>
-                  </div> --}}
                 <div class="card-body">
                   
                   <div class="table-responsive">
@@ -62,10 +53,8 @@ if(isset($_GET['category_id'])){
                           <tr>
                             <th><input type="checkbox" name=" chk_box" id="mult_del"></th>
                             <th>Sno.</th>
-                            <th>Brand Image</th>
+                            <th>Brand Logo</th>
                             <th>Brand Name</th>
-                            <th>Category name</th>
-                            <th>Subcategory name</th>
                             <th>Action</th>
                           </tr>
                       </thead>
@@ -73,10 +62,8 @@ if(isset($_GET['category_id'])){
                           <tr>
                             <th></th>
                             <th>Sno.</th>
-                            <th>Brand Image</th>
+                            <th>Brand Logo</th>
                             <th>Brand Name</th>
-                            <th>Category name</th>
-                            <th>Subcategory name</th>
                             <th>Action</th>
                           </tr>
                       </tfoot>
@@ -125,8 +112,6 @@ if(isset($_GET['category_id'])){
                           { "data": "id" },
                           { "data": "brand_image" },
                           { "data": "brand_name" },
-                          { "data": "category_id" },
-                          { "data": "subcategory_id" },
                           { "data": "action" },
                       ],
                       'columnDefs': [ {

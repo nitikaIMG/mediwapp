@@ -159,10 +159,10 @@ class OrderController extends Controller
         if(isset($_GET['order_status'])){
             $order_status=$_GET['order_status'];
             if($order_status!="" && $order_status!='null'){
-                 $query=  $query->where('order_status', 'LIKE', '%'.$order_status.'%');
+                 $query=  $query->where('order_status', $order_status);
+
              }
          }
-
         $count = $query->count();
         $titles = $query->select('id','order_id','order_status','status','del_status')
                 ->offset($start)
@@ -265,7 +265,6 @@ class OrderController extends Controller
         return response()->json(['success' => ' Data has been deleted!']);
     }
     public function status_update($order_id,$id){
-        
         OrderModel::where('order_id',$order_id)->update(['order_status' =>$id]);
         return redirect()->back()->with('success','Order Status Updated');      
     }

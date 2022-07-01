@@ -15,7 +15,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="exampleSelectGender">Select Category</label>
-                    <select name="category_id" class="form-control" id="exampleSelectGender">
+                    <select name="category_id" onchange="select_subcategory();" class="form-control" id="cat">
                         <option disabled selected value> -- select an option -- </option>
                         @foreach($category as $cat)
                         <option {{ old('category_id') == $cat->id ? "selected" : "" }} value="{{$cat->id}}" >{{$cat->category_name}}</option>
@@ -27,11 +27,11 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="exampleSelectGender">Subcategory</label>
-                    <select name="subcategory_id" class="form-control" id="exampleSelectGender">
+                    <select name="subcategory_id" class="form-control" id="sub_cat_id">
                         <option disabled selected value> -- select an option -- </option>
-                        @foreach($subcategory as $subcat)
+                        {{-- @foreach($subcategory as $subcat)
                         <option {{ old('subcategory_id') == $subcat->id ? "selected" : "" }} value="{{$subcat->id}}" >{{$subcat->subcategory_name}}</option>
-                        @endforeach
+                        @endforeach --}}
                     </select>
                     
                 </div>
@@ -66,12 +66,18 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="formFileMultiple" class="form-label">Brand Image</label>
-                    <input class="form-control" name="brand_image" type="file" id="formFileMultiple">
+                    <label for="exampleSelectGender">Brand Name</label>
+                    <select name="brand_image" class="form-control" id="">
+                        <option disabled selected value> -- select an option -- </option>
+                        @foreach($brand_name as $brand)
+                        <option {{ old('brand_name') == $brand->id ? "selected" : "" }} value="{{$brand->id}}" >{{$brand->brand_name}}</option>
+                        @endforeach
+                    </select>
+                    
                 </div>
                 <div class="form-group col-md-6">
                     <label for="exampleInputName1">Validate Date</label>
-                    <input type="text" name="validate_date" class="form-control"  value="{{old('validate_date')}}" id="exampleInputName1"  placeholder=" Validate Date">
+                    <input type="date" name="validate_date" class="form-control"  value="{{old('validate_date')}}" id="exampleInputName1"  placeholder=" Validate Date">
                 </div>
             </div>
             <div class="row">
@@ -82,7 +88,7 @@
                     
                 <div class="form-group col-md-6">
                     <label for="exampleInputName1">Offer Type</label>
-                    <input type="text" name="offer_type" class="form-control"  value="{{old('offer_type')}}" id="exampleInputName1"  placeholder=" Sale Price">
+                    <input type="text" name="offer_type" class="form-control"  value="{{old('offer_type')}}" id="exampleInputName1"  placeholder=" Offer Type">
                 </div>
             </div>
             <div class="row">
@@ -95,10 +101,29 @@
     </div>
   </div>
 
-  <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
   <script type="text/javascript">
-      $(document).ready(function() {
-         $('#ck').ckeditor();
-      });
-  </script>
+    $(document).ready(function() {
+       $('#ck').ckeditor();
+    });
+</script>
+
+     <script>
+         function select_subcategory(){
+            var cat_val=$('#cat').val();
+            $.ajax({
+                url:"{{route('get_subcat')}}",
+                data:{
+                  'id': cat_val,
+                  "_token": "{{ csrf_token() }}"  
+                },
+                type:'post',
+                datatype:'json',
+                success:function(data){
+                    $.each(data.data,function(index,subcategory){
+                        $('#sub_cat_id').append('<option value="'+subcategory.id+'">'+subcategory.subcategory_name+'</option>');
+                    })
+                }
+            });
+         }
+     </script>
 @endsection

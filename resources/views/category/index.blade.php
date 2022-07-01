@@ -22,9 +22,9 @@ if(isset($_GET['cat_type'])){
                         <div class="col">
                           <input type="text" name="cat_name"  id="cat_name" value="{{$cat_name}}" class="form-control" placeholder="Category name">
                         </div>
-                        <div class="col">
+                        {{-- <div class="col">
                           <input type="text" name="cat_type" id="cat_type" value="{{$cat_type}}" class="form-control" placeholder="Category name">
-                        </div>
+                        </div> --}}
                       </div>
                       <div class="row">
                         <div class="col-md-3 pt-4">
@@ -54,7 +54,6 @@ if(isset($_GET['cat_type'])){
                               <th>Sno.</th>
                               <th>Category Image</th>
                               <th>Category Name</th>
-                              <th>Category Type</th>
                               <th>Action</th>
                           </tr>
                       </thead>
@@ -64,7 +63,6 @@ if(isset($_GET['cat_type'])){
                             <th>Sno.</th>
                             <th>Category Image</th>
                             <th>Category Name</th>
-                            <th>Category Type</th>
                             <th>Action</th>
                           </tr>
                       </tfoot>
@@ -114,7 +112,6 @@ if(isset($_GET['cat_type'])){
                           { "data": "id" },
                           { "data": "category_image" },
                           { "data": "category_name" },
-                          { "data": "category_type" },
                           { "data": "action" },
                       ],
                       'columnDefs': [ {

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BrandModel;
 use App\Models\CategoryModel;
 use App\Models\ProductModel;
 use App\Models\SubcategoryModel;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
+use Subcategory;
+
 class ProductController extends Controller
 {
     
@@ -20,8 +23,8 @@ class ProductController extends Controller
     public function create()
     {
         $category=CategoryModel::all();
-        $subcategory=SubcategoryModel::all();
-        return view('product.add',compact('category','subcategory'));
+        $brand_name=BrandModel::all();
+        return view('product.add',compact('category','brand_name'));
     }
 
    
@@ -31,35 +34,34 @@ class ProductController extends Controller
         $validated = $request->validate([
             'product_name' => 'required|max:255',
             'category_id' => 'required',
-            // 'product_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'product_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'subcategory_id' => 'required',
             'prod_desc' => 'required',
             'price' => 'required',
             'opening_quantity' => 'required',
             'min_quantity' => 'required',
             'package_type' => 'required',
-            'brand_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'brand_image' => 'required',
             'validate_date' => 'required',
             'offer' => 'required',
             'offer_type' => 'required',
         ],[
             'product_name.required' => 'The Product name field is required.',
             'category_id.required' => 'The category name field is required.',
-            // 'product_image.required' => 'Please Select Image',
+            'product_image.required' => 'Please Select Image',
             'subcategory_id.required' => 'The subcategory type field is required.',
             'price.required' => 'The price  field is required.',
             'opening_quantity.required' => 'The opening quantity field is required.',
             'prod_desc.required' => 'The product description field is required.',
             'min_quantity.required' => 'The min quantity field is required.',
             'package_type.required' => 'The package type field is required.',
-            'brand_image.required' => 'The brand image field is required.',
+            'brand_image.required' => 'The brand  field is required.',
             'validate_date.required' => 'The validate date field is required.',
             'offer.required' => 'The offer field is required.',
             'offer_type.required' => 'The offer type field is required.',
         ]);
       
        $img=[];
-       $brand_image=[];
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
             foreach ($image as $files) {
@@ -69,16 +71,7 @@ class ProductController extends Controller
                 $img[] = $file_name;
             }
         }
-
-        if ($request->hasFile('brand_image')) {
-            $brand_image = $request->file('brand_image');
-                $destination = 'public/brand_image/';
-                $fil = time() . "." . $brand_image->getClientOriginalName();
-                $brand_image->move($destination, $fil);
-                $brand_image = $fil;
-        }
         $data['product_image']=implode(',',$img);
-        $data['brand_image']=$brand_image;
         ProductModel::create($data);
         return redirect()->back()->with('success', 'Data Inserted');
     }
@@ -92,10 +85,10 @@ class ProductController extends Controller
     public function edit($id)
     {
         $category=CategoryModel::all();
-        $subcategory=SubcategoryModel::all();
-        $edit_data=ProductModel::where('id',$id)->first()->toArray();
+        $brand_name=BrandModel::all();
+        $edit_data=ProductModel::join('subcategory','product.subcategory_id','subcategory.id')->where('product.id',$id)->first()->toArray();
         $file=ProductModel::where('id',$id)->pluck('product_image');
-        return view('product.edit',compact('edit_data','file','subcategory','category'));
+        return view('product.edit',compact('edit_data','file','category','brand_name'));
     }
 
     
@@ -133,18 +126,6 @@ class ProductController extends Controller
         ]);
       
        $img=[];
-       $brand_image=[];
-       if ($request->hasFile('brand_image')) {
-        $brand_image = $request->file('brand_image');
-            $destination = 'public/brand_image/';
-            $fil = time() . "." . $brand_image->getClientOriginalName();
-            $brand_image->move($destination, $fil);
-            $brand_image = $fil;
-            $data['brand_image']=$brand_image;
-        }else{
-            unset($data['brand_image']);
-        }
-
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
             foreach ($image as $files) {
@@ -263,6 +244,7 @@ class ProductController extends Controller
                 $nestedData['category_name'] = $title->category_name;
                 $nestedData['subcategory_name'] = $title->subcategory_name;
                 $nestedData['price'] = $title->price;
+                $nestedData['package_type'] = $title->package_type;
                 $data[] = $nestedData;
                 
                 if( $request->input('order.0.column') == '0' and $request->input('order.0.dir') == 'desc') {
@@ -314,6 +296,22 @@ class ProductController extends Controller
     }
     public function create_csv_product(){
         return Excel::download(new ProductModel(), 'category.xlsx');
+    }
+
+    public function get_subcat(Request $request){
+        $id = $request->id;
+        $data = SubcategoryModel::where('category_id',$id)->get();
+        return response(['data' => $data, 'message'=>"data fatch successfully"]);
+       
+    }
+
+    public function deletemulimg(Request $request, $key, $id){
+        $data=ProductModel::where('id',$id)->pluck('product_image')->toArray();
+        $img=explode(',',$data[0]);
+        unset($img[$key]);
+        $dt=implode(',',$img);
+        ProductModel::where('id',$id)->update(['product_image' => $dt]);
+        return redirect()->back()->with('success','Image deleted');
     }
 
 }

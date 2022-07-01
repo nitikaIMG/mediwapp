@@ -16,6 +16,9 @@ class AddAuthKeyToUserTable extends Migration
         Schema::table('user', function (Blueprint $table) {
           $table->longText('auth_key')->nullable()->after('user_address');
           $table->string('code')->nullable()->after('user_email');
+          $table->string('coupon')->nullable()->change();
+          $table->string('wallet')->nullable()->change();
+          $table->string('ref_id')->nullable()->change();
         });
     }
 

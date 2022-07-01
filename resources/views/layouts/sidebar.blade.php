@@ -107,7 +107,7 @@
           </ul>
         </div>
       </li>
-      <li class="nav-item">
+        <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#slider" aria-expanded="false" aria-controls="slider">
             <i class="typcn typcn-globe-outline menu-icon"></i>
             <span class="menu-title">Slider</span>
@@ -116,6 +116,19 @@
           <div class="collapse" id="slider">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="{{route('slider.index')}}">All Sliders </a></li>
+              
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="collapse" href="#banner" aria-expanded="false" aria-controls="banner">
+            <i class="typcn typcn-globe-outline menu-icon"></i>
+            <span class="menu-title">Banner</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="banner">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="{{route('banner.index')}}">View Banners </a></li>
               
             </ul>
           </div>

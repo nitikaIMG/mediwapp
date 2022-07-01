@@ -13,14 +13,14 @@ if(isset($_GET['category_id'])){
 <div class="col-lg-10 grid-margin stretch-card">
               <div class="card">
                   <div class="card-header">
-                    Category Filteration
+                    Product Filteration
                   </div>
                   <div class="card-body">
                     <div class="row">
                       <form>
                         <div class="row">
                           <div class="col">
-                            <input type="text" name="product_name"  id="product_name" value="{{$product_name}}" class="form-control" placeholder="Category name">
+                            <input type="text" name="product_name"  id="product_name" value="{{$product_name}}" class="form-control" placeholder="Product name">
                           </div>
                           <div class="col">
                             <input type="text" name="category_id" id="category_id" value="{{$category_id}}" class="form-control" placeholder="Category name">

@@ -20,4 +20,4 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
-require __DIR__.'/api/demo.php';
+require __DIR__.'/api/frontendroutes.php';

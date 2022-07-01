@@ -24,8 +24,8 @@
         <tr>
             <th class="all">Full Name</th>
             <th>Email Address</th>
-            <th>Mobile No</th>
-            <th>Attroney ID</th>
+            <th>Meta title</th>
+            <th>Subcategory Id</th>
             {{-- <th>Category Images</th> --}}
         </tr>
     </thead>
@@ -36,9 +36,6 @@
             <td >{{$d['category_image']}}</td>
             <td >{{$d['meta_title']}}</td>
             <td >{{$d['subcategory_id']}}</td>
-            {{-- <td > <img src="{{ asset('public/category_image/'.$d['category_image'])}}" width="50" height="50"></td> --}}
-      
-            {{-- <td style="border: 1px solid #100c09">{{$d['status']}}</td> --}}
         </tr> 
         @endforeach
     </tbody>

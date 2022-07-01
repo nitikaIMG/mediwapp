@@ -1,9 +1,9 @@
 @extends('layouts.home')
 @section('content')
 @php
-$product_name="";
-if(isset($_GET['product_name'])){
-  $product_name=$_GET['product_name'];
+$user_email="";
+if(isset($_GET['user_email'])){
+  $user_email=$_GET['user_email'];
 }  
 $user_name="";
 if(isset($_GET['user_name'])){
@@ -19,9 +19,9 @@ if(isset($_GET['user_name'])){
                     <div class="row">
                       <form>
                         <div class="row">
-                          {{-- <div class="col">
-                            <input type="text" name="product_name"  id="product_name" value="{{$product_name}}" class="form-control" placeholder="Product name">
-                          </div> --}}
+                          <div class="col">
+                            <input type="text" name="user_email"  id="user_email" value="{{$user_email}}" class="form-control" placeholder="User Email">
+                          </div>
                           <div class="col">
                             <input type="text" name="user_name" id="user_name" value="{{$user_name}}" class="form-control" placeholder="User First name">
                           </div>
@@ -51,6 +51,7 @@ if(isset($_GET['user_name'])){
                           <tr>
                               <th>Sno.</th>
                               <th>User Name</th>
+                              <th>User Email</th>
                               <th>User Orders</th>
                           </tr>
                       </thead>
@@ -58,6 +59,7 @@ if(isset($_GET['user_name'])){
                           <tr>
                               <th>Sno.</th>
                               <th>User Name</th>
+                              <th>User Email</th>
                               <th>User Orders</th>
                           </tr>
                       </tfoot>
@@ -73,7 +75,7 @@ if(isset($_GET['user_name'])){
               $(document).ready(function() {
                 let arr=[];
                 var user_name=$('#user_name').val();
-                var product_name=$('#product_name').val();
+                var user_email=$('#user_email').val();
               $.fn.dataTable.ext.errMode = 'none';
                   $('#display_cat').DataTable({
                       'responsive': true,
@@ -82,7 +84,7 @@ if(isset($_GET['user_name'])){
                 
                     "serverSide": true,
                       "ajax":{
-                               "url": '{{route('display_usersalesreport')}}?product_name='+product_name+'&user_name='+user_name,
+                               "url": '{{route('display_usersalesreport')}}?user_email='+user_email+'&user_name='+user_name,
                                "dataType": "json",
                                "type": "POST",
                                "data":{ _token: "{{csrf_token()}}"},
@@ -105,6 +107,7 @@ if(isset($_GET['user_name'])){
                       "columns": [
                         { "data": "id" },
                         { "data": "user_name" },
+                        { "data": "user_email" },
                         { "data": "cnt" },
                       ],
                       'columnDefs': [ {

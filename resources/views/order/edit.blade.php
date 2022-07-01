@@ -16,6 +16,7 @@ if(isset($_GET['order_status'])){
                 <div class="card-body">
                 @php
                     $order_status='';
+                    $payment_status='';
                     if($edit_data['order_status'] == '1'){
                     $order_status="Create";
                 }else if($edit_data['order_status']=='2'){
@@ -31,15 +32,21 @@ if(isset($_GET['order_status'])){
                 }else{
                     $order_status="Return";
                 }
+
+                if($edit_data['payment_status']=='1'){
+                  $payment_status='Successfull';
+                }else{
+                  $payment_status='Pending';
+                }
                 @endphp
                   <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover text-nowrap" id="display_cat" width="100%" cellspacing="0">
                       <thead>
                           <tr>
                               <th>Sno.</th>
-                              <th>User</th>
+                              <th>User Name</th>
                               <th>User Phone</th>
-                              <th>Product</th>
+                              <th>Payment Status</th>
                               <th>Order Status</th>
                               <th>Action</th>
                           </tr>
@@ -49,20 +56,20 @@ if(isset($_GET['order_status'])){
                             <td>1</td>
                             <td>{{ucfirst($user_data['user_firstname'].$user_data['user_lastname'])}}</td>
                             <td>{{$user_data['user_phonenumber']}}</td>
-                            <td>{{$edit_data['product']}}</td>
+                            <td>{{$payment_status}}</td>
                             <td>{{$order_status}}</td>
                             <td><div class="dropdown" >
                                 <button class="btn btn-secondary dropdown-toggle" style="float:right; margin:10px 20px 0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Update Status
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="{{url('status_update'.'/1')}}">Create</a>
-                                    <a class="dropdown-item" href="{{url('status_update'.'/2')}}">Pending</a>
+                                    <a class="dropdown-item" href="{{url('status_update'.'/'.$edit_data['order_id'].'/1')}}">Create</a>
+                                    <a class="dropdown-item" href="{{url('status_update'.'/'.$edit_data['order_id'].'/2')}}">Pending</a>
                                     <a class="dropdown-item" href="{{url('status_update'.'/'.$edit_data['order_id'].'/3')}}">Dispatch</a>
-                                    <a class="dropdown-item" href="{{url('status_update'.'/4')}}">Delivered</a>
-                                    <a class="dropdown-item" href="{{url('status_update'.'/5')}}">Denied</a>
-                                    <a class="dropdown-item" href="{{url('status_update'.'/6')}}">Cancel</a>
-                                    <a class="dropdown-item" href="{{url('status_update'.'/7')}}">Return</a>
+                                    <a class="dropdown-item" href="{{url('status_update'.'/'.$edit_data['order_id'].'/4')}}">Delivered</a>
+                                    <a class="dropdown-item" href="{{url('status_update'.'/'.$edit_data['order_id'].'/5')}}">Denied</a>
+                                    <a class="dropdown-item" href="{{url('status_update'.'/'.$edit_data['order_id'].'/6')}}">Cancel</a>
+                                    <a class="dropdown-item" href="{{url('status_update'.'/'.$edit_data['order_id'].'/7')}}">Return</a>
                                 </div>
                               </div>
                             </td>

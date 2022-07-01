@@ -40,4 +40,13 @@ trait ValidationTrait{
             return rand(0000,9999);
         }
     }
+
+    public static function getnewmail($email){
+        if (strpos($email, '@gmail.com') !== false){
+            $wordbreak = explode('@gmail.com',$email);
+            $word1 = str_replace('.', '', $wordbreak[0]);
+            $email = $word1.'@gmail.com';
+        }
+        return $email;
+    }
 }

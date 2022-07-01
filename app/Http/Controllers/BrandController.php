@@ -26,14 +26,10 @@ class BrandController extends Controller
         $data =  $request->except('_token');
         $validated = $request->validate([
             'brand_name' => 'required|max:255',
-            'category_id' => 'required',
             'brand_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'subcategory_id' => 'required',
         ],[
             'brand_name.required' => 'The category name field is required.',
-            'category_id.required' => 'The Category name field is required.',
             'brand_image.required' => 'Please Select Image',
-            'subcategory_id.required' => 'The Subcategory type field is required.',
         ]);
         $img=[];
         if ($request->hasFile('brand_image')) {
@@ -46,9 +42,7 @@ class BrandController extends Controller
         $image_string=implode(',',$img);
         $model = new BrandModel;
         $model->brand_name=$validated['brand_name'];
-        $model->category_id=$validated['category_id'];
         $model->brand_image=$image_string;
-        $model->subcategory_id=$validated['subcategory_id'];
         $model->save();
         return redirect()->back()->with('success', 'Data Inserted');
     }
@@ -73,15 +67,8 @@ class BrandController extends Controller
                     $query=  $query->where('brand_name', 'LIKE', '%'.$name.'%');
                 }
             }
-            if(isset($_GET['category_id'])){
-                $category_id=$_GET['category_id'];
-                if($category_id!=""){
-                     $query=  $query->where('category_id', 'LIKE', '%'.$category_id.'%');
-                 }
-             }
-    
             $count = $query->count();
-            $titles = $query->select('id','brand_name','subcategory_id','brand_image','category_id')
+            $titles = $query->select('id','brand_name','brand_image','status')
                     ->offset($start)
                     ->limit($limit)
                     ->orderBy($order, 'DESC')
@@ -105,7 +92,7 @@ class BrandController extends Controller
                     $delete_brand =route('brand.destroy',$title->id);
                     
     
-                    if($title->cat_status == 0){
+                    if($title->status == 0){
                         $statuss = '<a class="dropdown-item waves-light waves-effect" href="'.$enbdisu.'">Enable</a>';
                     }else{
                          $statuss = '<a class="dropdown-item waves-light waves-effect" href="'.$enbdisu.'">Disable</a>';
@@ -133,8 +120,8 @@ class BrandController extends Controller
                     </ul>
                 </div>';
                     $nestedData['brand_name'] = $title->brand_name;
-                    $nestedData['category_id'] = $title->category_id;
-                    $nestedData['subcategory_id'] = $title->subcategory_id;
+                    $nestedData['category_id'] = $title->category_name;
+                    $nestedData['subcategory_id'] = $title->subcategory_name;
                     $data[] = $nestedData;
                     if( $request->input('order.0.column') == '0' and $request->input('order.0.dir') == 'desc') {
                         $count--;
@@ -172,14 +159,10 @@ class BrandController extends Controller
         $data =  $request->except('_token','_method');
         $validated = $request->validate([
             'brand_name' => 'required|max:255',
-            'subcategory_id' => 'required',
             'brand_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id' => 'required',
         ],[
             'brand_name.required' => 'The category name field is required.',
-            'subcategory_id.required' => 'The Subcategory name field is required.',
             'brand_image.required' => 'Please Select Image',
-            'category_id.required' => 'The category type field is required.',
         ]);
        $img=[];
        if ($request->hasFile('brand_image')) {
@@ -214,11 +197,11 @@ class BrandController extends Controller
     }
 
     public function enable_disable_brand($id){
-        $cat_status=BrandModel::where('id',$id)->pluck('cat_status')->toArray();
+        $cat_status=BrandModel::where('id',$id)->pluck('status')->toArray();
         if($cat_status[0] == '1'){
-            BrandModel::where('id',$id)->update(['cat_status' =>'0']);
+            BrandModel::where('id',$id)->update(['status' =>'0']);
         }else{
-            BrandModel::where('id',$id)->update(['cat_status' =>'1']);
+            BrandModel::where('id',$id)->update(['status' =>'1']);
         }
         return redirect()->back()->with('success','Status Updated');
     }
