@@ -32,7 +32,7 @@ class ProductController extends Controller
     }
     public function trendingproduct(Request $request){
         if($request->isMethod('get')){
-            $productdata=OrderModel::pluck('product')->limit(10)->join(',');
+            $productdata=OrderModel::limit(10)->pluck('product')->join(',');
             $order_p=explode(',',$productdata);
             $p_id=array_unique($order_p);
             $t_products=ProductModel::whereIn('id',$p_id)->where('status','1')->get();
