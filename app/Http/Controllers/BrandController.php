@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\BrandModel;
+use App\Models\CategoryModel;
 use Illuminate\Http\Request;
 use PDF;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,7 +18,8 @@ class BrandController extends Controller
    
     public function create()
     {
-        return view('brand.add_brand');
+        $category=CategoryModel::all();
+        return view('brand.add_brand',compact('category'));
     }
 
     
@@ -26,9 +28,13 @@ class BrandController extends Controller
         $data =  $request->except('_token');
         $validated = $request->validate([
             'brand_name' => 'required|max:255',
+            'category_id' => 'required|max:255',
+            'subcategory_id' => 'required|max:255',
             'brand_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],[
-            'brand_name.required' => 'The category name field is required.',
+            'brand_name.required' => 'The Brand name field is required.',
+            'category_id.required' => 'The category  field is required.',
+            'subcategory_id.required' => 'The subcategory  field is required.',
             'brand_image.required' => 'Please Select Image',
         ]);
         $img=[];
@@ -42,6 +48,8 @@ class BrandController extends Controller
         $image_string=implode(',',$img);
         $model = new BrandModel;
         $model->brand_name=$validated['brand_name'];
+        $model->category_id=$validated['category_id'];
+        $model->subcategory_id=$validated['subcategory_id'];
         $model->brand_image=$image_string;
         $model->save();
         return redirect()->back()->with('success', 'Data Inserted');
@@ -149,8 +157,9 @@ class BrandController extends Controller
     
     public function edit($id)
     {
+        $category=CategoryModel::all();
         $edit_brand=BrandModel::where('id',$id)->first();
-        return view('brand.edit_brand',compact('edit_brand'));
+        return view('brand.edit_brand',compact('edit_brand','category'));
     }
 
     
@@ -159,10 +168,14 @@ class BrandController extends Controller
         $data =  $request->except('_token','_method');
         $validated = $request->validate([
             'brand_name' => 'required|max:255',
-            'brand_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category_id' => 'required|max:255',
+            'subcategory_id' => 'required|max:255',
+            // 'brand_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],[
-            'brand_name.required' => 'The category name field is required.',
-            'brand_image.required' => 'Please Select Image',
+            'brand_name.required' => 'The category  field is required.',
+            'subcategory_id.required' => 'The subcategory  field is required.',
+            'category_id.required' => 'The category  field is required.',
+            // 'brand_image.required' => 'Please Select Image',
         ]);
        $img=[];
        if ($request->hasFile('brand_image')) {
@@ -228,5 +241,10 @@ class BrandController extends Controller
     }
     public function create_csv_brand(){
         return Excel::download(new BrandModel(), 'category.xlsx');
+    }
+
+    public function brand_name(Request $request){
+        $data = BrandModel::where('category_id',$request->category_id)->where('subcategory_id',$request->subcategory_id)->get();
+        return response(['data' => $data, 'message'=>"data fatch successfully"]);
     }
 }

@@ -122,7 +122,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#banner" aria-expanded="false" aria-controls="banner">
-            <i class="typcn typcn-globe-outline menu-icon"></i>
+            <i class="typcn typcn-image-outline menu-icon"></i>
             <span class="menu-title">Banner</span>
             <i class="menu-arrow"></i>
           </a>
@@ -135,7 +135,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#users" aria-expanded="false" aria-controls="user">
-            <i class="typcn typcn-globe-outline menu-icon"></i>
+            <i class="typcn typcn-user-outline menu-icon"></i>
             <span class="menu-title">Users</span>
             <i class="menu-arrow"></i>
           </a>
@@ -148,13 +148,13 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#support" aria-expanded="false" aria-controls="support">
-            <i class="typcn typcn-globe-outline menu-icon"></i>
+            <i class="typcn typcn-business-card menu-icon"></i>
             <span class="menu-title">Support Tickets</span>
             <i class="menu-arrow"></i>
           </a>
           <div class="collapse" id="support">
             <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{{asset('public/pages/samples/error-404.html')}}">All Sliders </a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{route('customersupport.index')}}">View Tieckets </a></li>
               
             </ul>
           </div>

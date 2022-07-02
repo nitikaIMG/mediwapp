@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\SalesReport;
+use App\Http\Controllers\SupportController;
 use Illuminate\Support\Facades\Auth;
 
 Route::any('/', function () {
@@ -42,6 +43,7 @@ Route::get('enable_disable_brand/{id}',[BrandController::class,'enable_disable_b
 Route::get('brand_multiple_delete',[BrandController::class,'brand_multiple_delete'])->name('brand_multiple_delete');
 Route::get('create_pdf_brand',[BrandController::class,'create_pdf_brand']);
 Route::get('create_csv_brand',[BrandController::class,'create_csv_brand']);
+Route::post('brand_name',[BrandController::class,'brand_name'])->name('brand_name');
 
 //Subcategory Route
 Route::resource('subcategory',SubcategoryController::class);
@@ -102,4 +104,9 @@ Route::post('display_productsalesreport',[SalesReport::class,'display_productsal
 
 //banner
 Route::resource('banner',BannerController::class);
+
+//customer support
+Route::resource('customersupport',SupportController::class);
+Route::post('displaysupport',[SupportController::class,'displaysupport'])->name('displaysupport');
+
 });

@@ -23,7 +23,7 @@
             <img src="{{asset('public/banner/'.$edit_data['banner'])}}" height="50px" width="50px">
 
             <div class="row pt-4">
-              <label for="exampleInputName1">Slider Title</label>
+              <label for="exampleInputName1">Banner Type</label>
               <input type="text" name="banner_url" class="form-control"  value="{{$edit_data['banner_url']}}" id="exampleInputName1"  placeholder="Url">
             </div>
         <button type="submit" class="btn btn-primary mr-2 mt-2">Submit</button>

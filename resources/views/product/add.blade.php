@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="exampleSelectGender">Subcategory</label>
-                    <select name="subcategory_id" class="form-control" id="sub_cat_id">
+                    <select name="subcategory_id" class="form-control" onchange="select_brand();"id="sub_cat_id">
                         <option disabled selected value> -- select an option -- </option>
                         {{-- @foreach($subcategory as $subcat)
                         <option {{ old('subcategory_id') == $subcat->id ? "selected" : "" }} value="{{$subcat->id}}" >{{$subcat->subcategory_name}}</option>
@@ -67,11 +67,11 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="exampleSelectGender">Brand Name</label>
-                    <select name="brand_image" class="form-control" id="">
+                    <select name="brand_image" class="form-control" id="brand_name_id">
                         <option disabled selected value> -- select an option -- </option>
-                        @foreach($brand_name as $brand)
+                        {{-- @foreach($brand_name as $brand)
                         <option {{ old('brand_name') == $brand->id ? "selected" : "" }} value="{{$brand->id}}" >{{$brand->brand_name}}</option>
-                        @endforeach
+                        @endforeach --}}
                     </select>
                     
                 </div>
@@ -111,7 +111,7 @@
          function select_subcategory(){
             var cat_val=$('#cat').val();
             $.ajax({
-                url:"{{route('get_subcat')}}",
+            url:"{{route('get_subcat')}}",
                 data:{
                   'id': cat_val,
                   "_token": "{{ csrf_token() }}"  
@@ -123,6 +123,28 @@
                         $('#sub_cat_id').append('<option value="'+subcategory.id+'">'+subcategory.subcategory_name+'</option>');
                     })
                 }
+            });
+         }
+
+
+         function select_brand(){
+            var cat_val=$('#cat').val();
+            var sub_cat_val = $('#sub_cat_id').val();
+            $.ajax({
+               url:"{{route('brand_name')}}",
+               data:{
+                   'category_id':cat_val,
+                   'subcategory_id':sub_cat_val,
+                   "_token": "{{ csrf_token() }}" 
+               },
+               type:'post',
+               datatype:'json',
+               success:function(data){
+                $.each(data.data,function(index,brandname){
+                    $('#brand_name_id').append('<option value="'+brandname.id+'">'+brandname.brand_name+'</option>');
+                })
+               }
+
             });
          }
      </script>

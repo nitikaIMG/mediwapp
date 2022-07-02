@@ -1,37 +1,29 @@
 @extends('layouts.home')
 @section('content')
 @php
-$product_name="";
-if(isset($_GET['product_name'])){
-  $product_name=$_GET['product_name'];
-}  
-$category_id="";
-if(isset($_GET['category_id'])){
-  $category_id=$_GET['category_id'];
+$slider_title="";
+if(isset($_GET['slider_title'])){
+  $slider_title=$_GET['slider_title'];
 }  
 @endphp
 <div class="col-lg-10 grid-margin stretch-card">
               <div class="card">
                   <div class="card-header">
-                    Product Filteration
+                    Customer Support
                   </div>
                   <div class="card-body">
                     <div class="row">
                       <form>
                         <div class="row">
                           <div class="col">
-                            <input type="text" name="product_name"  id="product_name" value="{{$product_name}}" class="form-control" placeholder="Product name">
+                            <input type="text" name="slider_title"  id="slider_title" value="{{$slider_title}}" class="form-control" placeholder="Slider Title">
                           </div>
-                          <div class="col">
-                            <input type="text" name="category_id" id="category_id" value="{{$category_id}}" class="form-control" placeholder="Category name">
-                          </div>
+                         
                         </div>
                         <div class="row">
                           <div class="col-md-3 pt-4">
-                            <a class="btn" href="{{route('product.create')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-plus text-white"></i></a>
-                            <a class="btn delete_all" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-trash text-white"></i></a>
-                            <a class="btn" href="{{url('create_pdf_product')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-file-pdf-o text-white"></i></a>
-                            <a class="btn" href="{{url('create_csv_product')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-file-excel-o text-white"></i></a>
+                            <a class="btn" href="{{route('slider.create')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-plus text-white"></i></a>
+                            <a class="btn multiple_delete" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-trash text-white"></i></a>
                           </div>
                           <div class="col-md-6">
                             {{-- blank --}}
@@ -45,8 +37,7 @@ if(isset($_GET['category_id'])){
                       </form>
                     </div>
                   </div>
-                <h5 class="card-header">Products</h5>
-                  
+                <h5 class="card-header">SLIDER</h5>
                 <div class="card-body">
                   
                   <div class="table-responsive">
@@ -55,12 +46,9 @@ if(isset($_GET['category_id'])){
                           <tr>
                               <th><input type="checkbox" name=" chk_box" id="mult_del"></th>
                               <th>Sno.</th>
-                              <th>Product Image</th>
-                              <th>Product Name</th>
-                              <th>Category Name</th>
-                              <th>Subcategory Name</th>
-                              <th>Price</th>
-                              <th>Package Type</th>
+                              <th>Ticket Number</th>
+                              <th>User Name</th>
+                              <th>User Phone Number</th>
                               <th>Action</th>
                           </tr>
                       </thead>
@@ -68,12 +56,9 @@ if(isset($_GET['category_id'])){
                           <tr>
                             <th>#D</th>
                               <th>Sno.</th>
-                              <th>Product Image</th>
-                              <th>Product Name</th>
-                              <th>Category Name</th>
-                              <th>Subcategory Name</th>
-                              <th>Price</th>
-                              <th>Package Type</th>
+                              <th>Ticket Number</th>
+                              <th>User Name</th>
+                              <th>User Phone Number</th>
                               <th>Action</th>
                           </tr>
                       </tfoot>
@@ -88,8 +73,7 @@ if(isset($_GET['category_id'])){
             <script type="text/javascript">
               $(document).ready(function() {
                 let arr=[];
-                var category_id=$('#category_id').val();
-                var product_name=$('#product_name').val();
+                var slider_title=$('#slider_title').val();
               $.fn.dataTable.ext.errMode = 'none';
                   $('#display_cat').DataTable({
                       'responsive': true,
@@ -98,7 +82,7 @@ if(isset($_GET['category_id'])){
                 
                     "serverSide": true,
                       "ajax":{
-                               "url": '{{route('display_product')}}?product_name='+product_name+'&category_id='+category_id,
+                               "url": '{{route('displaysupport')}}?slider_title='+slider_title,
                                "dataType": "json",
                                "type": "POST",
                                "data":{ _token: "{{csrf_token()}}"},
@@ -119,15 +103,12 @@ if(isset($_GET['category_id'])){
                          }
                      ],
                       "columns": [
-                          { "data": "multidelete" },
-                          { "data": "id" },
-                          { "data": "product_image" },
-                          { "data": "product_name" },
-                          { "data": "category_name" },
-                          { "data": "subcategory_name" },
-                          { "data": "price" },
-                          { "data": "package_type" },
-                          { "data": "action" },
+                        { "data": "multidelete" },
+                        { "data": "id" },
+                        { "data": "slider_title" },
+                        { "data": "action" },
+                        { "data": "action" },
+                        { "data": "action" },
                       ],
                       'columnDefs': [ {
                       'targets': [0],
@@ -147,7 +128,7 @@ if(isset($_GET['category_id'])){
                       $(".sub_chk").prop('checked',false);  
                    }  
                   });
-                  $('.delete_all').on('click', function(e) {
+                  $('.multiple_delete').on('click', function(e) {
                       var allVals = [];  
                       $(".sub_chk:checked").each(function() {  
                           allVals.push($(this).attr('data-id'));
@@ -160,7 +141,7 @@ if(isset($_GET['category_id'])){
                           if(check == true){  
                               var join_selected_values = allVals.join(",");
                               $.ajax({
-                                  url: '{{route('multiple_delete_product')}}',
+                                  url: '{{route('multiple_delete_slider')}}',
                                   type: 'GET',
                                   headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                   data: 'ids='+join_selected_values,

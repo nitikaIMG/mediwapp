@@ -12,6 +12,7 @@
                 <h5 class="card-header">Banner</h5>
                 <div class="card-body">
                   <div class="table-responsive">
+                    
                     <table class="table table-bordered table-striped table-hover text-nowrap" id="display_cat" width="100%" cellspacing="0">
                       <thead>
                           <tr>
@@ -21,9 +22,10 @@
                               <th>Action</th>
                           </tr>
                       </thead>
+                      
+                      @if(!empty($banner_data))
                         @foreach ($banner_data as $item)
                           <tr>
-                            
                             <td>{{$i++}}</td>
                             <td><img src="{{asset('public/banner/'.$item['banner'])}}" height="50px" width="50px"></td>
                             <td>{{$item['banner_url']}}</td>
@@ -43,7 +45,11 @@
                               </ul>
                           </div></td>
                           </tr>
+                        
                         @endforeach
+                        @else
+                          <h1>No data</h1>
+                        @endif
                       <tbody>
                       </tbody>
                   </table>

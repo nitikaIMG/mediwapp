@@ -13,7 +13,13 @@ class BannerController extends Controller
         $banner_data=BannerModel::select('banner_url','banner')->get();
         $data=$banner_data->map(function($item, $key){
             return collect($item->attributesToArray())->map(function($value, $index){
-                return (!empty($value))?$value:'';  
+                // dump($value);
+                if($index =='banner'){
+                    return (!empty($value))?asset('public/banner/'.$value):'';
+                }else{
+                    return (!empty($value))?$value:'';
+                }
+                  
             });
             return $item;
         });

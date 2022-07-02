@@ -71,12 +71,12 @@ class CategoryController extends Controller
         $model->category_name=$validated['category_name'];
         $model->category_image=$image_string;
         $model->banner=$banner_image_string;
-        $model->category_type=$validated['category_type'];
+        // $model->category_type=$validated['category_type'];
         $model->cat_desc=$validated['cat_desc'];
         $model->meta_title=$validated['meta_title'];
         $model->meta_keyword=$validated['meta_keyword'];
         $model->meta_description=$validated['meta_description'];
-        $model->cat_status=$validated['cat_status'];
+        // $model->cat_status=$validated['cat_status'];
         $model->save();
         return redirect()->back()->with('success', 'Data Inserted');   
 
