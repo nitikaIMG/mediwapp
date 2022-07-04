@@ -14,6 +14,15 @@ class CategoryController extends Controller
    use ValidationTrait;
    public function index(Request $request){
       $category=CategoryModel::where('cat_status','1')->get();
-      return ApiResponse::ok('Successfully Fetch data',$category);
+      $data = [];
+      foreach($category as $kry => $cat){
+         $catdata['id'] = ($cat->id!=null)?$cat->id:"";
+         $catdata['category_name'] = ($cat->category_name!=null)?$cat->category_name:"";
+         $catdata['category_image'] = ($cat->category_image!=null)?$cat->category_image:"";
+         $catdata['cat_status'] = ($cat->cat_status!=null)?$cat->cat_status:"";
+         $catdata['banner'] = ($cat->banner!=null)?$cat->banner:"";
+         $data[] = $catdata;
+      }
+      return ApiResponse::ok('Successfully Fetch data',$data);
    }
 }
