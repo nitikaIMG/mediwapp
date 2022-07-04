@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class SupportModel extends Model
 {
     use HasFactory;
-    protected $table = 'customersupport';
+    protected $table = 'customer_support';
     protected $guarded = [];
 }

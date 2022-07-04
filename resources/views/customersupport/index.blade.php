@@ -1,9 +1,9 @@
 @extends('layouts.home')
 @section('content')
 @php
-$slider_title="";
-if(isset($_GET['slider_title'])){
-  $slider_title=$_GET['slider_title'];
+$ticket_number="";
+if(isset($_GET['ticket_number'])){
+  $ticket_number=$_GET['ticket_number'];
 }  
 @endphp
 <div class="col-lg-10 grid-margin stretch-card">
@@ -16,13 +16,12 @@ if(isset($_GET['slider_title'])){
                       <form>
                         <div class="row">
                           <div class="col">
-                            <input type="text" name="slider_title"  id="slider_title" value="{{$slider_title}}" class="form-control" placeholder="Slider Title">
+                            <input type="text" name="ticket_number"  id="ticket_number" value="{{$ticket_number}}" class="form-control" placeholder="Ticket Number">
                           </div>
                          
                         </div>
                         <div class="row">
                           <div class="col-md-3 pt-4">
-                            <a class="btn" href="{{route('slider.create')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-plus text-white"></i></a>
                             <a class="btn multiple_delete" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-trash text-white"></i></a>
                           </div>
                           <div class="col-md-6">
@@ -73,7 +72,7 @@ if(isset($_GET['slider_title'])){
             <script type="text/javascript">
               $(document).ready(function() {
                 let arr=[];
-                var slider_title=$('#slider_title').val();
+                var ticket_number=$('#ticket_number').val();
               $.fn.dataTable.ext.errMode = 'none';
                   $('#display_cat').DataTable({
                       'responsive': true,
@@ -82,7 +81,7 @@ if(isset($_GET['slider_title'])){
                 
                     "serverSide": true,
                       "ajax":{
-                               "url": '{{route('displaysupport')}}?slider_title='+slider_title,
+                               "url": '{{route('displaysupport')}}?ticket_number='+ticket_number,
                                "dataType": "json",
                                "type": "POST",
                                "data":{ _token: "{{csrf_token()}}"},
@@ -105,9 +104,9 @@ if(isset($_GET['slider_title'])){
                       "columns": [
                         { "data": "multidelete" },
                         { "data": "id" },
-                        { "data": "slider_title" },
-                        { "data": "action" },
-                        { "data": "action" },
+                        { "data": "ticket_number" },
+                        { "data": "user_name" },
+                        { "data": "user_phonenumber" },
                         { "data": "action" },
                       ],
                       'columnDefs': [ {
