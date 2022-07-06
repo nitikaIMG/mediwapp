@@ -31,6 +31,8 @@ class UserController extends Controller
         $validated = $request->validate([
             'user_firstname' => 'required|max:255',
             'user_lastname' => 'required',
+            'gender' => 'required',
+            'dob' => 'required',
             'user_email' => 'required|email|unique:user,user_email',
             'user_phonenumber' => 'required',
             'user_password' => 'required',
@@ -39,6 +41,8 @@ class UserController extends Controller
         ],[
             'user_firstname.required' => 'The First Name  is required.',
             'user_lastname.required' => 'The Last Name  is required.',
+            'dob.required' => 'The dob  is required.',
+            'gender.required' => 'The gender  is required.',
             'user_email.required' => 'The Email  is required.',
             'user_phonenumber.required' => 'The Phone Number  is required.',
             'user_password.required' => 'The Password is required.',
@@ -63,6 +67,8 @@ class UserController extends Controller
         $model->user_phonenumber=$validated['user_phonenumber'];
         $model->user_password=Hash::make($validated['user_password']);
         $model->user_address=$validated['user_address'];
+        $model->dob=$validated['dob'];
+        $model->gender=$validated['gender'];
 
         $model->save();
         return redirect()->back()->with('success', 'Data Inserted'); 
@@ -194,7 +200,8 @@ class UserController extends Controller
         $validated = $request->validate([
             'user_firstname' => 'required|max:255',
             'user_lastname' => 'required',
-            // 'user_email' => 'required',
+            'gender' => 'required',
+            'dob' => 'required',
             'user_phonenumber' => 'required',
             'user_password' => 'required',
             'user_address' => 'required',
@@ -202,7 +209,8 @@ class UserController extends Controller
         ],[
             'user_firstname.required' => 'The First Name  is required.',
             'user_lastname.required' => 'The Last Name  is required.',
-            // 'user_email.required' => 'The Email  is required.',
+            'gender.required' => 'Gender  is required.',
+            'dob.required' => 'Dob is required.',
             'user_phonenumber.required' => 'The Phone Number  is required.',
             'user_password.required' => 'The Password is required.',
             'user_address.required' => 'The Address is required.',

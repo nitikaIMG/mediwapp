@@ -20,6 +20,25 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input ml-2" type="radio" name="gender" id="gender1" {{ ($edit_user['gender']=="male")? "checked" : "" }} value="male" >
+                        <label class="form-check-label" for="gender1">
+                          Male
+                        </label>
+                        <input class="form-check-input ml-2" type="radio" name="gender" id="gender2" {{ ($edit_user['gender']=="female")? "checked" : "" }} value="female" >
+                        <label class="form-check-label" for="gender2">
+                          Female
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Dob</label>
+                    <input type="date" name="dob" class="form-control"  value="{{$edit_user['dob']}}" id="exampleInputName1"  placeholder="Dob">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
                     <label for="exampleInputName1">Email</label>
                     <input type="text" name="user_email" class="form-control"  value="{{$edit_user['user_email']}}" id="exampleInputName1"  placeholder=" User Name"  disabled>
                 </div>

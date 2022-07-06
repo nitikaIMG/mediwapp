@@ -14,7 +14,7 @@ class BannerController extends Controller
         $data=$banner_data->map(function($item, $key){
             return collect($item->attributesToArray())->map(function($value, $index){
                 if($index =='banner'){
-                    return (!empty($value))?asset('public/banner/'.$value):'';
+                    return (!empty($value))?asset('public/banner').'/'.$value:'';
                 }else{
                     return (!empty($value))?$value:'';
                 }

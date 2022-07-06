@@ -31,7 +31,7 @@ class CategoryController extends Controller
          }
          $catdata['id'] = ($cat->id!=null)?$cat->id:"";
          $catdata['category_name'] = ($cat->category_name!=null)?$cat->category_name:"";
-         $catdata['category_image'] = ($cat->category_image!=null)?$cat->category_image:"";
+         $catdata['category_image'] = ($cat->category_image!=null)?asset('public/category_image').'/'.$cat->category_image:"";
          $catdata['cat_status'] = ($status!=null)?$status:"";
          $catdata['banner'] = ($cat->banner!=null)?$cat->banner:"";
          $data[] = $catdata;

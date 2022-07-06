@@ -19,6 +19,24 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input ml-2" type="radio" name="gender" id="gender1"  value="male" checked>
+                        <label class="form-check-label" for="gender1">
+                          Male
+                        </label>
+                        <input class="form-check-input ml-2" type="radio" name="gender" value="female"  id="gender2" >
+                        <label class="form-check-label" for="gender2">
+                          Female
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Dob</label>
+                    <input type="date" name="dob" class="form-control"  value="{{old('dob')}}" id="exampleInputName1"  placeholder="Dob">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
                     <label for="exampleInputName1">Email</label>
                     <input type="text" name="user_email" class="form-control"  value="{{old('user_email')}}" id="exampleInputName1"  placeholder=" User Name" automcomplete="off">
                 </div>

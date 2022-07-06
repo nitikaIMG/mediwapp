@@ -49,6 +49,7 @@ class ProductController extends Controller
                 $data['category_name']=$cat_name['category_name'];
                 $data['subcategory_name']=$subcat_name['subcategory_name'];
                 $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
+                $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
                 $data['price']=($pro->price != Null)?$pro->price:"";
                 $data['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
                 $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
@@ -79,6 +80,7 @@ class ProductController extends Controller
                 $data['category_name']=$cat_name['category_name'];
                 $data['subcategory_name']=$subcat_name['subcategory_name'];
                 $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
+                $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
                 $data['price']=($pro->price != Null)?$pro->price:"";
                 $data['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
                 $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
@@ -135,9 +137,10 @@ class ProductController extends Controller
     public function show_wishlist(Request $request){
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
-            $get_prod_id=wishlistModel::where('user_id',$user_id)->pluck('product_id');
+            $get_prod=wishlistModel::where('user_id',$user_id)->pluck('product_id');
+            $get_prod_id=$get_prod[0];
             if(!empty($get_prod_id)){
-                $explode_ids=explode(',',$get_prod_id[0]);
+                $explode_ids=explode(',',$get_prod_id);
                 $get_wishlist_prod=ProductModel::whereIn('id',$explode_ids)->get();
                 $dataa=[];
                 foreach($get_wishlist_prod as $prod){

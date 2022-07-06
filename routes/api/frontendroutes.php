@@ -6,6 +6,8 @@ use App\Http\Controllers\Apis\CategoryController;
 use App\Http\Controllers\Apis\ProductController;
 use App\Http\Controllers\Apis\UserController;
 use App\Http\Controllers\Apis\CartController;
+use App\Http\Controllers\Apis\PrescriptionController;
+use App\Models\PrescriptionModel;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/tempuser',[AuthController::class,'tempuser']);
@@ -32,10 +34,11 @@ Route::middleware('jwt.verify')->group(function() {
 
     Route::get('banner',[BannerController::class,'banner']);
 
+    Route::post('prescriptionupload',[PrescriptionController::class,'prescriptionupload']);
 
     Route::post('add_address',[UserController::class,'add_address']);
     Route::get('show_address',[UserController::class,'show_address']);
     Route::post('edit_address',[UserController::class,'edit_address']);
     Route::get('delete_address',[UserController::class,'delete_address']);
-
+    Route::post('edit_userprofile',[UserController::class,'edit_userprofile']);
 });
