@@ -60,30 +60,35 @@ class ProductController extends Controller
             $t_products=ProductModel::whereIn('id',$p_id)->where('status','1')->where('del_status',1)->get();
             $dataa=[];
             $product_fav="";
-            foreach($t_products as $pro){
-                if($pro->product_name ==0){
-                    $product_fav="No";
-                }else{
-                    $product_fav="Yes";
+            if(!empty($t_products)){
+                foreach($t_products as $pro){
+                    if($pro->product_name ==0){
+                        $product_fav="No";
+                    }else{
+                        $product_fav="Yes";
+                    }
+    
+                    $cat_id=$pro->category_id;
+                    $subcat_id=$pro->subcategory_id;
+                    $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
+                    $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
+                    $data['category_name']=$cat_name['category_name'];
+                    $data['product_id']=$pro->id;
+                    $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
+                    $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
+                    $data['price']=($pro->price != Null)?$pro->price:"";
+                    $data['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
+                    $data['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
+                    $data['product_fav']=$product_fav;
+                    $data['offer']=($pro->offer != Null)?$pro->offer:"";
+                    $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
+                    $dataa[] = $data;
                 }
-
-                $cat_id=$pro->category_id;
-                $subcat_id=$pro->subcategory_id;
-                $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
-                $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
-                $data['category_name']=$cat_name['category_name'];
-                $data['product_id']=$pro->id;
-                $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
-                $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
-                $data['price']=($pro->price != Null)?$pro->price:"";
-                $data['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
-                $data['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
-                $data['product_fav']=$product_fav;
-                $data['offer']=($pro->offer != Null)?$pro->offer:"";
-                $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
-                $dataa[] = $data;
+               return ApiResponse::ok('Trending Products',$dataa);
+            }else{
+                return ApiResponse::ok('No Data');
             }
-           return ApiResponse::ok('Trending Products',$dataa);
+            
         }else{           
             return ApiResponse::error('Unauthorise Request');
         }
