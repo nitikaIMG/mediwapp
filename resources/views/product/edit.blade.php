@@ -98,6 +98,19 @@
                         <label for="exampleInputName1">Offer Type</label>
                         <input type="text" name="offer_type" class="form-control"  value="{{$edit_data['offer_type']}}" id="exampleInputName1"  placeholder=" Offer Type">
                     </div>
+
+                    
+                <div class="form-group col-md-6">
+                    <label for="exampleSelectGender">Health Goal</label>
+                    <select name="health_goal"  class="form-control" id="cat">
+                        <option disabled selected value> -- select an option -- </option>
+                        @foreach($health_goal as $health)
+                        <option {{ old('health_goal') == $health->id ? "selected" : "" }} value="{{$health->id}}" >{{$health->health_goals}}</option>
+                        @endforeach
+                    </select>
+                   
+                </div>
+                
                 </div>
                 <label for="exampleSelectGender">Product Description</label>
                 <textarea class="ckeditor form-control" id="ck" name="prod_desc">{{$edit_data['prod_desc']}}</textarea>
