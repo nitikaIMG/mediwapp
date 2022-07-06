@@ -193,7 +193,7 @@ class ProductController extends Controller
                 $data['offer_type']=($get_product['offer_type'] != Null)?$get_product['offer']:"";
                 $data['category_name']=($category['category_name'] != Null)?$category['category_name']:"";
                 $data['subcategory_name']=($subcat_name['subcategory_name'] != Null)?$subcat_name['subcategory_name']:"";
-                return ApiResponse::error('Success Fetched Data',$data);
+                return ApiResponse::ok('Success Fetched Data',$data);
             }
            
         }else{
