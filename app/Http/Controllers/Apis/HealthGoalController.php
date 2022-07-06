@@ -15,6 +15,7 @@ class HealthGoalController extends Controller
             $data = [];
             foreach ($all_goals as $gole_key => $goal) {
                 $products = $goal->products;
+                $goal['image']=asset('public/health/'.$goal['image']);
                 $data[$gole_key] = $goal;
                 $arr = ['created_at'];
                 $data[$gole_key]['products'] = $products;
