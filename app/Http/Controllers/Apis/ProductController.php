@@ -26,18 +26,26 @@ class ProductController extends Controller
         if($request->isMethod('get')){
             $disc_prod=ProductModel::where('offer','!=','NULL')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
             $data=[];
+            $product_fav="";
             foreach($disc_prod as $key => $product){
+                if($product['product_name'] ==0){
+                    $product_fav="No";
+                }else{
+                    $product_fav="Yes";
+                }
                 $category_id=$product['category_id'];
                 $subcategory_id=$product['subcategory_id'];
                 $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
                 $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
+                $data['product_id']=$product['id'];
                 $data['product_image'] = asset('public/product_image').'/'.$product['product_image'];
-                $data['product_name'] = $product['product_name'];
-                $data['category_name'] = $category['category_name'];
-                $data['subcategory_name'] =  $subcat_name['subcategory_name'];
-                $data['offer'] = $product['offer'];
-                $data['package_type'] = $product['package_type'];
-                $data['price'] = $product['price'];
+                $data['product_name'] = (!empty($product['product_name']))?$product['product_name']:"";
+                $data['category_name'] = (!empty($product['category_name']))?$product['category_name']:"";
+                $data['description']=(!empty($product['prod_desc']))?$product['prod_desc']:"";
+                $data['product_rating']=(!empty($product['product_rating']))?$product['product_rating']:"";
+                $data['product_fav'] = $product_fav;
+                $data['price'] = (!empty($product['price']))?$product['price']:"";
+                $data['offer'] = (!empty($product['offer']))?$product['offer']:"";
             }
            return ApiResponse::ok('Discounted Products',[$data]);
         }else{
@@ -51,18 +59,26 @@ class ProductController extends Controller
             $p_id=array_unique($order_p);
             $t_products=ProductModel::whereIn('id',$p_id)->where('status','1')->where('del_status',1)->get();
             $dataa=[];
+            $product_fav="";
             foreach($t_products as $pro){
+                if($pro->product_name ==0){
+                    $product_fav="No";
+                }else{
+                    $product_fav="Yes";
+                }
+
                 $cat_id=$pro->category_id;
                 $subcat_id=$pro->subcategory_id;
                 $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
                 $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
                 $data['category_name']=$cat_name['category_name'];
-                $data['subcategory_name']=$subcat_name['subcategory_name'];
+                $data['product_id']=$pro->id;
                 $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
                 $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
                 $data['price']=($pro->price != Null)?$pro->price:"";
-                $data['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
-                $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
+                $data['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
+                $data['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
+                $data['product_fav']=$product_fav;
                 $data['offer']=($pro->offer != Null)?$pro->offer:"";
                 $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
                 $dataa[] = $data;
@@ -82,18 +98,25 @@ class ProductController extends Controller
             $p_id=array_keys($res);
             $t_products=ProductModel::whereIn('id',$p_id)->take('15')->where('status','1')->where('del_status','1')->get();
             $dataa=[];
+            $product_fav="";
             foreach($t_products as $pro){
+                if($pro->product_name ==0){
+                    $product_fav="No";
+                }else{
+                    $product_fav="Yes";
+                }
                 $cat_id=$pro->category_id;
                 $subcat_id=$pro->subcategory_id;
                 $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
                 $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
                 $data['category_name']=$cat_name['category_name'];
-                $data['subcategory_name']=$subcat_name['subcategory_name'];
+                $data['product_id']=($pro->id != Null)?$pro->id:"";
                 $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
                 $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
                 $data['price']=($pro->price != Null)?$pro->price:"";
-                $data['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
-                $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
+                $data['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
+                $data['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
+                $data['product_fav']=$product_fav;
                 $data['offer']=($pro->offer != Null)?$pro->offer:"";
                 $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
                 $dataa[] = $data;
@@ -197,11 +220,11 @@ class ProductController extends Controller
                 $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
                 $data['singledata']['product_image']=($get_product['product_image'] != Null)?asset('public/product_image').'/'.$get_product['product_image']:"";
                 $data['singledata']['product_name']=($get_product['product_name'] != Null)?$get_product['product_name']:"";
+                $data['singledata']['product_id']=($get_product['id'] != Null)?$get_product['id']:"";
                 $data['singledata']['price']=($get_product['price'] != Null)?$get_product['price']:"";
                 $data['singledata']['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
                 $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
                 $data['singledata']['category_name']=($category['category_name'] != Null)?$category['category_name']:"";
-                $data['singledata']['subcategory_name']=($subcat_name['subcategory_name'] != Null)?$subcat_name['subcategory_name']:"";
 
                 $similiar_prod=ProductModel::where('category_id',$category_id)->limit(10)->get();
                 foreach($similiar_prod as $dd){
@@ -232,7 +255,7 @@ class ProductController extends Controller
                     $dataaaaa['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
                     $data['frequent_prod'][] = $dataaaaa;
                 }
-                    return ApiResponse::ok('Success Fetched Data',$data);
+                    return ApiResponse::ok('Success Fetched Data',[$data]);
                 }
            
         }else{
