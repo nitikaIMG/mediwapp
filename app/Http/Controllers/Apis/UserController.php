@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Apis;
 use App\Api\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\AddressModel;
+use App\Models\UserFeedbackModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JWTAuth;
@@ -123,6 +124,22 @@ class UserController extends Controller
       }
   }
 
+     public function get_user_feedback(Request $request){
+         $user_feedback = UserFeedbackModel::all();
+         $user = UserModel::join('user_feedback','user_feedback.user_id','user.id',)->select('user.user_image','user.user_firstname','user_feedback.user_feedback')->get();
+         // dd($user);
+         $dataa=[];
+         foreach($user as $user_data){
+             $data['user_firstname']=$user_data['user_firstname'];
+             $data['user_feedback']=$user_data['user_feedback'];
+             $data['user_image']=($user_data->user_image != Null)?asset('public/product_image').'/'.$user_data->user_image:"";
+             $dataa[] = $data;
+         }
+         return ApiResponse::ok("User FeedBack",$dataa);
+      }
+   
 }
+
+
 
   
