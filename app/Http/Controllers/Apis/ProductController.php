@@ -138,9 +138,8 @@ class ProductController extends Controller
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
             $get_prod=wishlistModel::where('user_id',$user_id)->pluck('product_id');
-            $get_prod_id=$get_prod[0];
-            if(!empty($get_prod_id)){
-                $explode_ids=explode(',',$get_prod_id);
+            if($get_prod->isNotEmpty()){
+                $explode_ids = $get_prod->toarray();
                 $get_wishlist_prod=ProductModel::whereIn('id',$explode_ids)->get();
                 $dataa=[];
                 foreach($get_wishlist_prod as $prod){
