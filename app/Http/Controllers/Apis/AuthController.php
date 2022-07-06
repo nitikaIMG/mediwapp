@@ -99,7 +99,7 @@ class AuthController extends Controller
                             ]
                         );
                 }else{
-                    return ApiResponse::error(
+                    return ApiResponse::ok(
                         'User already existing'
                     );
                 }
@@ -124,7 +124,7 @@ class AuthController extends Controller
                         ]
                     );
                 }else{
-                    return ApiResponse::error(
+                    return ApiResponse::ok(
                         'Invalid User'
                     );
                 }

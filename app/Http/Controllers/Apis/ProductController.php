@@ -31,7 +31,6 @@ class ProductController extends Controller
                 $subcategory_id=$product['subcategory_id'];
                 $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
                 $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
-                
                 $data['product_image'] = asset('public/product_image').'/'.$product['product_image'];
                 $data['product_name'] = $product['product_name'];
                 $data['category_name'] = $category['category_name'];
@@ -40,7 +39,7 @@ class ProductController extends Controller
                 $data['package_type'] = $product['package_type'];
                 $data['price'] = $product['price'];
             }
-           return ApiResponse::ok('Discounted Products',$data);
+           return ApiResponse::ok('Discounted Products',[$data]);
         }else{
             return ApiResponse::error('Unauthorise Request');
         }
@@ -138,7 +137,7 @@ class ProductController extends Controller
                 return ApiResponse::ok('Products Added in wishlist');
                     
             }else{
-                return ApiResponse::error('User Not LoggedIn');
+                return ApiResponse::ok('User Not LoggedIn');
             }
         }else{           
             return ApiResponse::error('Unauthorise Request');
@@ -172,7 +171,7 @@ class ProductController extends Controller
 
                 return ApiResponse::ok('Succesfully Fetchd Data',$dataa);
             }else{
-            return ApiResponse::error('No products are in wishlist');
+            return ApiResponse::ok('No products are in wishlist');
             }
         }else{
             return ApiResponse::error('Unauthorise Request');
@@ -196,19 +195,50 @@ class ProductController extends Controller
                 $subcategory_id=$get_product['subcategory_id'];
                 $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
                 $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
-                $data['product_image']=($get_product['product_image'] != Null)?$get_product['product_image']:"";
-                $data['product_name']=($get_product['product_name'] != Null)?$get_product['product_name']:"";
-                $data['price']=($get_product['price'] != Null)?$get_product['price']:"";
-                $data['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
-                $data['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
-                $data['offer_type']=($get_product['offer_type'] != Null)?$get_product['offer']:"";
-                $data['category_name']=($category['category_name'] != Null)?$category['category_name']:"";
-                $data['subcategory_name']=($subcat_name['subcategory_name'] != Null)?$subcat_name['subcategory_name']:"";
-                return ApiResponse::ok('Success Fetched Data',$data);
-            }
+                $data['singledata']['product_image']=($get_product['product_image'] != Null)?asset('public/product_image').'/'.$get_product['product_image']:"";
+                $data['singledata']['product_name']=($get_product['product_name'] != Null)?$get_product['product_name']:"";
+                $data['singledata']['price']=($get_product['price'] != Null)?$get_product['price']:"";
+                $data['singledata']['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
+                $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
+                $data['singledata']['category_name']=($category['category_name'] != Null)?$category['category_name']:"";
+                $data['singledata']['subcategory_name']=($subcat_name['subcategory_name'] != Null)?$subcat_name['subcategory_name']:"";
+
+                $similiar_prod=ProductModel::where('category_id',$category_id)->limit(10)->get();
+                foreach($similiar_prod as $dd){
+                    $dataa['product_image']=($dd['product_image'] != Null)?asset('public/product_image').'/'.$dd['product_image']:"";
+                    $dataa['product_name']=($dd['product_name'] != Null)?$dd['product_name']:"";
+                    $dataa['price']=($dd['price'] != Null)?$dd['price']:"";
+                    $data['similar_prod'][] = $dataa;
+                }
+
+                $productdata=OrderModel::limit(10)->pluck('product')->join(',');
+                $order_p=explode(',',$productdata);
+                $res = collect(array_count_values($order_p))->sortDesc()->all();
+                $p_id=array_keys($res);
+                $t_products=ProductModel::whereIn('id',$p_id)->take('15')->where('status','1')->where('del_status','1')->get();
+                foreach($t_products as $pro){
+                    $cat_id=$pro->category_id;
+                    $subcat_id=$pro->subcategory_id;
+                    $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
+                    $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
+                    $dataaaaa['category_name']=$cat_name['category_name'];
+                    $dataaaaa['subcategory_name']=$subcat_name['subcategory_name'];
+                    $dataaaaa['product_name']=($pro->product_name != Null)?$pro->product_name:"";
+                    $dataaaaa['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
+                    $dataaaaa['price']=($pro->price != Null)?$pro->price:"";
+                    $dataaaaa['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
+                    $dataaaaa['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
+                    $dataaaaa['offer']=($pro->offer != Null)?$pro->offer:"";
+                    $dataaaaa['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
+                    $data['frequent_prod'][] = $dataaaaa;
+                }
+                    return ApiResponse::ok('Success Fetched Data',$data);
+                }
            
         }else{
             return ApiResponse::error('Unauthorise Request');
         } 
     }
+
+  
 }
