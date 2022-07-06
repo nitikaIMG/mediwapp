@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserModel;
+// use App\Models\UserFeedbackModel;
 use App\Models\OrderModel;
 use App\Models\ProductModel;
 use Illuminate\Support\Facades\Hash;
@@ -298,4 +299,5 @@ class UserController extends Controller
     public function create_csv_user(){
         return Excel::download(new UserModel(), 'category.xlsx');
     }
+
 }
