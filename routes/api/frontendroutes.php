@@ -6,6 +6,7 @@ use App\Http\Controllers\Apis\CategoryController;
 use App\Http\Controllers\Apis\ProductController;
 use App\Http\Controllers\Apis\UserController;
 use App\Http\Controllers\Apis\CartController;
+use App\Http\Controllers\Apis\HealthGoalController;
 use App\Http\Controllers\Apis\PrescriptionController;
 use App\Models\PrescriptionModel;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,7 @@ Route::middleware('jwt.verify')->group(function() {
     Route::post('addcart',[CartController::class,'addcart']);
 
     Route::get('userprofile',[UserController::class,'userprofile']);
+    Route::get('healthgoals',[HealthGoalController::class,'healthgoal']);
 
     Route::get('banner',[BannerController::class,'banner']);
 

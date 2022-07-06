@@ -27,7 +27,18 @@ class ProductController extends Controller
             $disc_prod=ProductModel::where('offer','!=','NULL')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
             $data=[];
             foreach($disc_prod as $key => $product){
-                $data[] = $product;
+                $category_id=$product['category_id'];
+                $subcategory_id=$product['subcategory_id'];
+                $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
+                $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
+                
+                $data['product_image'] = asset('public/product_image').'/'.$product['product_image'];
+                $data['product_name'] = $product['product_name'];
+                $data['category_name'] = $category['category_name'];
+                $data['subcategory_name'] =  $subcat_name['subcategory_name'];
+                $data['offer'] = $product['offer'];
+                $data['package_type'] = $product['package_type'];
+                $data['price'] = $product['price'];
             }
            return ApiResponse::ok('Discounted Products',$data);
         }else{
@@ -193,7 +204,7 @@ class ProductController extends Controller
                 $data['offer_type']=($get_product['offer_type'] != Null)?$get_product['offer']:"";
                 $data['category_name']=($category['category_name'] != Null)?$category['category_name']:"";
                 $data['subcategory_name']=($subcat_name['subcategory_name'] != Null)?$subcat_name['subcategory_name']:"";
-                return ApiResponse::error('Success Fetched Data',$data);
+                return ApiResponse::ok('Success Fetched Data',$data);
             }
            
         }else{
