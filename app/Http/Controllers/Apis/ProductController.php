@@ -220,7 +220,7 @@ class ProductController extends Controller
             if(!empty($product_id)){
                 $product_fav2='';
                 $get_product=ProductModel::where('id',$product_id)->first();
-                if($get_product->product_fav ==0){
+                if($get_product['product_fav'] ==0){
                     $product_fav2="No";
                 }else{
                     $product_fav2="Yes";
