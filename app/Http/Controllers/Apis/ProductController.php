@@ -297,7 +297,6 @@ class ProductController extends Controller
         } 
     }
 
-<<<<<<< HEAD
     public function categoryproduct(Request $request){
         if($request->isMethod('get')){
             $t_products=ProductModel::where('category_id',$request->category_id)->take('15')->where('status','1')->where('del_status','1')->get();
@@ -323,7 +322,4 @@ class ProductController extends Controller
             return ApiResponse::error('Unauthorise Request');
         }
     }
-=======
-  
->>>>>>> 05fa1fef1370795ee00f619b950911073cc8ae2a
 }
