@@ -13,6 +13,7 @@ use App\Traits\ValidationTrait;
 class CartController extends Controller
 {
     use ValidationTrait;
+
     public function addcart(Request $request){
         if($request->isMethod('post')){
             $validator = Validator::make($request->all(), 
@@ -30,7 +31,14 @@ class CartController extends Controller
             $data['user_id']=$user_id;
             $data['product_id']=$request->product_id;
             $data['product_qty']=$request->product_qty;
-            CartModel::create($data);
+            $get_prod = CartModel::where('user_id',$user_id)->where('product_id',$request->product_id)->first();
+            if($get_prod){
+                $newqty['product_qty']  = $data['product_qty'] + $get_prod->product_qty;
+                CartModel::where('id',$get_prod->id)->update($newqty);
+            }else{
+                CartModel::create($data);
+            }
+            
             return ApiResponse::ok("Data Added Into Cart");
         }else{
             return ApiResponse::error('Unauthorise Request');

@@ -34,7 +34,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'product_name' => 'required|max:255',
             'category_id' => 'required',
-            'product_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'product_image.*' =>'required',
             'subcategory_id' => 'required',
             'prod_desc' => 'required',
             'price' => 'required',
@@ -94,6 +94,7 @@ class ProductController extends Controller
     
     public function update(Request $request, $id)
     {
+        // dd($id);
         $data =  $request->except('_token','_method');
         $validated = $request->validate([
             'product_name' => 'required|max:255',
@@ -139,6 +140,7 @@ class ProductController extends Controller
         }else{
             unset($data['product_image']);
         }
+    
         ProductModel::where('id',$id)->update($data);
         return redirect()->back()->with('success', 'Data Updated');
     }

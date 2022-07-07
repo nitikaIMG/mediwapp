@@ -16,7 +16,7 @@ Route::post('/userlogin',[AuthController::class,'userlogin']);
 Route::post('/socialauthentication',[AuthController::class,'socialauthentication']);
 
 
-Route::middleware('jwt.verify')->group(function() {
+    Route::middleware('jwt.verify')->group(function() {
     Route::get('category',[CategoryController::class,'index']);
 
     Route::get('subcategory',[CategoryController::class,'index']);
