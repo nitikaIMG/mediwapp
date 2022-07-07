@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="exampleInputName1">Product Name</label>
-                    <input type="text" name="product_name" class="form-control" id="exampleInputName1"  value="{{$edit_data['product_name']}}" placeholder=" Category Name">
+                    <input type="text" name="product_name" class="form-control" id="exampleInputName1"  value="{{$edit_data['product_name']}}" placeholder="Product Name">
                     
                 </div>
                 <div class="form-group col-md-6">

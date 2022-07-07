@@ -11,9 +11,7 @@
             <div class="row">
               <div class="form-group col-md-6">
                 <label for="exampleSelectGender">Brand Name</label>
-                <select name="brand_image" class="form-control" id="brand_name_id">
-                    <option disabled selected value> -- select an option -- </option>
-                </select>
+                <input type="text" name="brand_name" class="form-control"  value="{{$edit_brand['brand_name']}}" id="exampleInputName1"  placeholder=" Brand Name">
                 
             </div>
                 <div class="form-group col-md-6">
