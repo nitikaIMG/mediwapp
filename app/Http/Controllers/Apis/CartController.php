@@ -22,14 +22,13 @@ class CartController extends Controller
             $validator = Validator::make($request->all(), 
             [
                 'product_id' => ['required'],
-                // 'product_qty' => ['required'],
             ],[
                 'product_id' =>'Product Id field Is Required..',
-                // 'product_qty' =>'Product Quantity Is Required..',
             ]);
             if($validator->fails()){
                 return $this->validation_error_response($validator);
             }
+            
             $user_id=auth('api')->user()->id;
             $data['user_id']=$user_id;
             $data['product_id']=$request->product_id;
