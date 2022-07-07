@@ -30,6 +30,7 @@ Route::post('/socialauthentication',[AuthController::class,'socialauthentication
     Route::get('show_wishlist',[ProductController::class,'show_wishlist']);
     Route::post('update_wishlist',[ProductController::class,'update_wishlist']);
     Route::post('single_product',[ProductController::class,'single_product']);
+    Route::get('recent_view',[ProductController::class,'recent_view']);
 
     Route::post('addcart',[CartController::class,'addcart']);
     Route::get('showcart',[CartController::class,'showcart']);
