@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BrandModel;
 use App\Models\CategoryModel;
 use App\Models\ProductModel;
+use App\Models\HeathGoalModel;
 use App\Models\SubcategoryModel;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -24,7 +25,8 @@ class ProductController extends Controller
     {
         $category=CategoryModel::all();
         $brand_name=BrandModel::all();
-        return view('product.add',compact('category','brand_name'));
+        $health_goal=HeathGoalModel::all();
+        return view('product.add',compact('category','brand_name','health_goal'));
     }
 
    
@@ -86,9 +88,10 @@ class ProductController extends Controller
     {
         $category=CategoryModel::all();
         $brand_name=BrandModel::all();
+        $health_goal=HeathGoalModel::all();
         $edit_data=ProductModel::join('subcategory','product.subcategory_id','subcategory.id')->where('product.id',$id)->first()->toArray();
         $file=ProductModel::where('id',$id)->pluck('product_image');
-        return view('product.edit',compact('edit_data','file','category','brand_name'));
+        return view('product.edit',compact('edit_data','file','category','brand_name','health_goal'));
     }
 
     

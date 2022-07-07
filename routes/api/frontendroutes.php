@@ -6,6 +6,8 @@ use App\Http\Controllers\Apis\CategoryController;
 use App\Http\Controllers\Apis\ProductController;
 use App\Http\Controllers\Apis\UserController;
 use App\Http\Controllers\Apis\CartController;
+use App\Http\Controllers\Apis\HealthGoalController;
+use App\Http\Controllers\Apis\OrderController;
 use App\Http\Controllers\Apis\PrescriptionController;
 use App\Models\PrescriptionModel;
 use Illuminate\Support\Facades\Route;
@@ -31,11 +33,14 @@ Route::post('/socialauthentication',[AuthController::class,'socialauthentication
     Route::post('addcart',[CartController::class,'addcart']);
     Route::get('showcart',[CartController::class,'showcart']);
     Route::get('userprofile',[UserController::class,'userprofile']);
+    Route::get('healthgoals',[HealthGoalController::class,'healthgoal']);
 
     Route::get('banner',[BannerController::class,'banner']);
+    Route::get('myorders',[OrderController::class,'myorders']);
 
     Route::post('prescriptionupload',[PrescriptionController::class,'prescriptionupload']);
-
+    
+    
     Route::post('add_address',[UserController::class,'add_address']);
     Route::get('show_address',[UserController::class,'show_address']);
     Route::post('edit_address',[UserController::class,'edit_address']);

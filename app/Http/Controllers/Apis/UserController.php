@@ -32,7 +32,6 @@ class UserController extends Controller
       $input['gender'] = ($user_data->gender!=null)?$user_data->gender:"";
       $input['user_adress'] = ($user_data->user_adress!=null)?$user_data->user_adress:"";
       $input['status'] = ($user_data->status==1)?'Active':'Deactive';
-      dd($input);
       return ApiResponse::ok('userdata',$input);
       }else{
          return ApiResponse::error('User Not LoggedIn');
