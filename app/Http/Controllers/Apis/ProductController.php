@@ -173,6 +173,31 @@ class ProductController extends Controller
         }
     }
 
+    public function update_wishlist(Request $request){
+        if($request->isMethod('post')){
+            $validator = Validator::make($request->all(), 
+            [
+                'product_id' => ['required'],
+            ],[
+                'product_id' =>'Product field Is Required..',
+            ]);
+            if($validator->fails()){
+                return $this->validation_error_response($validator);
+            }
+            $user_id=auth('api')->user()->id;
+            $get_wishlist_prod=wishlistModel::where('user_id',$user_id)->first();
+            $userProducts = explode(',',$get_wishlist_prod->product_id);
+            // dump($userProducts);
+            unset($userProducts[array_search($request->product_id,$userProducts)]);
+            $remProducts = implode(',',array_values($userProducts));
+            wishlistModel::where('user_id',$user_id)->update(['product_id'=>$remProducts]);
+            // dd();
+            return ApiResponse::ok('Product Removed From Wishlist...');
+        }else{
+            return ApiResponse::error('Unauthorise Request...');
+        }
+    }
+
     public function show_wishlist(Request $request){
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
