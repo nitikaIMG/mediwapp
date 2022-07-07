@@ -199,4 +199,30 @@ class ProductController extends Controller
             return ApiResponse::error('Unauthorise Request');
         } 
     }
+
+    public function categoryproduct(Request $request){
+        if($request->isMethod('get')){
+            $t_products=ProductModel::where('category_id',$request->category_id)->take('15')->where('status','1')->where('del_status','1')->get();
+            $dataa=[];
+            foreach($t_products as $pro){
+                $cat_id=$pro->category_id;
+                $subcat_id=$pro->subcategory_id;
+                $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
+                $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
+                $data['category_name']=$cat_name['category_name'];
+                $data['subcategory_name']=$subcat_name['subcategory_name'];
+                $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
+                $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
+                $data['price']=($pro->price != Null)?$pro->price:"";
+                $data['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
+                $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
+                $data['offer']=($pro->offer != Null)?$pro->offer:"";
+                $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
+                $dataa[] = $data;
+            }
+           return ApiResponse::ok('Categorized Products',$dataa);
+        }else{           
+            return ApiResponse::error('Unauthorise Request');
+        }
+    }
 }
