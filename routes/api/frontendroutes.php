@@ -18,7 +18,7 @@ Route::post('/userlogin',[AuthController::class,'userlogin']);
 Route::post('/socialauthentication',[AuthController::class,'socialauthentication']);
 
 
-Route::middleware('jwt.verify')->group(function() {
+    Route::middleware('jwt.verify')->group(function() {
     Route::get('category',[CategoryController::class,'index']);
 
     Route::get('subcategory',[CategoryController::class,'index']);
@@ -31,7 +31,7 @@ Route::middleware('jwt.verify')->group(function() {
     Route::post('single_product',[ProductController::class,'single_product']);
 
     Route::post('addcart',[CartController::class,'addcart']);
-
+    Route::get('showcart',[CartController::class,'showcart']);
     Route::get('userprofile',[UserController::class,'userprofile']);
     Route::get('healthgoals',[HealthGoalController::class,'healthgoal']);
 
@@ -47,4 +47,8 @@ Route::middleware('jwt.verify')->group(function() {
     Route::get('delete_address',[UserController::class,'delete_address']);
     Route::post('edit_userprofile',[UserController::class,'edit_userprofile']);
     Route::get('get_user_feedback',[UserController::class,'get_user_feedback']);
+
+    Route::post('add_item', [CartController::class,'add_item']);
+    Route::post('remove_item', [CartController::class,'remove_item']);
+    Route::any('categoryproduct', [ProductController::class,'categoryproduct']);
 });
