@@ -24,17 +24,17 @@ class OrderController extends Controller
             $products_list = array();
             $dataa = array();
             $user_id=auth('api')->user()->id;
-            $get_all_order=OrderModel::where('user_id',$user_id)->get();
+            $get_all_order=OrderModel::where('user_id',$user_id)->whereIn('order_status',['1','2','4'])->get();
 
             foreach($get_all_order as $dat){
                 if($dat['order_status']=='1'){
-                    $order_status="Create";
+                    $order_status="Approved";
                 }else if($dat['order_status']=='2'){
                     $order_status="pending";
                 }else if($dat['order_status']=='3'){
                     $order_status="Dispatch";
                 }else if($dat['order_status']=='4'){
-                    $order_status="Delivered";
+                    $order_status="Completed";
                 }else if($dat['order_status']=='5'){
                     $order_status="Denied";
                 }else if($dat['order_status']=='6'){
