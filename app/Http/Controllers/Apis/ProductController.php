@@ -332,7 +332,13 @@ class ProductController extends Controller
     }
 
     public function categoryproduct(Request $request){
-        if($request->isMethod('get')){
+        if($request->isMethod('post')){
+            $validator = Validator::make($request->all(),[
+                'category_id' => 'required',
+                ]);
+            if($validator->fails()){
+               return $this->validation_error_response($validator);
+            }
             $t_products=ProductModel::where('category_id',$request->category_id)->take('15')->where('status','1')->where('del_status','1')->get();
             $dataa=[];
             foreach($t_products as $pro){
