@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function discountedproduct(Request $request){
         if($request->isMethod('get')){
             $disc_prod=ProductModel::where('offer','!=','NULL')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
-            $data=[];
+            $dataa=[];
             $product_fav="";
             foreach($disc_prod as $key => $product){
                 if($product['product_fav'] ==0){
@@ -47,8 +47,9 @@ class ProductController extends Controller
                 $data['product_fav'] = $product_fav;
                 $data['price'] = (!empty($product['price']))?$product['price']:"";
                 $data['offer'] = (!empty($product['offer']))?$product['offer']:"";
+                $dataa[]=$data;
             }
-           return ApiResponse::ok('Discounted Products',[$data]);
+           return ApiResponse::ok('Discounted Products',[$dataa]);
         }else{
             return ApiResponse::error('Unauthorise Request');
         }
