@@ -79,4 +79,45 @@ class OrderController extends Controller
             return ApiResponse::error('Unauthorise Request');
         }
     }
+
+    public function get_orderby_status(Request $request){
+        if($request->isMethod('get')){
+            $user_id=auth('api')->user()->id;
+            $data = array();
+
+            $ostatus = [1=>'Approved',2=>'Pending',4=>'Delivered'];
+
+            $order_data = OrderModel::where('user_id',$user_id)->whereIn('order_status',['1','2','4'])->get();
+            //get ordered product list
+            $orderedProducts = collect(explode(',',$order_data->pluck('product')->join(',')))->unique()->all();
+
+            $products = ProductModel::whereIn('id',$orderedProducts)->get();
+
+            $orderBystatus = $order_data->groupBy('order_status')->all();
+
+            foreach($orderBystatus as $okey=>$orderdata){
+
+                $ps = $orderdata->map(function($item,$index) use($okey,$products,$ostatus){
+
+                    $pids = explode(',',$item->product);
+
+                    if(isset($ostatus[$okey])){
+
+                        $data1[$ostatus[$okey]][$index] =$item; 
+
+                        $data1[$ostatus[$okey]][$index]['product'] =$products->whereIn('id',$pids)->values();
+                        
+                        return $data1;
+                    }
+                    
+                })->first();
+
+                $data[]= $ps;
+            }
+            // return ApiResponse::ok('Fetch Order Details',[call_user_func_array('array_merge', $data)]);
+            return ApiResponse::ok('Fetch Order Details',$data);
+        }else{
+            return ApiResponse::ok("No Orders For This User");
+        }
+    }
 }

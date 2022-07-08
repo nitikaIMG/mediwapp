@@ -37,6 +37,7 @@ Route::post('/socialauthentication',[AuthController::class,'socialauthentication
 
     Route::get('banner',[BannerController::class,'banner']);
     Route::get('myorders',[OrderController::class,'myorders']);
+    Route::get('get_orderby_status',[OrderController::class,'get_orderby_status']);
 
     Route::post('prescriptionupload',[PrescriptionController::class,'prescriptionupload']);
     
@@ -49,7 +50,8 @@ Route::post('/socialauthentication',[AuthController::class,'socialauthentication
     Route::get('get_user_feedback',[UserController::class,'get_user_feedback']);
     Route::post('add_user_feedback',[UserController::class,'add_user_feedback']);
 
-    Route::post('add_item', [CartController::class,'add_item']);
-    Route::post('remove_item', [CartController::class,'remove_item']);
+    // Route::post('add_item', [CartController::class,'add_item']);
+    // Route::post('remove_item', [CartController::class,'remove_item']);
+    Route::post('add_remove', [CartController::class,'add_remove']);
     Route::any('categoryproduct', [ProductController::class,'categoryproduct']);
 });
