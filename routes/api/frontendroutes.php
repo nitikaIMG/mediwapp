@@ -55,5 +55,5 @@ Route::post('/socialauthentication',[AuthController::class,'socialauthentication
     // Route::post('add_item', [CartController::class,'add_item']);
     // Route::post('remove_item', [CartController::class,'remove_item']);
     Route::post('add_remove', [CartController::class,'add_remove']);
-    Route::any('categoryproduct', [ProductController::class,'categoryproduct']);
+    Route::post('categoryproduct', [ProductController::class,'categoryproduct']);
 });
