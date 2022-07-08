@@ -147,18 +147,22 @@ class ProductController extends Controller
             if($validator->fails()){
                 return $this->validation_error_response($validator);
             }
+            
             $user_id=auth('api')->user()->id;
             if(!empty($user_id)){
                 $data=[];
                 $chk_user=wishlistModel::where('user_id',$user_id)->pluck('product_id')->first();
+                
                 if(!empty($chk_user) && $chk_user !=""){
                     $exp_prod=explode(',',$chk_user);
                     if($request->status=="1"){
                         $data['user_id']=$user_id;
                         $exp_prod = explode(",",$chk_user);
+
                         if(in_array($request['product_id'],$exp_prod) == "true"){
                             return ApiResponse::ok('Products Already in wishlist');
                         }
+
                         if(!$chk_user){
                             $data['product_id']=$request['product_id'];
                             wishlistModel::create($data);
@@ -179,6 +183,15 @@ class ProductController extends Controller
                         return ApiResponse::ok('Products Removed from wishlist');
                     }
                    
+                }else{
+                    if($request->status="1"){
+                        $data['product_id']=$request['product_id'];
+                        $data['user_id']=$user_id;
+                        wishlistModel::create($data);
+                        return ApiResponse::ok('Products Added In Wishlist');
+                    }else{
+                        return ApiResponse::ok('No Products In Wishlist');
+                    }
                 }
             }else{
                 return ApiResponse::ok('User Not LoggedIn');
