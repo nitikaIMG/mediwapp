@@ -139,8 +139,10 @@ class ProductController extends Controller
             $validator = Validator::make($request->all(), 
             [
                 'product_id' => ['required'],
+                'status' => ['required'],
             ],[
                 'product_id' =>'Product field Is Required..',
+                'status' =>'Status field Is Required..',
             ]);
             if($validator->fails()){
                 return $this->validation_error_response($validator);
@@ -148,24 +150,36 @@ class ProductController extends Controller
             $user_id=auth('api')->user()->id;
             if(!empty($user_id)){
                 $data=[];
-                $chk_user=wishlistModel::where('user_id',$user_id)->pluck('product_id')->toArray();
-                if(!empty($chk_user)){
-                    $exp_prod=explode(',',$chk_user[0]);
-                    if(in_array($request['product_id'],$exp_prod) == "true"){
-                        return ApiResponse::error('Products Already in wishlist');
+                $chk_user=wishlistModel::where('user_id',$user_id)->pluck('product_id')->first();
+                if(!empty($chk_user) && $chk_user !=""){
+                    $exp_prod=explode(',',$chk_user);
+                    if($request->status=="1"){
+                        $data['user_id']=$user_id;
+                        $exp_prod = explode(",",$chk_user);
+                        if(in_array($request['product_id'],$exp_prod) == "true"){
+                            return ApiResponse::ok('Products Already in wishlist');
+                        }
+                        if(!$chk_user){
+                            $data['product_id']=$request['product_id'];
+                            wishlistModel::create($data);
+                        }else{
+                            $dd=explode(',',$chk_user);
+                            array_push($dd,$request['product_id']);
+                            $data=implode(',',$dd);
+                            wishlistModel::where('user_id',$user_id)->update(['product_id'=>$data]);
+                        } 
+                        return ApiResponse::ok('Products Added in wishlist');
+                    }else{
+                        $data=explode(',',$chk_user);
+                        foreach (array_keys($data, $request['product_id']) as $key) {
+                            unset($data[$key]);
+                        }
+                        $implode_array=implode(',',$data);
+                        wishlistModel::where('user_id',$user_id)->update(['product_id'=>$implode_array]);
+                        return ApiResponse::ok('Products Removed from wishlist');
                     }
+                   
                 }
-                $data['user_id']=$user_id;
-                if(!$chk_user){
-                    $data['product_id']=$request['product_id'];
-                    wishlistModel::create($data);
-                }else{
-                    $prod_data=array_push($chk_user,$request['product_id']);
-                    $data=implode(',',$chk_user);
-                    wishlistModel::where('user_id',$user_id)->update(['product_id'=>$data]);
-                }
-                return ApiResponse::ok('Products Added in wishlist');
-                    
             }else{
                 return ApiResponse::ok('User Not LoggedIn');
             }
