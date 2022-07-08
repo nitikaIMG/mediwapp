@@ -10,6 +10,7 @@ use App\Models\CategoryModel;
 use App\Models\ProductModel;
 use Illuminate\Support\Carbon;
 use App\Models\OrderModel;
+use App\Models\RecentProduct;
 use App\Models\SubcategoryModel;
 use App\Models\wishlistModel;
 use Illuminate\Support\Facades\Validator;
@@ -173,6 +174,31 @@ class ProductController extends Controller
         }
     }
 
+    public function update_wishlist(Request $request){
+        if($request->isMethod('post')){
+            $validator = Validator::make($request->all(), 
+            [
+                'product_id' => ['required'],
+            ],[
+                'product_id' =>'Product field Is Required..',
+            ]);
+            if($validator->fails()){
+                return $this->validation_error_response($validator);
+            }
+            $user_id=auth('api')->user()->id;
+            $get_wishlist_prod=wishlistModel::where('user_id',$user_id)->first();
+            $userProducts = explode(',',$get_wishlist_prod->product_id);
+            // dump($userProducts);
+            unset($userProducts[array_search($request->product_id,$userProducts)]);
+            $remProducts = implode(',',array_values($userProducts));
+            wishlistModel::where('user_id',$user_id)->update(['product_id'=>$remProducts]);
+            // dd();
+            return ApiResponse::ok('Product Removed From Wishlist...');
+        }else{
+            return ApiResponse::error('Unauthorise Request...');
+        }
+    }
+
     public function show_wishlist(Request $request){
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
@@ -218,6 +244,14 @@ class ProductController extends Controller
             }
             $product_id=$request->product_id;
             if(!empty($product_id)){
+                $user_id=auth('api')->user()->id;
+                $getmaxprod = RecentProduct::where('user_id',$user_id)->get();
+                if(count($getmaxprod)>=5){
+                    RecentProduct::where('user_id',$user_id)->where('id',$getmaxprod[0]['id'])->delete();
+                    RecentProduct::insert(['user_id'=>$user_id,'recent_product'=>$product_id]);
+                }else{
+                    RecentProduct::insert(['user_id'=>$user_id,'recent_product'=>$product_id]);
+                }
                 $product_fav2='';
                 $get_product=ProductModel::where('id',$product_id)->first();
                 if($get_product['product_fav'] ==0){
@@ -311,6 +345,7 @@ class ProductController extends Controller
                 $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
                 $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
                 $data['price']=($pro->price != Null)?$pro->price:"";
+                $data['product_id']=$pro->id;
                 $data['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
                 $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
                 $data['offer']=($pro->offer != Null)?$pro->offer:"";
@@ -319,6 +354,36 @@ class ProductController extends Controller
             }
            return ApiResponse::ok('Categorized Products',$dataa);
         }else{           
+            return ApiResponse::error('Unauthorise Request');
+        }
+    }
+    public function recent_view(Request $request){
+        if($request->isMethod('get')){
+            $user_id=auth('api')->user()->id;
+            $get_prod_id=RecentProduct::where('user_id',$user_id)->pluck('recent_product')->toArray();
+            if(!empty($get_prod_id)){
+                $recent_prod=ProductModel::whereIn('id',$get_prod_id)->get();
+                if(!empty($recent_prod)){
+                    foreach($recent_prod as $pro){
+                        $cat_id=$pro->category_id;
+                        $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
+                        $data['category_name']=!empty($cat_name)?$cat_name->category_name:'';
+                        $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
+                        $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
+                        $data['price']=($pro->price != Null)?$pro->price:"";
+                        $data['product_id']=$pro->id;
+                        $data['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
+                        $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
+                        $data['offer']=($pro->offer != Null)?$pro->offer:"";
+                        $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
+                        $dataa[] = $data;
+                    }
+                    return ApiResponse::ok('Categorized Products',$dataa);
+                }
+            }else{
+                return ApiResponse::ok('No Recents Viewed Products...');
+            }
+        }else{
             return ApiResponse::error('Unauthorise Request');
         }
     }

@@ -28,7 +28,9 @@ Route::post('/socialauthentication',[AuthController::class,'socialauthentication
     Route::get('bestseller',[ProductController::class,'bestseller']);
     Route::post('add_wishlist_prod',[ProductController::class,'add_wishlist_prod']);
     Route::get('show_wishlist',[ProductController::class,'show_wishlist']);
+    Route::post('update_wishlist',[ProductController::class,'update_wishlist']);
     Route::post('single_product',[ProductController::class,'single_product']);
+    Route::get('recent_view',[ProductController::class,'recent_view']);
 
     Route::post('addcart',[CartController::class,'addcart']);
     Route::get('showcart',[CartController::class,'showcart']);
