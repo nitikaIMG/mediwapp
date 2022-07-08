@@ -18,9 +18,9 @@ class HealthGoalController extends Controller
                 $goal['image']=asset('public/health/'.$goal['image']);
                 $data[$gole_key] = $goal;
                 $arr = ['created_at'];
-                $data[$gole_key]['products'] = asset('public/health').'/'.$products['product_image'];
+                // $data[$gole_key]['products'] = asset('public/health').'/'.$products['product_image'];
                 $data[$gole_key]['products'] = $products;
-                dd($data);
+                // dd($data);
             }
             return ApiResponse::ok('Goals products',$data);
         }else{
