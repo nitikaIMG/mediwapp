@@ -25,7 +25,7 @@ class ProductController extends Controller
 
     public function discountedproduct(Request $request){
         if($request->isMethod('get')){
-            $disc_prod=ProductModel::where('offer','!=','NULL')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
+            $disc_prod=ProductModel::where('offer','!=','')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
             $data=[];
             $product_fav="";
             foreach($disc_prod as $key => $product){
