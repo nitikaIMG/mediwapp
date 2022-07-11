@@ -29,6 +29,10 @@ class ProductController extends Controller
             $disc_prod=ProductModel::where('offer','!=','NULL')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
             $dataa=[];
             $product_fav="";
+
+            if(empty($disc_prod)){
+                return ApiResponse::ok('Disscount Product are not Available',$dataa);
+           }else{
             foreach($disc_prod as $key => $product){
                 if($product['product_fav'] ==0){
                     $product_fav="No";
@@ -51,6 +55,7 @@ class ProductController extends Controller
                 $dataa[]=$data;
             }
            return ApiResponse::ok('Discounted Products',$dataa);
+        }
         }else{
             return ApiResponse::error('Unauthorise Request');
         }
@@ -315,7 +320,7 @@ class ProductController extends Controller
                     $data['singledata']['product_id']=($get_product['id'] != Null)?$get_product['id']:"";
                     $data['singledata']['price']=($get_product['price'] != Null)?$get_product['price']:"";
                     $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
-                    $data['singledata']['product_qty']=$pro_qty;
+                    $data['singledata']['product_qty']=intval($pro_qty);
                     $data['singledata']['product_rating']=($get_product['product_rating'] != Null)?$get_product['product_rating']:"";
                     $data['singledata']['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
                     $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
