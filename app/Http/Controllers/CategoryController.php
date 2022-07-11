@@ -95,6 +95,7 @@ class CategoryController extends Controller
         $file=CategoryModel::where('id',$id)->pluck('category_image');
         return view('category.edit_category',compact('edit_data','file'));
     }
+    
 
     public function update(Request $request, $id)
     {

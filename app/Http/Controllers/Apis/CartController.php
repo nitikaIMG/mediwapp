@@ -79,36 +79,32 @@ class CartController extends Controller
 
     }
 
-    public function add_item(Request $request)
+  public function add_remove(Request $request)
   {
-
-    $user_id=auth('api')->user()->id;
-    $pid = $request->get('product_id');
-    $cartdata = CartModel::where('user_id', $user_id)->where('product_id', $pid)->first();
-    if(!empty($cartdata)){
-        CartModel::where('user_id', $user_id)->where('product_id', $pid)->update(['product_qty'=>$cartdata->product_qty+1]);
-        return ApiResponse::ok('Add Item Successfully');
-    }else{
-        return ApiResponse::error('Unauthorise Request');
-    }
-    
-  }
-
-  public function remove_item(Request $request)
-  {
-    $user_id=auth('api')->user()->id;
-    $pid = $request->get('product_id');
-    $cartdata = CartModel::where('user_id', $user_id)->where('product_id', $pid)->first();
-
-    if(!empty($cartdata)){
-        if($cartdata->product_qty==1){
-            CartModel::where('user_id', $user_id)->where('product_id', $pid)->delete();
-        }else{
-            CartModel::where('user_id', $user_id)->where('product_id', $pid)->update(['product_qty'=>$cartdata->product_qty-1]);
+        if($request->isMethod('post')){
+        $validator = Validator::make($request->all(),[
+            'product_id' => 'required',
+            'type' => 'required',
+            ]);
+        if($validator->fails()){
+           return $this->validation_error_response($validator);
         }
-        return ApiResponse::ok('Remove Item Successfully');
-    }else{
-        return ApiResponse::error('Unauthorise Request');
-    }
+        $user_id=auth('api')->user()->id;
+        $pid = $request->get('product_id');
+        $cartdata = CartModel::where('user_id', $user_id)->where('product_id', $pid)->first();
+        if(!empty($cartdata)){
+            if($request->type == 'add'){
+                $newqnt = $cartdata->product_qty+1;
+            }else{
+                $newqnt = $cartdata->product_qty-1;
+            }
+            CartModel::where('user_id', $user_id)->where('product_id', $pid)->update(['product_qty'=>$newqnt]);
+            return ApiResponse::ok('Item  Update Successfully');
+        }
+       }
+       else{
+            return ApiResponse::error('Unauthorise Request');
+        }
+    
   }
 }

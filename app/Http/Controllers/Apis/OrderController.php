@@ -21,17 +21,20 @@ class OrderController extends Controller
     public function myorders(Request $request){
         if($request->isMethod('get')){
             $data=[];
+            $products_list = array();
+            $dataa = array();
             $user_id=auth('api')->user()->id;
-            $get_all_order=OrderModel::where('user_id',$user_id)->get();
+            $get_all_order=OrderModel::where('user_id',$user_id)->whereIn('order_status',['1','2','4'])->get();
+
             foreach($get_all_order as $dat){
                 if($dat['order_status']=='1'){
-                    $order_status="Create";
+                    $order_status="Approved";
                 }else if($dat['order_status']=='2'){
                     $order_status="pending";
                 }else if($dat['order_status']=='3'){
                     $order_status="Dispatch";
                 }else if($dat['order_status']=='4'){
-                    $order_status="Delivered";
+                    $order_status="Completed";
                 }else if($dat['order_status']=='5'){
                     $order_status="Denied";
                 }else if($dat['order_status']=='6'){
@@ -45,9 +48,19 @@ class OrderController extends Controller
                 }else{
                     $payement_status="Pending";
                 }
-//prod_data
+
                 $prod_id=explode(',',$dat['product']);
+
+                $dataa['order_id']=(!empty($dat['order_id']))?$dat['order_id']:"";
+                $dataa['order_price']=(!empty($dat['order_price']))?$dat['order_price']:"";
+                $dataa['payment_id']=(!empty($dat['payment_id']))?$dat['payment_id']:"";
+                $dataa['payment_status']=(!empty($payement_status))?$payement_status:"";
+                $dataa['user_address']=!empty($dat['user_address'])?$dat['user_address']:"";
+                $dataa['created_at']=!empty($dat['created_at'])?$dat['created_at']:"";
+                $dataa['order_status']=!empty($order_status)?$order_status:"";
+                $products_list = array();
                 $get_prod_data=ProductModel::whereIn('id',$prod_id)->get();
+                //dd($get_prod_data);
                 foreach($get_prod_data as $pro_data){
                     $category=CategoryModel::where('id',$pro_data['category_id'])->select('category_name')->first();
                     $pro_dat['product_id']=$pro_data['id'];
@@ -60,26 +73,62 @@ class OrderController extends Controller
                     $pro_dat['product_description']=(!empty($pro_data['product_description']))?$pro_data['product_description']:"";
                     $pro_dat['product_rating']=(!empty($pro_data['product_rating']))?$pro_data['product_rating']:"";
                     $pro_dat['category']=(!empty($category['category_name']))?$category['category_name']:"";
-                    $data['product_data']=$pro_dat;
-                }
-//order_data
-                    $dataa['order_id']=(!empty($dat['order_id']))?$dat['order_id']:"";
-                    $dataa['order_price']=(!empty($dat['order_price']))?$dat['order_price']:"";
-                    $dataa['payment_id']=(!empty($dat['payment_id']))?$dat['payment_id']:"";
-                    $dataa['payment_status']=(!empty($payement_status))?$payement_status:"";
-                    $dataa['created_at']=!empty($dat['created_at'])?$dat['created_at']:"";
-                    $dataa['order_status']=!empty($order_status)?$order_status:"";
-                    $data['myorder']=$dataa;
-                    $data['address']=!empty($dat['address'])?$dat['address']:"";
+                    $products_list[]=$pro_dat;
+                 }
+                 $dataa['products_list'] = $products_list;
+
+                 $data[]=$dataa;
+                
             }
             if(!empty($get_all_order->toArray())){
-                return ApiResponse::ok("Succesfully Fetched Orders Data",[$data]);
+                return ApiResponse::ok("Succesfully Fetched Orders Data",$data);
             }else{
                 return ApiResponse::ok("No Orders For This User");
             }
         }
         else{
             return ApiResponse::error('Unauthorise Request');
+        }
+    }
+
+    public function get_orderby_status(Request $request){
+        if($request->isMethod('get')){
+            $user_id=auth('api')->user()->id;
+            $data = array();
+
+            $ostatus = [1=>'Approved',2=>'Pending',4=>'Delivered'];
+
+            $order_data = OrderModel::where('user_id',$user_id)->whereIn('order_status',['1','2','4'])->get();
+            //get ordered product list
+            $orderedProducts = collect(explode(',',$order_data->pluck('product')->join(',')))->unique()->all();
+
+            $products = ProductModel::whereIn('id',$orderedProducts)->get();
+
+            $orderBystatus = $order_data->groupBy('order_status')->all();
+
+            foreach($orderBystatus as $okey=>$orderdata){
+
+                $ps = $orderdata->map(function($item,$index) use($okey,$products,$ostatus){
+
+                    $pids = explode(',',$item->product);
+
+                    if(isset($ostatus[$okey])){
+
+                        $data1[$ostatus[$okey]][$index] =$item; 
+
+                        $data1[$ostatus[$okey]][$index]['product'] =$products->whereIn('id',$pids)->values();
+                        
+                        return $data1;
+                    }
+                    
+                })->first();
+
+                $data[]= $ps;
+            }
+            // return ApiResponse::ok('Fetch Order Details',[call_user_func_array('array_merge', $data)]);
+            return ApiResponse::ok('Fetch Order Details',$data);
+        }else{
+            return ApiResponse::ok("No Orders For This User");
         }
     }
 }

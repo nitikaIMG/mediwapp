@@ -93,6 +93,7 @@ class UserController extends Controller
 
    public function edit_userprofile(Request $request){
       if($request->isMethod('post')){
+         // dd($user_id);
       $validator = Validator::make($request->all(),[
           'user_firstname' => 'required',
           'user_phonenumber' => 'required|digits:10',
@@ -114,7 +115,7 @@ class UserController extends Controller
            $image->move('/user_image/', $name);
            $user_data['user_image'] = $name;
           }
-         
+       
           $user_id=auth('api')->user()->id;
           $user_data = UserModel::where('id',$user_id)->update($user_data);
 
@@ -137,6 +138,23 @@ class UserController extends Controller
              $dataa[] = $data;
          }
          return ApiResponse::ok("User FeedBack",$dataa);
+      }
+
+      public  function add_user_feedback(Request $request){
+         if($request->isMethod('post')){
+            $validator = Validator::make($request->all(),[
+                'user_id' => 'required',
+                'user_feedback' => 'required',
+                ]);
+            if($validator->fails()){
+               return $this->validation_error_response($validator);
+            }
+      
+               $add_user_feedback = $request->all();
+               $data = UserFeedbackModel::create($add_user_feedback); 
+               return ApiResponse::ok("Add User Feedback",$data);
+            }
+           
       }
    
 }
