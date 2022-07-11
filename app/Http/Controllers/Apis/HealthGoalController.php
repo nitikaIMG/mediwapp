@@ -15,10 +15,13 @@ class HealthGoalController extends Controller
             $data = [];
             foreach ($all_goals as $gole_key => $goal) {
                 $products = $goal->products;
+                dd($goal);
                 $goal['image']=asset('public/health/'.$goal['image']);
                 $data[$gole_key] = $goal;
                 $arr = ['created_at'];
+                $data[$gole_key]['products'] = asset('public/health').'/'.$products['product_image'];
                 $data[$gole_key]['products'] = $products;
+                dd($data);
             }
             return ApiResponse::ok('Goals products',$data);
         }else{
