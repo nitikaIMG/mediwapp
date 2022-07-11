@@ -83,7 +83,8 @@ class UserController extends Controller
                'house_no'=>$address_data['house_no'],'landmark'=>$address_data['landmark'],'city'=>$address_data['city'],
                'state'=>$address_data['state']
             ]);
-            return ApiResponse::ok('Succesfully Address Edited');
+            $after_edit=UserModel::where('id',$user_id)->first();
+            return ApiResponse::ok('Succesfully Address Edited',[$after_edit]);
          }else{
             return ApiResponse::error('Unauthorise User');
          }
