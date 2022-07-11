@@ -92,14 +92,24 @@ class CartController extends Controller
         $user_id=auth('api')->user()->id;
         $pid = $request->get('product_id');
         $cartdata = CartModel::where('user_id', $user_id)->where('product_id', $pid)->first();
+        
         if(!empty($cartdata)){
             if($request->type == 'add'){
                 $newqnt = $cartdata->product_qty+1;
             }else{
-                $newqnt = $cartdata->product_qty-1;
+                if($cartdata->product_qty<0)
+                {
+                    return ApiResponse::ok('Product QTY is not less then zero');
+                }
+                else{
+                    $newqnt = $cartdata->product_qty-1;
+                } 
             }
             CartModel::where('user_id', $user_id)->where('product_id', $pid)->update(['product_qty'=>$newqnt]);
             return ApiResponse::ok('Item  Update Successfully');
+        }
+        else{
+            return ApiResponse::error('Product id invalid');
         }
        }
        else{
