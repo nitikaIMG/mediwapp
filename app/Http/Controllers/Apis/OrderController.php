@@ -64,9 +64,12 @@ class OrderController extends Controller
                 foreach($get_prod_data as $pro_data){
                     $category=CategoryModel::where('id',$pro_data['category_id'])->select('category_name')->first();
                     $pro_dat['product_id']=$pro_data['id'];
+                    $pro_dat['product_name']=!empty($pro_data['product_name'])?$pro_data['product_name']:"";
                     $pro_dat['product_image']=(!empty($pro_data['product_image']))?$pro_data['product_image']:"";
                     $pro_dat['price']=(!empty($pro_data['price']))?$pro_data['price']:"";
                     $pro_dat['offer']=(!empty($pro_data['offer']))?$pro_data['offer']:"";
+                    $pro_dat['prod_qty']=(!empty($pro_data['prod_qty']))?$pro_data['prod_qty']:"";
+                    $pro_dat['coupon']=(!empty($pro_data['coupon']))?$pro_data['coupon']:"";
                     $pro_dat['product_description']=(!empty($pro_data['product_description']))?$pro_data['product_description']:"";
                     $pro_dat['product_rating']=(!empty($pro_data['product_rating']))?$pro_data['product_rating']:"";
                     $pro_dat['category']=(!empty($category['category_name']))?$category['category_name']:"";
