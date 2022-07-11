@@ -57,6 +57,7 @@ class OrderController extends Controller
                 $dataa['payment_status']=(!empty($payement_status))?$payement_status:"";
                 $dataa['user_address']=!empty($dat['user_address'])?$dat['user_address']:"";
                 $dataa['created_at']=!empty($dat['created_at'])?$dat['created_at']:"";
+                $dataa['delivery_address']=!empty($dat['address'])?$dat['address']:"";
                 $dataa['order_status']=!empty($order_status)?$order_status:"";
                 $products_list = array();
                 $get_prod_data=ProductModel::whereIn('id',$prod_id)->get();
@@ -64,8 +65,8 @@ class OrderController extends Controller
                 foreach($get_prod_data as $pro_data){
                     $category=CategoryModel::where('id',$pro_data['category_id'])->select('category_name')->first();
                     $pro_dat['product_id']=$pro_data['id'];
-                    $pro_dat['product_name']=!empty($pro_data['product_name'])?$pro_data['product_name']:"";
-                    $pro_dat['product_image']=(!empty($pro_data['product_image']))?$pro_data['product_image']:"";
+                    $pro_dat['product_name']=(!empty($pro_data['product_name']))?$pro_data['product_name']:"";
+                    $pro_dat['product_image']=(!empty($pro_data['product_image']))? asset('public/product_image').'/'.$pro_data['product_image']:"";
                     $pro_dat['price']=(!empty($pro_data['price']))?$pro_data['price']:"";
                     $pro_dat['offer']=(!empty($pro_data['offer']))?$pro_data['offer']:"";
                     $pro_dat['prod_qty']=(!empty($pro_data['prod_qty']))?$pro_data['prod_qty']:"";

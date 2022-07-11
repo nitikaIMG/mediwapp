@@ -48,6 +48,12 @@
                     <label for="exampleSelectGender">Address</label>
                     <textarea class="form-control"  name="user_address"></textarea>
                 </div>
+ 
+                <div class="form-group col-md-6">
+                    <label for="exampleInputName1">Product Quantity</label>
+                    <input type="number" name="product_qty" class="form-control"  value="{{$user->product_qty}}" id="exampleInputName1"  placeholder=" Enter Product Quantity" >
+                </div>
+                
             </div>
             
         <button type="submit" class="btn btn-primary mr-2 mt-2">Submit</button>
