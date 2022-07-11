@@ -291,10 +291,17 @@ class ProductController extends Controller
                 $subcategory_id=$get_product['subcategory_id'];
                 $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
                 $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
-                $data['singledata']['product_image']=($get_product['product_image'] != Null)?asset('public/product_image').'/'.$get_product['product_image']:"";
+                $image_arr = explode(",",$get_product['product_image']);
+                $product_image=[];
+                foreach( $image_arr as $image){
+                $product_image[] =($image != Null)?asset('public/product_image').'/'.$image:"";
+                }
+                $data['singledata']['product_image'] = $product_image;
                 $data['singledata']['product_name']=($get_product['product_name'] != Null)?$get_product['product_name']:"";
                 $data['singledata']['product_id']=($get_product['id'] != Null)?$get_product['id']:"";
                 $data['singledata']['price']=($get_product['price'] != Null)?$get_product['price']:"";
+                $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
+                $data['singledata']['product_qty']='';
                 $data['singledata']['product_rating']=($get_product['product_rating'] != Null)?$get_product['product_rating']:"";
                 $data['singledata']['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
                 $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
@@ -337,7 +344,6 @@ class ProductController extends Controller
                     $subcat_id=$pro->subcategory_id;
                     $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
                     $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
-                    $dataaaaa['category_name']=$cat_name['category_name'];
                     $dataaaaa['product_id']=($pro->id != Null)?$pro->id:"";
                     $dataaaaa['product_name']=($pro->product_name != Null)?$pro->product_name:"";
                     $dataaaaa['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";

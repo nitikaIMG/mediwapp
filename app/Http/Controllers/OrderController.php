@@ -27,11 +27,12 @@ class OrderController extends Controller
     
     public function store(Request $request)
     {
-    
+        //  dd($request->all());
         $unique_order_id='MED'.random_int(100000, 999999);
         $data =  $request->except('_token');
         $validated = $request->validate([
             'product_name' => 'required|max:255',
+            'product_qty' => 'required',
             'order_amount' => 'required',
             'priscription.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'user_id' => 'required',
@@ -62,6 +63,7 @@ class OrderController extends Controller
         $model->prescription=$image_string;
         $model->order_amount=$validated['order_amount'];
         $model->address=$validated['user_address'];
+        $model->product_qty = $validated['product_qty'];
         $model->user_id=$validated['user_id'];
         $model->save();
         return redirect()->back()->with('success', 'Data Inserted');
