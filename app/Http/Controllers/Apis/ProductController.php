@@ -293,7 +293,6 @@ class ProductController extends Controller
                 $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
                 $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
                 $product_qty=CartModel::where('user_id',$user_id)->where('product_id',$product_id)->first();
-                // dd($product_qty['product_qty']);
                 $image_arr = explode(",",$get_product['product_image']);
                 $product_image=[];
                 foreach( $image_arr as $image){
@@ -304,13 +303,13 @@ class ProductController extends Controller
                 $data['singledata']['product_id']=($get_product['id'] != Null)?$get_product['id']:"";
                 $data['singledata']['price']=($get_product['price'] != Null)?$get_product['price']:"";
                 $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
-                $data['singledata']['product_qty']=($product_qty['product_qty'] != Null)?$product_qty['product_qty']:0;
+                $data['singledata']['product_qty']=($product_qty['product_qty'] != Null)?intval($product_qty['product_qty']):0;
                 $data['singledata']['product_rating']=($get_product['product_rating'] != Null)?$get_product['product_rating']:"";
                 $data['singledata']['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
                 $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
                 $data['singledata']['category_name']=($category['category_name'] != Null)?$category['category_name']:"";
                 $data['singledata']['product_fav']=$product_fav2;
-
+      
                 $similiar_prod=ProductModel::where('category_id',$category_id)->limit(10)->get();
                 foreach($similiar_prod as $dd){
                     if($dd->product_fav ==0){
