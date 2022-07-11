@@ -8,6 +8,7 @@ use App\Traits\ValidationTrait;
 use App\Api\ApiResponse;
 use App\Models\CategoryModel;
 use App\Models\ProductModel;
+use App\Models\CartModel;
 use Illuminate\Support\Carbon;
 use App\Models\OrderModel;
 use App\Models\RecentProduct;
@@ -291,6 +292,8 @@ class ProductController extends Controller
                 $subcategory_id=$get_product['subcategory_id'];
                 $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
                 $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
+                $product_qty=CartModel::where('user_id',$user_id)->where('product_id',$product_id)->first();
+                // dd($product_qty['product_qty']);
                 $image_arr = explode(",",$get_product['product_image']);
                 $product_image=[];
                 foreach( $image_arr as $image){
@@ -301,7 +304,7 @@ class ProductController extends Controller
                 $data['singledata']['product_id']=($get_product['id'] != Null)?$get_product['id']:"";
                 $data['singledata']['price']=($get_product['price'] != Null)?$get_product['price']:"";
                 $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
-                $data['singledata']['product_qty']='';
+                $data['singledata']['product_qty']=($product_qty['product_qty'] != Null)?$product_qty['product_qty']:0;
                 $data['singledata']['product_rating']=($get_product['product_rating'] != Null)?$get_product['product_rating']:"";
                 $data['singledata']['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
                 $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
