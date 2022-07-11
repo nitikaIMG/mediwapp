@@ -28,9 +28,9 @@ class UserController extends Controller
       $input['user_lastname'] = ($user_data->user_lastname!=null)?$user_data->user_lastname:"";
       $input['user_email'] = ($user_data->user_email!=null)?$user_data->user_email:"";
       $input['user_phonenumber'] = ($user_data->user_phonenumber!=null)?$user_data->user_phonenumber:"";
-      $input['dob'] = ($user_data->dob!=null)?$user_data->dob:"";
+      $input['dob'] = ($user_data->dob != null)?$user_data->dob:"";
       $input['gender'] = ($user_data->gender!=null)?$user_data->gender:"";
-      $input['user_adress'] = ($user_data->user_adress!=null)?$user_data->user_adress:"";
+      $input['user_adress'] = !empty($user_data->user_address)?$user_data->user_address:"";
       $input['status'] = ($user_data->status==1)?'Active':'Deactive';
       return ApiResponse::ok('userdata',$input);
       }else{
@@ -83,7 +83,8 @@ class UserController extends Controller
                'house_no'=>$address_data['house_no'],'landmark'=>$address_data['landmark'],'city'=>$address_data['city'],
                'state'=>$address_data['state']
             ]);
-            return ApiResponse::ok('Succesfully Address Edited');
+            $after_edit=UserModel::where('id',$user_id)->first();
+            return ApiResponse::ok('Succesfully Address Edited',[$after_edit]);
          }else{
             return ApiResponse::error('Unauthorise User');
          }
