@@ -8,6 +8,7 @@ use App\Traits\ValidationTrait;
 use App\Api\ApiResponse;
 use App\Models\CategoryModel;
 use App\Models\ProductModel;
+use App\Models\CartModel;
 use Illuminate\Support\Carbon;
 use App\Models\OrderModel;
 use App\Models\RecentProduct;
@@ -28,6 +29,10 @@ class ProductController extends Controller
             $disc_prod=ProductModel::where('offer','!=','NULL')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
             $dataa=[];
             $product_fav="";
+
+            if(empty($disc_prod)){
+                return ApiResponse::ok('Disscount Product are not Available',$dataa);
+           }else{
             foreach($disc_prod as $key => $product){
                 if($product['product_fav'] ==0){
                     $product_fav="No";
@@ -50,6 +55,7 @@ class ProductController extends Controller
                 $dataa[]=$data;
             }
            return ApiResponse::ok('Discounted Products',$dataa);
+        }
         }else{
             return ApiResponse::error('Unauthorise Request');
         }
@@ -270,95 +276,115 @@ class ProductController extends Controller
             if($validator->fails()){
                 return $this->validation_error_response($validator);
             }
+            $dataa=[];
             $product_id=$request->product_id;
-            if(!empty($product_id)){
-                $user_id=auth('api')->user()->id;
-                $getmaxprod = RecentProduct::where('user_id',$user_id)->get();
-                if(count($getmaxprod)>=5){
-                    RecentProduct::where('user_id',$user_id)->where('id',$getmaxprod[0]['id'])->delete();
-                    RecentProduct::insert(['user_id'=>$user_id,'recent_product'=>$product_id]);
-                }else{
-                    RecentProduct::insert(['user_id'=>$user_id,'recent_product'=>$product_id]);
-                }
-                $product_fav2='';
-                $get_product=ProductModel::where('id',$product_id)->first();
-                if($get_product['product_fav'] ==0){
-                    $product_fav2="No";
-                }else{
-                    $product_fav2="Yes";
-                }
-                $category_id=$get_product['category_id'];
-                $subcategory_id=$get_product['subcategory_id'];
-                $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
-                $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
-                $image_arr = explode(",",$get_product['product_image']);
-                $product_image=[];
-                foreach( $image_arr as $image){
-                $product_image[] =($image != Null)?asset('public/product_image').'/'.$image:"";
-                }
-                $data['singledata']['product_image'] = $product_image;
-                $data['singledata']['product_name']=($get_product['product_name'] != Null)?$get_product['product_name']:"";
-                $data['singledata']['product_id']=($get_product['id'] != Null)?$get_product['id']:"";
-                $data['singledata']['price']=($get_product['price'] != Null)?$get_product['price']:"";
-                $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
-                $data['singledata']['product_qty']='';
-                $data['singledata']['product_rating']=($get_product['product_rating'] != Null)?$get_product['product_rating']:"";
-                $data['singledata']['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
-                $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
-                $data['singledata']['category_name']=($category['category_name'] != Null)?$category['category_name']:"";
-                $data['singledata']['product_fav']=$product_fav2;
-
-                $similiar_prod=ProductModel::where('category_id',$category_id)->limit(10)->get();
-                foreach($similiar_prod as $dd){
-                    if($dd->product_fav ==0){
-                        $product_fav1="No";
+            if(ProductModel::where('id',$product_id)->exists()){
+                if(!empty($product_id)){
+                    $user_id=auth('api')->user()->id;
+                    $getmaxprod = RecentProduct::where('user_id',$user_id)->get();
+                    if(count($getmaxprod)>=5){
+                        RecentProduct::where('user_id',$user_id)->where('id',$getmaxprod[0]['id'])->delete();
+                        RecentProduct::insert(['user_id'=>$user_id,'recent_product'=>$product_id]);
                     }else{
-                        $product_fav1="Yes";
+                        RecentProduct::insert(['user_id'=>$user_id,'recent_product'=>$product_id]);
                     }
-                    $cat_name=CategoryModel::where('id',$category_id)->select('category_name')->first();
-                    $dataa['category_name']=$cat_name['category_name'];
-                    $dataa['product_image']=($dd['product_image'] != Null)?asset('public/product_image').'/'.$dd['product_image']:"";
-                    $dataa['product_id']=($dd['product_id'] != Null)?$dd['product_id']:"";
-                    $dataa['product_name']=($dd['product_name'] != Null)?$dd['product_name']:"";
-                    $dataa['price']=($dd['price'] != Null)?$dd['price']:"";
-                    $dataa['prod_desc']=($dd['prod_desc'] != Null)?$dd['prod_desc']:"";
-                    $dataa['product_rating']=($dd['product_rating'] != Null)?$dd['product_rating']:"";
-                    $dataa['offer']=($dd['offer'] != Null)?$dd['offer']:"";
-                    $dataa['product_fav']=$product_fav1;
-                    $data['similar_prod'][] = $dataa;
-                }
-
-                $productdata=OrderModel::limit(10)->pluck('product')->join(',');
-                $order_p=explode(',',$productdata);
-                $res = collect(array_count_values($order_p))->sortDesc()->all();
-                $p_id=array_keys($res);
-                
-                $t_products=ProductModel::whereIn('id',$p_id)->take('15')->where('status','1')->where('del_status','1')->get();
-                foreach($t_products as $pro){
-                    if($pro->product_fav ==0){
-                        $product_fav="No";
+                    $product_fav2='';
+                    $get_product=ProductModel::where('id',$product_id)->first();
+                    if(!empty($get_product)){
+                        if($get_product['product_fav'] ==0){
+                            $product_fav2="No";
+                        }else{
+                            $product_fav2="Yes";
+                        }
                     }else{
-                        $product_fav="Yes";
+                        $product_fav2="No";
                     }
-                    $cat_id=$pro->category_id;
-                    $subcat_id=$pro->subcategory_id;
-                    $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
-                    $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
-                    $dataaaaa['product_id']=($pro->id != Null)?$pro->id:"";
-                    $dataaaaa['product_name']=($pro->product_name != Null)?$pro->product_name:"";
-                    $dataaaaa['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
-                    $dataaaaa['price']=($pro->price != Null)?$pro->price:"";
-                    $dataaaaa['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
-                    $dataaaaa['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
-                    $dataaaaa['product_fav']=$product_fav;
-                    $dataaaaa['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
-                    $dataaaaa['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
-                    $dataaaaa['offer']=($pro->offer != Null)?$pro->offer:"";
-                    $dataaaaa['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
-                    $data['frequent_prod'][] = $dataaaaa;
+                    $category_id=$get_product['category_id'];
+                    $subcategory_id=$get_product['subcategory_id'];
+                    $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
+                    $subcat_name=SubcategoryModel::where('id',$subcategory_id)->select('subcategory_name')->first();
+                    $product_qty=CartModel::where('user_id',$user_id)->where('product_id',$product_id)->first();
+                    $image_arr = explode(",",$get_product['product_image']);
+                    $pro_qty="";
+                    if($product_qty == NULL){
+                        $pro_qty=0;
+                    }else{
+                        $pro_qty=$product_qty['product_qty'];
+                    }
+                    $product_image=[];
+                    foreach( $image_arr as $image){
+                    $product_image[] =($image != Null)?asset('public/product_image').'/'.$image:"";
+                    }
+                    $data['singledata']['product_image'] = $product_image;
+                    $data['singledata']['product_name']=($get_product['product_name'] != Null)?$get_product['product_name']:"";
+                    $data['singledata']['product_id']=($get_product['id'] != Null)?$get_product['id']:"";
+                    $data['singledata']['price']=($get_product['price'] != Null)?$get_product['price']:"";
+                    $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
+                    $data['singledata']['product_qty']=intval($pro_qty);
+                    $data['singledata']['product_rating']=($get_product['product_rating'] != Null)?$get_product['product_rating']:"";
+                    $data['singledata']['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
+                    $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
+                    $data['singledata']['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
+                    // dd('s');
+
+                    $data['singledata']['product_fav']=$product_fav2;
+        
+                    $similiar_prod=ProductModel::where('category_id',$category_id)->limit(10)->get();
+                    foreach($similiar_prod as $dd){
+                        if($dd->product_fav ==0){
+                            $product_fav1="No";
+                        }else{
+                            $product_fav1="Yes";
+                        }
+                        $cat_name=CategoryModel::where('id',$category_id)->select('category_name')->first();
+                        $dataa['category_name']=((!empty($cat_name))?(($cat_name['category_name'] != Null)?$cat_name['category_name']:""):"");
+                        $dataa['product_image']=($dd['product_image'] != Null)?asset('public/product_image').'/'.$dd['product_image']:"";
+                        $dataa['product_id']=($dd['product_id'] != Null)?$dd['product_id']:"";
+                        $dataa['product_name']=($dd['product_name'] != Null)?$dd['product_name']:"";
+                        $dataa['price']=($dd['price'] != Null)?$dd['price']:"";
+                        $dataa['prod_desc']=($dd['prod_desc'] != Null)?$dd['prod_desc']:"";
+                        $dataa['product_rating']=($dd['product_rating'] != Null)?$dd['product_rating']:"";
+                        $dataa['offer']=($dd['offer'] != Null)?$dd['offer']:"";
+                        $dataa['product_fav']=$product_fav1;
+                        $data['similar_prod'][] = $dataa;
+                    }
+
+                    $productdata=OrderModel::limit(10)->pluck('product')->join(',');
+                    $order_p=explode(',',$productdata);
+                    $res = collect(array_count_values($order_p))->sortDesc()->all();
+                    $p_id=array_keys($res);
+                    
+                    $t_products=ProductModel::whereIn('id',$p_id)->take('15')->where('status','1')->where('del_status','1')->get();
+                    foreach($t_products as $pro){
+                        if($pro->product_fav ==0){
+                            $product_fav="No";
+                        }else{
+                            $product_fav="Yes";
+                        }
+                        $cat_id=$pro->category_id;
+                        $subcat_id=$pro->subcategory_id;
+                        $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
+                        $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
+                        $dataaaaa['product_id']=($pro->id != Null)?$pro->id:"";
+                        $dataaaaa['product_name']=($pro->product_name != Null)?$pro->product_name:"";
+                        $dataaaaa['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
+                        $dataaaaa['price']=($pro->price != Null)?$pro->price:"";
+                        $dataaaaa['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
+                        $dataaaaa['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
+                        $dataaaaa['product_fav']=$product_fav;
+                        $dataaaaa['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
+                        $dataaaaa['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
+                        $dataaaaa['offer']=($pro->offer != Null)?$pro->offer:"";
+                        $dataaaaa['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
+                        $data['frequent_prod'][] = $dataaaaa;
+                    }
+                        return ApiResponse::ok('Success Fetched Data',[$data]);
+                }else{
+                    return ApiResponse::ok('Invalid Product ID',$dataa);
                 }
-                    return ApiResponse::ok('Success Fetched Data',[$data]);
-                }
+            }else{
+                return ApiResponse::ok('Invalid Product ID',$dataa);
+            }
            
         }else{
             return ApiResponse::error('Unauthorise Request');
@@ -428,3 +454,4 @@ class ProductController extends Controller
         }
     }
 }
+
