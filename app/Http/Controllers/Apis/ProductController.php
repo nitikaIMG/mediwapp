@@ -49,7 +49,7 @@ class ProductController extends Controller
                 $data['offer'] = (!empty($product['offer']))?$product['offer']:"";
                 $dataa[]=$data;
             }
-           return ApiResponse::ok('Discounted Products',[$dataa]);
+           return ApiResponse::ok('Discounted Products',$dataa);
         }else{
             return ApiResponse::error('Unauthorise Request');
         }
