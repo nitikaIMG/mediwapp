@@ -88,7 +88,10 @@
                     
                 <div class="form-group col-md-6">
                     <label for="exampleInputName1">Offer Type</label>
-                    <input type="text" name="offer_type" class="form-control"  value="{{old('offer_type')}}" id="exampleInputName1"  placeholder=" Offer Type">
+                    <select name="offer_type" class="form-control">
+                        <option value="cash">Cash</option>
+                        <option value="percentage">Percentage</option>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-6">
