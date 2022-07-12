@@ -47,43 +47,44 @@ class CartController extends Controller
         }
     }
 
-    public function showcart(Request $request){
-        if($request->isMethod('get')){
-            $card_data = CartModel::all();
-            $dataa=[];
-            foreach($card_data as $card){
+    // public function showcart(Request $request){
+    //     if($request->isMethod('get')){
+    //         $card_data = CartModel::all();
+    //         $dataa=[];
+    //         foreach($card_data as $card){
                
-                $user_id=$card->user_id;
-                $product_id=$card->product_id;
-                $product_qty=$card->product_qty;
-                $address_id=$card->address_id;
-                $category=CategoryModel::where('id',$product_id)->select('category_name')->first();
-                $subcat_name=SubcategoryModel::where('id',$product_id)->select('subcategory_name')->first();
-                $cat_project=ProductModel::where('id',$product_id)->first();
+    //             $user_id=$card->user_id;
+    //             $product_id=$card->product_id;
+    //             $product_qty=$card->product_qty;
+    //             $address_id=$card->address_id;
+    //             $category=CategoryModel::where('id',$product_id)->select('category_name')->first();
+    //             $subcat_name=SubcategoryModel::where('id',$product_id)->select('subcategory_name')->first();
+    //             $cat_project=ProductModel::where('id',$product_id)->first();
                 
-                $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
-                $data['subcategory_name']=$subcat_name['subcategory_name'];
-                $data['product_name']=($cat_project['product_name'] != Null)?$cat_project['product_name']:"";
-                $data['product_image']=($cat_project['product_image'] != Null)?asset('public/product_image').'/'.$cat_project['product_image']:"";
-                $data['amount']=($cat_project['price'] != Null)?$cat_project['price']:"";
-                $data['min_quantity']=($cat_project['min_quantity'] != Null)?$cat_project['min_quantity']:"";
-                $data['opening_quantity']=($cat_project['opening_quantity'] != Null)?$cat_project['opening_quantity']:"";
-                $data['offer']=($cat_project['offer'] != Null)?$cat_project['offer']:"";
-                $data['offer_type']=($cat_project['offer_type'] != Null)?$cat_project['offer_type']:"";
-                $dataa[] = $data;
-                // $cat_name=ProductModel::where('id',$card->product_id)->first();
+    //             $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
+    //             $data['subcategory_name']=$subcat_name['subcategory_name'];
+    //             $data['product_name']=($cat_project['product_name'] != Null)?$cat_project['product_name']:"";
+    //             $data['product_image']=($cat_project['product_image'] != Null)?asset('public/product_image').'/'.$cat_project['product_image']:"";
+    //             $data['amount']=($cat_project['price'] != Null)?$cat_project['price']:"";
+    //             $data['min_quantity']=($cat_project['min_quantity'] != Null)?$cat_project['min_quantity']:"";
+    //             $data['opening_quantity']=($cat_project['opening_quantity'] != Null)?$cat_project['opening_quantity']:"";
+    //             $data['offer']=($cat_project['offer'] != Null)?$cat_project['offer']:"";
+    //             $data['offer_type']=($cat_project['offer_type'] != Null)?$cat_project['offer_type']:"";
+    //             $dataa[] = $data;
+    //             // $cat_name=ProductModel::where('id',$card->product_id)->first();
             
-            }
-           return ApiResponse::ok('Fetch Card Details',$dataa);
-        }else{           
-            return ApiResponse::error('Unauthorise Request');
-        }
+    //         }
+    //        return ApiResponse::ok('Fetch Card Details',$dataa);
+    //     }else{           
+    //         return ApiResponse::error('Unauthorise Request');
+    //     }
 
-    }
+    // }
 
     public function view_cart(Request $request){
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
+            $data =[];
             $card_data=CartModel::where('user_id',$user_id)->where('del_status',1)->get();
             foreach($card_data as $card){
                 $user_id=$card->user_id;
@@ -93,7 +94,6 @@ class CartController extends Controller
                 $category=CategoryModel::where('id',$product_id)->select('category_name')->first();
                 $subcat_name=SubcategoryModel::where('id',$product_id)->select('subcategory_name')->first();
                 $cat_project=ProductModel::where('id',$product_id)->first();
-                
                 $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
                 $data['product_name']=($cat_project['product_name'] != Null)?$cat_project['product_name']:"";
                 $data['product_image']=($cat_project['product_image'] != Null)?asset('public/product_image').'/'.$cat_project['product_image']:"";
