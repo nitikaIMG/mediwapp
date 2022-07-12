@@ -67,8 +67,6 @@ class CartController extends Controller
                 $data['product_name']=(!empty($cat_project['product_name']))?$cat_project['product_name']:"";
                 $data['product_image']=(!empty($cat_project['product_image']))?asset('public/product_image').'/'.$cat_project['product_image']:"";
                 $data['amount']=(!empty($cat_project['price']))?$cat_project['price']:"";
-                $data['min_quantity']=(!empty($cat_project['min_quantity']))?$cat_project['min_quantity']:"";
-                $data['opening_quantity']=(!empty($cat_project['opening_quantity']))?$cat_project['opening_quantity']:"";
                 $data['offer']=(!empty($cat_project['offer']))?$cat_project['offer']:"";
                 $data['offer_type']=(!empty($cat_project['offer_type']))?$cat_project['offer_type']:"";
                 $data['product_qty']=intval($product_qty);
