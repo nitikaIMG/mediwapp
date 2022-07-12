@@ -84,7 +84,7 @@
               <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
                 <div>
                   <p class="mb-2 text-md-center text-lg-left">Total Orders</p>
-                  <h1 class="mb-0">{{$total_user}}</h1>
+                  <h1 class="mb-0">{{$total_order}}</h1>
                 </div>
                 <i class="typcn typcn-chart-pie icon-xl text-secondary"></i>
               </div>

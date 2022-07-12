@@ -34,8 +34,10 @@ class CartController extends Controller
             $data['product_id']=$request->product_id;
             $data['product_qty']=1;
             $get_prod = CartModel::where('user_id',$user_id)->where('product_id',$request->product_id)->first();
+            
             if($get_prod){
                 $newqty['product_qty']  = $data['product_qty'] + $get_prod->product_qty;
+                return ApiResponse::ok("Data already  Into Cart");
                 CartModel::where('id',$get_prod->id)->update($newqty);
             }else{
                 CartModel::create($data);
