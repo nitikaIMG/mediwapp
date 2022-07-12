@@ -238,10 +238,10 @@ class ProductController extends Controller
     public function show_wishlist(Request $request){
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
-            $get_prod=wishlistModel::where('user_id',$user_id)->pluck('product_id');
-            if($get_prod->isNotEmpty()){
-                $explode_ids = $get_prod->toarray();
-                $get_wishlist_prod=ProductModel::whereIn('id',$explode_ids)->where('del_status','1')->where('status','1')->get();
+            $get_prod=wishlistModel::where('user_id',$user_id)->value('product_id');
+            if($get_prod){
+                $explode_ids = explode(",",$get_prod);
+                $get_wishlist_prod=ProductModel::whereIn('id',$explode_ids)->get();
                 $dataa=[];
                 $prod_fav="";
                 if($get_wishlist_prod->isNotEmpty()){
