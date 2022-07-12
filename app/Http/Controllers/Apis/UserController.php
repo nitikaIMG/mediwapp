@@ -149,7 +149,6 @@ class UserController extends Controller
             if($validator->fails()){
                return $this->validation_error_response($validator);
             }
-      
                $add_user_feedback = $request->all();
                $data = UserFeedbackModel::create($add_user_feedback); 
                return ApiResponse::ok("Add User Feedback",$data);

@@ -245,10 +245,10 @@ class ProductController extends Controller
                     $cat_id=$prod->category_id;
                     $subcat_id=$prod->subcategory_id;
                     $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
-                    $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
-                    $data['category_name']=(!empty($cat_name['category_name']))?$cat_name['category_name']:"";
-                    $data['subcategory_name']=(!empty($subcat_name['subcategory_name']))?$subcat_name['subcategory_name']:"";
-                    $data['prodduct_name']=($prod->product_name != Null)?$prod->product_name:"";
+                    $data['category_name']=((!empty($cat_name))?(($cat_name['category_name'] != Null)?$cat_name['category_name']:""):"");
+                    $data['product_name']=($prod->product_name != Null)?$prod->product_name:"";
+                    $data['product_id']=($prod->product_id != Null)?$prod->product_id:"";
+                    $data['product_image']=($prod->product_image != Null)?asset('public/product_image').'/'.$prod->product_image:"";
                     $data['price']=($prod->price != Null)?$prod->price:"";
                     $data['min_quantity']=($prod->min_quantity != Null)?$prod->min_quantity:"";
                     $data['opening_quantity']=($prod->opening_quantity != Null)?$prod->opening_quantity:"";
@@ -339,7 +339,7 @@ class ProductController extends Controller
                         $cat_name=CategoryModel::where('id',$category_id)->select('category_name')->first();
                         $dataa['category_name']=((!empty($cat_name))?(($cat_name['category_name'] != Null)?$cat_name['category_name']:""):"");
                         $dataa['product_image']=($dd['product_image'] != Null)?asset('public/product_image').'/'.$dd['product_image']:"";
-                        $dataa['product_id']=($dd['product_id'] != Null)?$dd['product_id']:"";
+                        $dataa['product_id']=$dd->id;
                         $dataa['product_name']=($dd['product_name'] != Null)?$dd['product_name']:"";
                         $dataa['price']=($dd['price'] != Null)?$dd['price']:"";
                         $dataa['prod_desc']=($dd['prod_desc'] != Null)?$dd['prod_desc']:"";
@@ -365,7 +365,7 @@ class ProductController extends Controller
                         $subcat_id=$pro->subcategory_id;
                         $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
                         $subcat_name=SubcategoryModel::where('id',$subcat_id)->select('subcategory_name')->first();
-                        $dataaaaa['product_id']=($pro->id != Null)?$pro->id:"";
+                        $dataaaaa['product_id']=$pro->id;
                         $dataaaaa['product_name']=($pro->product_name != Null)?$pro->product_name:"";
                         $dataaaaa['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
                         $dataaaaa['price']=($pro->price != Null)?$pro->price:"";
