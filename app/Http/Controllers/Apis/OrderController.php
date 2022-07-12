@@ -134,4 +134,38 @@ class OrderController extends Controller
             return ApiResponse::ok("No Orders For This User");
         }
     }
+
+    public function cart_checkout(Request $request){
+        if($request->isMethod('post')){
+            $validator = Validator::make($request->all(), 
+            [
+                'product_id' => ['required'],
+            ],[
+                'product_id' =>'Product Id field Is Required..',
+            ]);
+            if($validator->fails()){
+                return $this->validation_error_response($validator);
+            }
+
+            $user_id=auth('api')->user()->id;
+            if(!empty($user_id)){
+                    $implode_prd_id=implode(",",$request['product_id']);
+                    $data['user_id']=$user_id;
+                    $data['order_id']='MED'.random_int(100000, 999999);
+                    $data['product']=$user_id;
+                    $data['order_status']='2';
+                    $data['payment_status']='0';
+                    $data['order_amount']="1000";
+                    OrderModel::create($data);
+                    return ApiResponse::ok("Your order is in pending list wait untill admin will approve...");
+            }else{
+                return ApiResponse::ok("User Not logged In");
+            }
+            
+            
+
+        }else{
+            return ApiResponse::error("Unauthorise Request");
+        }
+    }
 }

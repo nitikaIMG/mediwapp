@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CartModel;
 use App\Models\ProductModel;
 use App\Models\CategoryModel;
+use App\Models\OrderModel;
 use App\Models\SubcategoryModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -148,22 +149,5 @@ class CartController extends Controller
             return ApiResponse::error('Unauthorise Request');
         }
     }
-    public function cart_checkout(Request $request){
-        if($request->isMethod('post')){
-            $validator = Validator::make($request->all(), 
-            [
-                'product_id' => ['required'],
-            ],[
-                'product_id' =>'Product Id field Is Required..',
-            ]);
-            if($validator->fails()){
-                return $this->validation_error_response($validator);
-            }
-            
-            $user_id=auth('api')->user()->id;
-            
-        }else{
-            return ApiResponse::error("Unauthorise Request");
-        }
-    }
+   
 }
