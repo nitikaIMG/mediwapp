@@ -39,6 +39,8 @@ class ProductController extends Controller
                 }else{
                     $product_fav="True";
                 }
+
+
                 $category_id=$product['category_id'];
                 $subcategory_id=$product['subcategory_id'];
                 $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
@@ -168,7 +170,7 @@ class ProductController extends Controller
                         if(in_array($request['product_id'],$exp_prod) == "true"){
                             return ApiResponse::ok('Products Already in wishlist');
                         }
-
+                        
                         if(!empty($chk_user) && $chk_user !="" && $request['status']=='1'){
                             $dd=explode(',',$chk_user);
                             array_push($dd,$request['product_id']);
