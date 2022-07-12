@@ -33,7 +33,8 @@ Route::post('/socialauthentication',[AuthController::class,'socialauthentication
     Route::get('recent_view',[ProductController::class,'recent_view']);
 
     Route::post('addcart',[CartController::class,'addcart']);
-    Route::get('showcart',[CartController::class,'showcart']);
+    // Route::get('showcart',[CartController::class,'showcart']);
+    Route::get('view_cart',[CartController::class,'view_cart']);
     Route::get('userprofile',[UserController::class,'userprofile']);
     Route::get('healthgoals',[HealthGoalController::class,'healthgoal']);
 
