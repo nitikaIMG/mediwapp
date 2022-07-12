@@ -52,6 +52,7 @@ class CartController extends Controller
             $card_data = CartModel::all();
             $dataa=[];
             foreach($card_data as $card){
+               
                 $user_id=$card->user_id;
                 $product_id=$card->product_id;
                 $product_qty=$card->product_qty;
@@ -61,13 +62,13 @@ class CartController extends Controller
                 $cat_project=ProductModel::where('id',$product_id)->first();
                 $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
                 $data['subcategory_name']=$subcat_name['subcategory_name'];
-                $data['product_name']=($cat_project->product_name != Null)?$cat_project->product_name:"";
-                $data['product_image']=($cat_project->product_image != Null)?asset('public/product_image').'/'.$cat_project->product_image:"";
-                $data['amount']=($cat_project->price != Null)?$cat_project->price:"";
-                $data['min_quantity']=($cat_project->min_quantity != Null)?$cat_project->min_quantity:"";
-                $data['opening_quantity']=($cat_project->opening_quantity != Null)?$cat_project->opening_quantity:"";
-                $data['offer']=($cat_project->offer != Null)?$cat_project->offer:"";
-                $data['offer_type']=($cat_project->offer_type != Null)?$cat_project->offer_type:"";
+                $data['product_name']=($cat_project['product_name'] != Null)?$cat_project['product_name']:"";
+                $data['product_image']=($cat_project['product_image'] != Null)?asset('public/product_image').'/'.$cat_project['product_image']:"";
+                $data['amount']=($cat_project['price'] != Null)?$cat_project['price']:"";
+                $data['min_quantity']=($cat_project['min_quantity'] != Null)?$cat_project['min_quantity']:"";
+                $data['opening_quantity']=($cat_project['opening_quantity'] != Null)?$cat_project['opening_quantity']:"";
+                $data['offer']=($cat_project['offer'] != Null)?$cat_project['offer']:"";
+                $data['offer_type']=($cat_project['offer_type'] != Null)?$cat_project['offer_type']:"";
                 $dataa[] = $data;
                 // $cat_name=ProductModel::where('id',$card->product_id)->first();
             
