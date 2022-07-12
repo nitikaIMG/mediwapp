@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Traits\ValidationTrait;
 use App\Api\ApiResponse;
 use App\Models\CategoryModel;
+use App\Models\CartModel;
 use App\Models\ProductModel;
 use Illuminate\Support\Carbon;
 use App\Models\OrderModel;
@@ -64,12 +65,13 @@ class OrderController extends Controller
                 //dd($get_prod_data);
                 foreach($get_prod_data as $pro_data){
                     $category=CategoryModel::where('id',$pro_data['category_id'])->select('category_name')->first();
+                    $product_qty = CartModel::where('user_id',$user_id)->where('product_id',$pro_data['id'])->select('product_qty')->first();
                     $pro_dat['product_id']=$pro_data['id'];
                     $pro_dat['product_name']=(!empty($pro_data['product_name']))?$pro_data['product_name']:"";
                     $pro_dat['product_image']=(!empty($pro_data['product_image']))? asset('public/product_image').'/'.$pro_data['product_image']:"";
                     $pro_dat['price']=(!empty($pro_data['price']))?$pro_data['price']:"";
                     $pro_dat['offer']=(!empty($pro_data['offer']))?$pro_data['offer']:"";
-                    $pro_dat['prod_qty']=(!empty($pro_data['prod_qty']))?$pro_data['prod_qty']:"";
+                    $pro_dat['product_qty']=(!empty($product_qty['product_qty']))?intval($product_qty['product_qty']):"";
                     $pro_dat['coupon']=(!empty($pro_data['coupon']))?$pro_data['coupon']:"";
                     $pro_dat['product_description']=(!empty($pro_data['product_description']))?$pro_data['product_description']:"";
                     $pro_dat['product_rating']=(!empty($pro_data['product_rating']))?$pro_data['product_rating']:"";
