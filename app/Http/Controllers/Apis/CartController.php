@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CartModel;
 use App\Models\ProductModel;
 use App\Models\CategoryModel;
+use App\Models\OrderModel;
 use App\Models\SubcategoryModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -79,41 +80,40 @@ class CartController extends Controller
         }
     }
 
-  public function add_remove(Request $request)
-  {
+    public function add_remove(Request $request)
+    {
         if($request->isMethod('post')){
-        $validator = Validator::make($request->all(),[
-            'product_id' => 'required',
-            'type' => 'required',
-            ]);
-        if($validator->fails()){
-           return $this->validation_error_response($validator);
-        }
-        $user_id=auth('api')->user()->id;
-        $pid = $request->get('product_id');
-        $cartdata = CartModel::where('user_id', $user_id)->where('product_id', $pid)->first();
-        if(!empty($cartdata)){
-            if($request->type == 'add'){
-                $newqnt = $cartdata->product_qty+1;
-            }else{
-                if($cartdata->product_qty<=0)
-                { 
-                    return ApiResponse::ok('Product QTY is not less then zero');
-                }
-                else{
-                    $newqnt = $cartdata->product_qty-1;
-                } 
+            $validator = Validator::make($request->all(),[
+                'product_id' => 'required',
+                'type' => 'required',
+                ]);
+            if($validator->fails()){
+            return $this->validation_error_response($validator);
             }
-            CartModel::where('user_id', $user_id)->where('product_id', $pid)->update(['product_qty'=>$newqnt]);
-            return ApiResponse::ok('Item  Update Successfully');
-        }
-        else{
-            return ApiResponse::error('Product id invalid');
-        }
-       }
-       else{
+            $user_id=auth('api')->user()->id;
+            $pid = $request->get('product_id');
+            $cartdata = CartModel::where('user_id', $user_id)->where('product_id', $pid)->first();
+            if(!empty($cartdata)){
+                if($request->type == 'add'){
+                    $newqnt = $cartdata->product_qty+1;
+                }else{
+                    if($cartdata->product_qty<=0)
+                    { 
+                        return ApiResponse::ok('Product QTY is not less then zero');
+                    }
+                    else{
+                        $newqnt = $cartdata->product_qty-1;
+                    } 
+                }
+                CartModel::where('user_id', $user_id)->where('product_id', $pid)->update(['product_qty'=>$newqnt]);
+                return ApiResponse::ok('Item  Update Successfully');
+            }
+            else{
+                return ApiResponse::error('Product id invalid');
+            }
+        }else{
             return ApiResponse::error('Unauthorise Request');
         }
-    
-  }
+    }
+   
 }
