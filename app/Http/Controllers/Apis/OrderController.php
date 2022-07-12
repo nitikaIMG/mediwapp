@@ -62,7 +62,6 @@ class OrderController extends Controller
                 $dataa['order_status']=!empty($order_status)?$order_status:"";
                 $products_list = array();
                 $get_prod_data=ProductModel::whereIn('id',$prod_id)->get();
-                //dd($get_prod_data);
                 foreach($get_prod_data as $pro_data){
                     $category=CategoryModel::where('id',$pro_data['category_id'])->select('category_name')->first();
                     $product_qty = CartModel::where('user_id',$user_id)->where('product_id',$pro_data['id'])->select('product_qty')->first();
