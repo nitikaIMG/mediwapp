@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Traits\ValidationTrait;
 use App\Api\ApiResponse;
 use App\Models\CategoryModel;
+use App\Models\CartModel;
 use App\Models\ProductModel;
 use Illuminate\Support\Carbon;
 use App\Models\OrderModel;

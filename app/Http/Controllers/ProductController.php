@@ -150,8 +150,8 @@ class ProductController extends Controller
 
     
     public function destroy($id)
-    {
-        dd($id);
+    {   
+        $status="";
         $del_status=ProductModel::where('id',$id)->pluck('del_status');
         if(!empty($del_status)){
             foreach($del_status as $del){
@@ -211,7 +211,6 @@ class ProductController extends Controller
         if (!empty($titles)) {
             $data = array();
             foreach ($titles as $title) {
-                //$dele_category = "";
                 $enbdisu =route('enable_disable_product',$title->id);
                 $edit_category =route('product.edit',$title->id);
                 $dele_category =route('product.destroy',$title->id);
@@ -227,7 +226,7 @@ class ProductController extends Controller
                 $image=explode(',',$title->product_image);
                 $key = array_key_last($image);
                 $nestedData['multidelete']='<td><input type="checkbox" class="sub_chk" data-id="'.$title->id.'"></td>';
-                $nestedData['product_image'] = isset($title->product_image[$key])?'<img src ='.asset("/public/product_image/".$title->product_image).' height="50px" width="50px">':'Image not available';
+                $nestedData['product_image'] = isset($title->product_image[$key])?'<img src ='.asset("/public/product_image/".$image[0]).' height="50px" width="50px">':'Image not available';
                 $nestedData['action'] = '<div class="dropdown">
                 <button class="btn btn-sm btn-primary btn-active-pink dropdown-toggle dropdown-toggle-icon" data-toggle="dropdown" type="button" aria-expanded="true">
                     Action <i class="dropdown-caret"></i>
@@ -258,6 +257,7 @@ class ProductController extends Controller
                     $count++;
                 }
             }
+          
         }
 
         $json_data = array(
