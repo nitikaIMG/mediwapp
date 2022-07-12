@@ -64,6 +64,7 @@ class CartController extends Controller
                 $subcat_name=SubcategoryModel::where('id',$product_id)->select('subcategory_name')->first();
                 $cat_project=ProductModel::where('id',$product_id)->first();
                 $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
+                $data['product_id']=(!empty($cat_project['id']))?intval($cat_project['id']):"";
                 $data['product_name']=(!empty($cat_project['product_name']))?$cat_project['product_name']:"";
                 $data['product_image']=(!empty($cat_project['product_image']))?asset('public/product_image').'/'.$cat_project['product_image']:"";
                 $data['amount']=(!empty($cat_project['price']))?$cat_project['price']:"";
