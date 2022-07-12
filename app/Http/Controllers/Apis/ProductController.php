@@ -169,11 +169,10 @@ class ProductController extends Controller
                             return ApiResponse::ok('Products Already in wishlist');
                         }
 
-                        if(!$chk_user && $request->status=='1'){
+                        if(!empty($chk_user) && $chk_user !=""){
                             $dd=explode(',',$chk_user);
                             array_push($dd,$request['product_id']);
                             $data=implode(',',$dd);
-                            dd($data);
                             ProductModel::where('id',$request['product_id'])->update(['product_fav' =>1]);
                             wishlistModel::where('user_id',$user_id)->update(['product_id'=>$data]);
                             return ApiResponse::ok('Products Added in wishlist');
