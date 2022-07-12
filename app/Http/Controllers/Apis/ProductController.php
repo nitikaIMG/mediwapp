@@ -421,7 +421,7 @@ class ProductController extends Controller
                 $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
                 $data['offer']=($pro->offer != Null)?$pro->offer:"";
                 $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
-                $dataaaaa['product_fav']=$product_fav;
+                $data['product_fav']=$product_fav;
                 $dataa[] = $data;
             }
            return ApiResponse::ok('Categorized Products',$dataa);
@@ -440,6 +440,11 @@ class ProductController extends Controller
                 $recent_prod=ProductModel::whereIn('id',$get_prod_id)->get();
                 if(!empty($recent_prod)){
                     foreach($recent_prod as $pro){
+                        if($pro->product_fav ==0){
+                            $product_fav="False";
+                        }else{
+                            $product_fav="True";
+                        }
                         $cat_id=$pro->category_id;
                         $category=CategoryModel::where('id',$cat_id)->select('category_name')->first();
                         $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
@@ -451,6 +456,7 @@ class ProductController extends Controller
                         $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
                         $data['offer']=($pro->offer != Null)?$pro->offer:"";
                         $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
+                        $data['product_fav']=$product_fav;
                         $dataa[] = $data;
                     }
                     return ApiResponse::ok('Categorized Products',$dataa);
