@@ -213,7 +213,7 @@ class ProductController extends Controller
             foreach ($titles as $title) {
                 $enbdisu =route('enable_disable_product',$title->id);
                 $edit_category =route('product.edit',$title->id);
-                $delete_category =route('product.destroy',$title->id);
+                $dele_category =route('product.destroy',$title->id);
                 
 
                 if($title->status == 0){
@@ -234,8 +234,9 @@ class ProductController extends Controller
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item waves-light waves-effect" href="'.$edit_category.'">Edit</a></li>
                     <li>'.$statuss.'</li>
-                    <form action="'.$delete_category.'" method="post" id="form">
+                    <form action="'.$dele_category.'" method="post" id="form">
                         <input type="hidden" name="_token" value="'.csrf_token().'" />
+                        
                         <input type="hidden" name="_method" value="DELETE" />
                     </form>
                     <li>
