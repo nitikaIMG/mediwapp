@@ -71,7 +71,7 @@ class CartController extends Controller
                 $data['opening_quantity']=(!empty($cat_project['opening_quantity']))?$cat_project['opening_quantity']:"";
                 $data['offer']=(!empty($cat_project['offer']))?$cat_project['offer']:"";
                 $data['offer_type']=(!empty($cat_project['offer_type']))?$cat_project['offer_type']:"";
-                $data['product_qty']=$product_qty;
+                $data['product_qty']=intval($product_qty);
                 $dataa[] = $data;
             }
             return ApiResponse::ok('Fetch Card Details',$dataa);
