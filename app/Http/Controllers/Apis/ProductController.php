@@ -140,7 +140,6 @@ class ProductController extends Controller
             return ApiResponse::error('Unauthorise Request');
         }
     }
-
     public function add_wishlist_prod(Request $request){
         if($request->isMethod('post')){
             $validator = Validator::make($request->all(), 
@@ -154,14 +153,13 @@ class ProductController extends Controller
             if($validator->fails()){
                 return $this->validation_error_response($validator);
             }
-            
+
             $user_id=auth('api')->user()->id;
             if(!empty($user_id)){
-                $data=[];
-                $chk_user=wishlistModel::where('user_id',$user_id)->pluck('product_id')->first();
-                
-                if(!empty($chk_user) && $chk_user !=""){
-                    $exp_prod=explode(',',$chk_user);
+                if(ProductModel::where('id',$request['product_id'])->exists()){
+                    $chk_user=wishlistModel::where('user_id',$user_id)->pluck('product_id')->first();
+                    if(!empty($chk_user) && $chk_user !=""){
+                        $exp_prod=explode(',',$chk_user);
                     if($request->status=="1"){
                         $data['user_id']=$user_id;
                         $exp_prod = explode(",",$chk_user);
@@ -170,40 +168,46 @@ class ProductController extends Controller
                             return ApiResponse::ok('Products Already in wishlist');
                         }
 
-                        if(!$chk_user){
-                            $data['product_id']=$request['product_id'];
-                            wishlistModel::create($data);
-                        }else{
+                        if(!$chk_user && $request->status=='1'){
                             $dd=explode(',',$chk_user);
                             array_push($dd,$request['product_id']);
                             $data=implode(',',$dd);
+                            dd($data);
+                            ProductModel::where('id',$request['product_id'])->update(['product_fav' =>1]);
                             wishlistModel::where('user_id',$user_id)->update(['product_id'=>$data]);
-                        } 
-                        return ApiResponse::ok('Products Added in wishlist');
+                            return ApiResponse::ok('Products Added in wishlist');
+                        }else{
+                            return ApiResponse::ok('No Products In Wishlist');
+                        }
                     }else{
                         $data=explode(',',$chk_user);
                         foreach (array_keys($data, $request['product_id']) as $key) {
                             unset($data[$key]);
                         }
                         $implode_array=implode(',',$data);
+                        ProductModel::where('id',$request['product_id'])->update(['product_fav' =>0]);
                         wishlistModel::where('user_id',$user_id)->update(['product_id'=>$implode_array]);
                         return ApiResponse::ok('Products Removed from wishlist');
                     }
-                   
-                }else{
-                    if($request->status="1"){
-                        $data['product_id']=$request['product_id'];
-                        $data['user_id']=$user_id;
-                        wishlistModel::create($data);
-                        return ApiResponse::ok('Products Added In Wishlist');
                     }else{
-                        return ApiResponse::ok('No Products In Wishlist');
+                        if($request->status=="1"){
+                            $data['product_id']=$request['product_id'];
+                            $data['user_id']=$user_id;
+                            ProductModel::where('id',$request['product_id'])->update(['product_fav' =>1]);
+                            wishlistModel::create($data);
+                            return ApiResponse::ok('Products Added In Wishlist');
+                        }else{
+                            return ApiResponse::ok('Invalid Request');
+                        }
                     }
+                }else{
+                    return ApiResponse::ok('Product Id Invalid');
                 }
             }else{
-                return ApiResponse::ok('User Not LoggedIn');
+                return ApiResponse::ok('User Not Logged In');
             }
-        }else{           
+
+        }else{
             return ApiResponse::error('Unauthorise Request');
         }
     }
@@ -239,23 +243,45 @@ class ProductController extends Controller
             $get_prod=wishlistModel::where('user_id',$user_id)->pluck('product_id');
             if($get_prod->isNotEmpty()){
                 $explode_ids = $get_prod->toarray();
-                $get_wishlist_prod=ProductModel::whereIn('id',$explode_ids)->get();
+                $get_wishlist_prod=ProductModel::whereIn('id',$explode_ids)->where('del_status','1')->where('status','1')->get();
                 $dataa=[];
-                foreach($get_wishlist_prod as $prod){
+                $prod_fav="";
+                if($get_wishlist_prod->isNotEmpty()){
+                    foreach($get_wishlist_prod as $prod){
                     $cat_id=$prod->category_id;
-                    $subcat_id=$prod->subcategory_id;
+
+                    if($prod->product_fav =='1'){
+                        $prod_fav="True";
+                    }else{
+                        $prod_fav="False";
+                    }
+
+                    if($prod->status =='1'){
+                        $status="Active";
+                    }else{
+                        $status="Deactive";
+                    }
+
                     $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
                     $data['category_name']=((!empty($cat_name))?(($cat_name['category_name'] != Null)?$cat_name['category_name']:""):"");
                     $data['product_name']=($prod->product_name != Null)?$prod->product_name:"";
-                    $data['product_id']=($prod->product_id != Null)?$prod->product_id:"";
+                    $data['product_rating']=($prod->product_rating != Null)?$prod->product_rating:"";
+                    $data['product_fav']=$prod_fav;
+                    $data['product_id']=$prod->id;
+                    $data['satus']=$status;
                     $data['product_image']=($prod->product_image != Null)?asset('public/product_image').'/'.$prod->product_image:"";
                     $data['price']=($prod->price != Null)?$prod->price:"";
                     $data['min_quantity']=($prod->min_quantity != Null)?$prod->min_quantity:"";
                     $data['opening_quantity']=($prod->opening_quantity != Null)?$prod->opening_quantity:"";
                     $data['offer']=($prod->offer != Null)?$prod->offer:"";
+                    $data['prod_desc']=($prod->prod_desc != Null)?$prod->prod_desc:"";
                     $data['offer_type']=($prod->offer_type != Null)?$prod->offer_type:"";
                     $dataa[] = $data;
                 }
+                }else{
+                    return ApiResponse::ok('No Products In Wishlist');
+                }
+                
 
                 return ApiResponse::ok('Succesfully Fetchd Data',$dataa);
             }else{
