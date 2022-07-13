@@ -348,7 +348,7 @@ class ProductController extends Controller
                 if(!empty($product_id)){
                     $user_id=auth('api')->user()->id;
                     $wsdaata= auth('api')->user()->getFavrioutes;
-                    $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
+                    $wishlist = !empty($wsdaata)?explode(',',$wsdaata->product_id):[];
                     $getmaxprod = RecentProduct::where('user_id',$user_id)->get();
                     if(count($getmaxprod)>=5){
                         RecentProduct::where('user_id',$user_id)->where('id',$getmaxprod[0]['id'])->delete();
