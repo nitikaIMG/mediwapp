@@ -39,13 +39,13 @@ class ProductController extends Controller
             'product_image.*' =>'required',
             'subcategory_id' => 'required',
             'prod_desc' => 'required',
-            'price' => 'required',
+            'price' => 'required|numeric',
             'opening_quantity' => 'required',
             'min_quantity' => 'required',
             'package_type' => 'required',
             'brand_image' => 'required',
             'validate_date' => 'required',
-            'offer' => 'required',
+            'offer' => 'required|numeric',
             'offer_type' => 'required',
         ],[
             'product_name.required' => 'The Product name field is required.',
@@ -143,7 +143,6 @@ class ProductController extends Controller
         }else{
             unset($data['product_image']);
         }
-    
         ProductModel::where('id',$id)->update($data);
         return redirect()->back()->with('success', 'Data Updated');
     }
