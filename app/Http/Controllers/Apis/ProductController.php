@@ -29,7 +29,7 @@ class ProductController extends Controller
             $disc_prod=ProductModel::where('offer','!=','NULL')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
             $dataa=[];
             $product_fav="";
-
+            $discounted_price="";
             if(empty($disc_prod)){
                 return ApiResponse::ok('Disscount Product are not Available',$dataa);
            }else{
@@ -39,6 +39,21 @@ class ProductController extends Controller
                 }else{
                     $product_fav="True";
                 }
+
+                $offertype=$product->offer_type;
+                if(!empty($offertype)){
+                        if($offertype =="cash"){
+                        $offer_price=$product->offer;
+                        $prod_price=$product->price;
+                        $discounted_price=abs(intval($prod_price-$offer_price));
+                    }else{
+                        $offer_price=$product->offer;
+                        $prod_price=$product->price;
+                        $per=$prod_price*$offer_price/100;
+                        $discounted_price=abs(intval($product->price-$per));
+                    }
+                }
+                
 
 
                 $category_id=$product['category_id'];
@@ -52,9 +67,10 @@ class ProductController extends Controller
                 $data['subcategory_name'] = ((!empty($subcat_name))?(($subcat_name['subcategory_name'] != Null)?$subcat_name['subcategory_name']:""):"");
                 $data['description']=(!empty($product['prod_desc']))?$product['prod_desc']:"";
                 $data['product_rating']=(!empty($product['product_rating']))?$product['product_rating']:"";
+                $data['discounted_price']=(!empty($discounted_price))?$discounted_price:"";
                 $data['product_fav'] = $product_fav;
                 $data['price'] = (!empty($product['price']))?$product['price']:"";
-                $data['offer'] = (!empty($product['offer']))?$product['offer']:"";
+                $data['offer'] = (!empty($discounted_price))?$discounted_price:"";
                 $dataa[]=$data;
             }
            return ApiResponse::ok('Discounted Products',$dataa);
@@ -79,7 +95,22 @@ class ProductController extends Controller
                     }else{
                         $product_fav="True";
                     }
-    
+                    
+                    $offertype=$pro->offer_type;
+                    if(!empty($offertype)){
+                            if($offertype =="cash"){
+                            $offer_price=$pro->offer;
+                            $prod_price=$pro->price;
+                            $discounted_price=abs(intval($prod_price-$offer_price));
+                        }else{
+                            $offer_price=$pro->offer;
+                            $prod_price=$pro->price;
+                            $per=$prod_price*$offer_price/100;
+                            $discounted_price=abs(intval($pro->price-$per));
+                        }
+                    }
+
+
                     $cat_id=$pro->category_id;
                     $subcat_id=$pro->subcategory_id;
                     $category=CategoryModel::where('id',$cat_id)->select('category_name')->first();
@@ -93,6 +124,7 @@ class ProductController extends Controller
                     $data['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
                     $data['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
                     $data['product_fav']=$product_fav;
+                    $data['discounted_price']=(!empty($discounted_price))?$discounted_price:"";
                     $data['offer']=($pro->offer != Null)?$pro->offer:"";
                     $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
                     $dataa[] = $data;
