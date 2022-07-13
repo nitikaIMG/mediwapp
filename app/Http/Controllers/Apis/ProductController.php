@@ -29,22 +29,35 @@ class ProductController extends Controller
             $disc_prod=ProductModel::where('offer','!=','NULL')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
             $user_id=auth('api')->user()->id;
             $wsdaata= auth('api')->user()->getFavrioutes;
-            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
+            $wishlist = !empty($wsdaata)?explode(',',$wsdaata->product_id):[];
             $dataa=[];
             $product_fav="";
-
+            $discounted_price="";
             if(empty($disc_prod)){
                 return ApiResponse::ok('Disscount Product are not Available',$dataa);
            }else{
             foreach($disc_prod as $key => $product){
-
-                if(!empty($wishlist)){
                     if(in_array($product->id,$wishlist)){
                         $product_fav="True";
                     }else{
                         $product_fav="False";
                     }
+                $offertype=$product->offer_type;
+                if(!empty($offertype)){
+                        if($offertype =="cash"){
+                        $offer_price=$product->offer;
+                        $prod_price=$product->price;
+                        $discounted_price=abs(intval($prod_price-$offer_price));
+                    }else{
+                        $offer_price=$product->offer;
+                        $prod_price=$product->price;
+                        $per=$prod_price*$offer_price/100;
+                        $discounted_price=abs(intval($product->price-$per));
+                    }
                 }
+                
+
+
                 $category_id=$product['category_id'];
                 $subcategory_id=$product['subcategory_id'];
                 $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
@@ -56,9 +69,10 @@ class ProductController extends Controller
                 $data['subcategory_name'] = ((!empty($subcat_name))?(($subcat_name['subcategory_name'] != Null)?$subcat_name['subcategory_name']:""):"");
                 $data['description']=(!empty($product['prod_desc']))?$product['prod_desc']:"";
                 $data['product_rating']=(!empty($product['product_rating']))?$product['product_rating']:"";
+                $data['discounted_price']=(!empty($discounted_price))?$discounted_price:"";
                 $data['product_fav'] = $product_fav;
                 $data['price'] = (!empty($product['price']))?$product['price']:"";
-                $data['offer'] = (!empty($product['offer']))?$product['offer']:"";
+                $data['offer'] = (!empty($discounted_price))?$discounted_price:"";
                 $dataa[]=$data;
             }
            return ApiResponse::ok('Discounted Products',$dataa);
@@ -74,7 +88,7 @@ class ProductController extends Controller
             $p_id=array_unique($order_p);
             $user_id=auth('api')->user()->id;
             $wsdaata= auth('api')->user()->getFavrioutes;
-            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
+            $wishlist = !empty($wsdaata)?explode(',',$wsdaata->product_id):[];
             $t_products=ProductModel::whereIn('id',$p_id)->where('status','1')->where('del_status',1)->get();
             $dataa=[];
             $product_fav="";
@@ -88,7 +102,22 @@ class ProductController extends Controller
                             $product_fav="False";
                         }
                     }
-    
+                    
+                    $offertype=$pro->offer_type;
+                    if(!empty($offertype)){
+                            if($offertype =="cash"){
+                            $offer_price=$pro->offer;
+                            $prod_price=$pro->price;
+                            $discounted_price=abs(intval($prod_price-$offer_price));
+                        }else{
+                            $offer_price=$pro->offer;
+                            $prod_price=$pro->price;
+                            $per=$prod_price*$offer_price/100;
+                            $discounted_price=abs(intval($pro->price-$per));
+                        }
+                    }
+
+
                     $cat_id=$pro->category_id;
                     $subcat_id=$pro->subcategory_id;
                     $category=CategoryModel::where('id',$cat_id)->select('category_name')->first();
@@ -102,6 +131,7 @@ class ProductController extends Controller
                     $data['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
                     $data['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
                     $data['product_fav']=$product_fav;
+                    $data['discounted_price']=(!empty($discounted_price))?$discounted_price:"";
                     $data['offer']=($pro->offer != Null)?$pro->offer:"";
                     $data['offer_type']=($pro->offer_type != Null)?$pro->offer_type:"";
                     $dataa[] = $data;
@@ -124,7 +154,7 @@ class ProductController extends Controller
             $res = collect(array_count_values($order_p))->sortDesc()->all();
             $user_id=auth('api')->user()->id;
             $wsdaata= auth('api')->user()->getFavrioutes;
-            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
+            $wishlist = !empty($wsdaata)?explode(',',$wsdaata->product_id):[];
             $p_id=array_keys($res);
             $t_products=ProductModel::whereIn('id',$p_id)->take('15')->where('status','1')->where('del_status','1')->get();
             $dataa=[];
@@ -184,7 +214,7 @@ class ProductController extends Controller
                         if(in_array($request['product_id'],$exp_prod) == "true"){
                             return ApiResponse::ok('Products Already in wishlist');
                         }
-
+                        
                         if(!empty($chk_user) && $chk_user !="" && $request['status']=='1'){
                             $dd=explode(',',$chk_user);
                             array_push($dd,$request['product_id']);
@@ -255,7 +285,7 @@ class ProductController extends Controller
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
             $wsdaata= auth('api')->user()->getFavrioutes;
-            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
+            $wishlist = !empty($wsdaata)?explode(',',$wsdaata->product_id):[];
             if(!empty($wishlist)){
                 $get_wishlist_prod=ProductModel::whereIn('id',$wishlist)->get();
                 $dataa=[];
@@ -368,7 +398,9 @@ class ProductController extends Controller
                     // dd('s');
 
                     $data['singledata']['product_fav']=$product_fav2;
-        
+                    $product_fav1="";
+                    $product_fav="";
+                    $product_fav2="";
                     $similiar_prod=ProductModel::where('category_id',$category_id)->limit(10)->get();
                     foreach($similiar_prod as $dd){
                         if(!empty($wishlist)){
@@ -445,7 +477,7 @@ class ProductController extends Controller
             }
             $user_id=auth('api')->user()->id;
             $wsdaata= auth('api')->user()->getFavrioutes;
-            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
+            $wishlist = !empty($wsdaata)?explode(',',$wsdaata->product_id):[];
             $t_products=ProductModel::where('category_id',$request->category_id)->take('15')->where('status','1')->where('del_status','1')->get();
             $dataa=[];
             if(!empty($t_products)){
@@ -486,7 +518,7 @@ class ProductController extends Controller
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
             $wsdaata= auth('api')->user()->getFavrioutes;
-            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
+            $wishlist = !empty($wsdaata)?explode(',',$wsdaata->product_id):[];
             $get_prod_id=RecentProduct::where('user_id',$user_id)->pluck('recent_product')->toArray();
             if(!empty($get_prod_id)){
                 $recent_prod=ProductModel::whereIn('id',$get_prod_id)->get();
