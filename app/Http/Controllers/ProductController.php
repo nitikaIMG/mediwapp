@@ -143,7 +143,6 @@ class ProductController extends Controller
         }else{
             unset($data['product_image']);
         }
-    
         ProductModel::where('id',$id)->update($data);
         return redirect()->back()->with('success', 'Data Updated');
     }

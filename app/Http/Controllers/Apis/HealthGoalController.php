@@ -13,7 +13,7 @@ class HealthGoalController extends Controller
         if($request->isMethod('get')){
             $all_goals=HeathGoalModel::all();
             $data = [];
-            foreach ($all_goals as $gole_key => $goal) {
+            foreach ($all_goals as $gole_key => $goal){
                $products = $goal->products;
                foreach($products as $p_key => $product){           
                 $products[$p_key]['product_image']= asset('public/product_image/'.$products[$p_key]['product_image']);

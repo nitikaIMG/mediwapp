@@ -96,7 +96,10 @@
                         
                     <div class="form-group col-md-6">
                         <label for="exampleInputName1">Offer Type</label>
-                        <input type="text" name="offer_type" class="form-control"  value="{{$edit_data['offer_type']}}" id="exampleInputName1"  placeholder=" Offer Type">
+                        <select name="offer_type" class="form-control">
+                            <option value="cash" {{ $edit_data['offer_type']=='cash' ? 'selected' : ''  }}>Cash</option>
+                            <option value="percentage"  {{ $edit_data['offer_type']=='percentage' ? 'selected' : ''  }}>Percentage</option>
+                        </select>
                     </div>
 
                     
