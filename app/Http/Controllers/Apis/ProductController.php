@@ -76,7 +76,7 @@ class ProductController extends Controller
                 $data['discounted_price']=(!empty($discounted_price))?$discounted_price:"";
                 $data['product_fav'] = $product_fav;
                 $data['price'] = (!empty($product['price']))?$product['price']:"";
-                $data['offer'] = (!empty($discounted_price))?$discounted_price:"";
+                $data['offer'] = (!empty($product['offer']))?$product['offer']:"";
                 $dataa[]=$data;
             }
            return ApiResponse::ok('Discounted Products',$dataa);
@@ -175,6 +175,20 @@ class ProductController extends Controller
                 }else{
                     $product_fav="False";
                 }
+
+                $offertype=$pro->offer_type;
+                if(!empty($offertype)){
+                        if($offertype =="cash"){
+                        $offer_price=$pro->offer;
+                        $prod_price=$pro->price;
+                        $discounted_price=abs(intval($prod_price-$offer_price));
+                    }else{
+                        $offer_price=$pro->offer;
+                        $prod_price=$pro->price;
+                        $per=$prod_price*$offer_price/100;
+                        $discounted_price=abs(intval($pro->price-$per));
+                    }
+                }
                 $cat_id=$pro->category_id;
                 $subcat_id=$pro->subcategory_id;
                 $category=CategoryModel::where('id',$cat_id)->select('category_name')->first();
@@ -184,6 +198,7 @@ class ProductController extends Controller
                 $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
                 $data['price']=($pro->price != Null)?$pro->price:"";
                 $data['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
+                $data['discounted_price']=(!empty($discounted_price))?$discounted_price:"";
                 $data['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
                 $data['product_fav']=$product_fav;
                 $data['offer']=($pro->offer != Null)?$pro->offer:"";
@@ -310,6 +325,20 @@ class ProductController extends Controller
                         $status="Deactive";
                     }
 
+                    $offertype=$prod->offer_type;
+                    if(!empty($offertype)){
+                            if($offertype =="cash"){
+                            $offer_price=$prod->offer;
+                            $prod_price=$prod->price;
+                            $discounted_price=abs(intval($prod_price-$offer_price));
+                        }else{
+                            $offer_price=$prod->offer;
+                            $prod_price=$prod->price;
+                            $per=$prod_price*$offer_price/100;
+                            $discounted_price=abs(intval($prod->price-$per));
+                        }
+                    }
+
                     $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
                     $data['category_name']=((!empty($cat_name))?(($cat_name['category_name'] != Null)?$cat_name['category_name']:""):"");
                     $data['product_name']=($prod->product_name != Null)?$prod->product_name:"";
@@ -319,6 +348,7 @@ class ProductController extends Controller
                     $data['satus']=$status;
                     $data['product_image']=($prod->product_image != Null)?asset('public/product_image').'/'.$prod->product_image:"";
                     $data['price']=($prod->price != Null)?$prod->price:"";
+                    $data['discounted_price']=(!empty($discounted_price))?$discounted_price:"";
                     $data['min_quantity']=($prod->min_quantity != Null)?$prod->min_quantity:"";
                     $data['opening_quantity']=($prod->opening_quantity != Null)?$prod->opening_quantity:"";
                     $data['offer']=($prod->offer != Null)?$prod->offer:"";
@@ -377,6 +407,21 @@ class ProductController extends Controller
                     }else{
                         $product_fav2="False";
                     }
+
+                    $offertype=$get_product->offer_type;
+                    if(!empty($offertype)){
+                            if($offertype =="cash"){
+                            $offer_price=$get_product->offer;
+                            $prod_price=$get_product->price;
+                            $discounted_price=abs(intval($prod_price-$offer_price));
+                        }else{
+                            $offer_price=$get_product->offer;
+                            $prod_price=$get_product->price;
+                            $per=$prod_price*$offer_price/100;
+                            $discounted_price=abs(intval($get_product->price-$per));
+                        }
+                    }
+
                     $category_id=$get_product['category_id'];
                     $subcategory_id=$get_product['subcategory_id'];
                     $category=CategoryModel::where('id',$category_id)->select('category_name')->first();
@@ -403,6 +448,7 @@ class ProductController extends Controller
                     $data['singledata']['prod_desc']=($get_product['prod_desc'] != Null)?$get_product['prod_desc']:"";
                     $data['singledata']['offer']=($get_product['offer'] != Null)?$get_product['offer']:"";
                     $data['singledata']['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
+                    $data['singledata']['discounted_price']=((!empty($discounted_price))?(($discounted_price)?$discounted_price:""):"");
                     // dd('s');
 
                     $data['singledata']['product_fav']=$product_fav2;
@@ -420,12 +466,29 @@ class ProductController extends Controller
                         }else{
                             $product_fav1="False";
                         }
+
+                        $offertype=$dd->offer_type;
+                        if(!empty($offertype)){
+                                if($offertype =="cash"){
+                                $offer_price=$dd->offer;
+                                $prod_price=$dd->price;
+                                $discounted_price=abs(intval($prod_price-$offer_price));
+                            }else{
+                                $offer_price=$dd->offer;
+                                $prod_price=$dd->price;
+                                $per=$prod_price*$offer_price/100;
+                                $discounted_price=abs(intval($dd->price-$per));
+                            }
+                        }
+
+
                         $cat_name=CategoryModel::where('id',$category_id)->select('category_name')->first();
                         $dataa['category_name']=((!empty($cat_name))?(($cat_name['category_name'] != Null)?$cat_name['category_name']:""):"");
                         $dataa['product_image']=($dd['product_image'] != Null)?asset('public/product_image').'/'.$dd['product_image']:"";
                         $dataa['product_id']=$dd->id;
                         $dataa['product_name']=($dd['product_name'] != Null)?$dd['product_name']:"";
                         $dataa['price']=($dd['price'] != Null)?$dd['price']:"";
+                        $dataa['discounted_price']=($discounted_price != Null)?$discounted_price:"";
                         $dataa['prod_desc']=($dd['prod_desc'] != Null)?$dd['prod_desc']:"";
                         $dataa['product_rating']=($dd['product_rating'] != Null)?$dd['product_rating']:"";
                         $dataa['offer']=($dd['offer'] != Null)?$dd['offer']:"";
@@ -449,6 +512,23 @@ class ProductController extends Controller
                         }else{
                             $product_fav="False";
                         }
+
+
+                        $offertype=$pro->offer_type;
+                        if(!empty($offertype)){
+                                if($offertype =="cash"){
+                                $offer_price=$pro->offer;
+                                $prod_price=$pro->price;
+                                $discounted_price=abs(intval($prod_price-$offer_price));
+                            }else{
+                                $offer_price=$pro->offer;
+                                $prod_price=$pro->price;
+                                $per=$prod_price*$offer_price/100;
+                                $discounted_price=abs(intval($pro->price-$per));
+                            }
+                        }
+
+
                         $cat_id=$pro->category_id;
                         $subcat_id=$pro->subcategory_id;
                         $cat_name=CategoryModel::where('id',$cat_id)->select('category_name')->first();
@@ -460,6 +540,7 @@ class ProductController extends Controller
                         $dataaaaa['description']=($pro->prod_desc != Null)?$pro->prod_desc:"";
                         $dataaaaa['product_rating']=($pro->product_rating != Null)?$pro->product_rating:"";
                         $dataaaaa['product_fav']=$product_fav;
+                        $dataaaaa['discounted_price']=$discounted_price;
                         $dataaaaa['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
                         $dataaaaa['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
                         $dataaaaa['offer']=($pro->offer != Null)?$pro->offer:"";
@@ -503,6 +584,22 @@ class ProductController extends Controller
                 }else{
                     $product_fav="False";
                 }
+
+                $offertype=$pro->offer_type;
+                if(!empty($offertype)){
+                        if($offertype =="cash"){
+                        $offer_price=$pro->offer;
+                        $prod_price=$pro->price;
+                        $discounted_price=abs(intval($prod_price-$offer_price));
+                    }else{
+                        $offer_price=$pro->offer;
+                        $prod_price=$pro->price;
+                        $per=$prod_price*$offer_price/100;
+                        $discounted_price=abs(intval($pro->price-$per));
+                    }
+                }
+
+
                 $cat_id=$pro->category_id;
                 $subcat_id=$pro->subcategory_id;
                 $category=CategoryModel::where('id',$cat_id)->select('category_name')->first();
@@ -512,6 +609,7 @@ class ProductController extends Controller
                 $data['product_name']=($pro->product_name != Null)?$pro->product_name:"";
                 $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
                 $data['price']=($pro->price != Null)?$pro->price:"";
+                $data['discounted_price']=(!empty($discounted_price))?$discounted_price:"";
                 $data['product_id']=$pro->id;
                 $data['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
                 $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
@@ -548,6 +646,23 @@ class ProductController extends Controller
                             $product_fav="False";
                         }
                       
+
+                        $offertype=$pro->offer_type;
+                        if(!empty($offertype)){
+                                if($offertype =="cash"){
+                                $offer_price=$pro->offer;
+                                $prod_price=$pro->price;
+                                $discounted_price=abs(intval($prod_price-$offer_price));
+                            }else{
+                                $offer_price=$pro->offer;
+                                $prod_price=$pro->price;
+                                $per=$prod_price*$offer_price/100;
+                                $discounted_price=abs(intval($pro->price-$per));
+                            }
+                        }
+
+
+
                         $cat_id=$pro->category_id;
                         $category=CategoryModel::where('id',$cat_id)->select('category_name')->first();
                         $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
@@ -555,6 +670,7 @@ class ProductController extends Controller
                         $data['product_image']=($pro->product_image != Null)?asset('public/product_image').'/'.$pro->product_image:"";
                         $data['price']=($pro->price != Null)?$pro->price:"";
                         $data['product_id']=$pro->id;
+                        $data['product_id']=!empty($discounted_price)?$discounted_price:"";
                         $data['min_quantity']=($pro->min_quantity != Null)?$pro->min_quantity:"";
                         $data['opening_quantity']=($pro->opening_quantity != Null)?$pro->opening_quantity:"";
                         $data['offer']=($pro->offer != Null)?$pro->offer:"";
