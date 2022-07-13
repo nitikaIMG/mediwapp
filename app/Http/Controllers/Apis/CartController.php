@@ -77,9 +77,7 @@ class CartController extends Controller
                         $data['product_qty']=intval($product_qty);
                         $dataa[] = $data;
                     }
-                    else{
-                        return ApiResponse::ok('Invalid product id');
-                    }  
+                    
             }
             return ApiResponse::ok('Fetch Card Details',$dataa);
            }
