@@ -29,11 +29,11 @@ class CategoryController extends Controller
          }else{
             $status="Disable";
          }
-         $catdata['id'] = ($cat->id!=null)?$cat->id:"";
-         $catdata['category_name'] = ($cat->category_name!=null)?$cat->category_name:"";
-         $catdata['category_image'] = ($cat->category_image!=null)?asset('public/category_image').'/'.$cat->category_image:"";
-         $catdata['cat_status'] = ($status!=null)?$status:"";
-         $catdata['banner'] = ($cat->banner!=null)?$cat->banner:"";
+         $catdata['id'] = (!empty($cat->id))?$cat->id:"";
+         $catdata['category_name'] =(!empty($cat->category_name))?$cat->category_name:"";
+         $catdata['category_image'] =(!empty($cat->category_image))?asset('public/category_image').'/'.$cat->category_image:"";
+         $catdata['cat_status'] = (!empty($status))?$status:"";
+         $catdata['banner'] = (!empty($cat->banner))?$cat->banner:"";
          $data[] = $catdata;
       }
       return ApiResponse::ok('Successfully Fetch data',$data);

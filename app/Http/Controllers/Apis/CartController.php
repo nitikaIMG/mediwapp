@@ -55,27 +55,38 @@ class CartController extends Controller
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
             $data =[];
+            $dataa =[];
             $card_data=CartModel::where('user_id',$user_id)->where('del_status',1)->get();
+            if(!empty($card_data  && $card_data->isNotEmpty())){
             foreach($card_data as $card){
-                $user_id=$card->user_id;
-                $product_id=$card->product_id;
-                $product_qty=$card->product_qty;
-                $address_id=$card->address_id;
-                $category=CategoryModel::where('id',$product_id)->select('category_name')->first();
-                $subcat_name=SubcategoryModel::where('id',$product_id)->select('subcategory_name')->first();
-                $cat_project=ProductModel::where('id',$product_id)->first();
-                $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
-                $data['product_id']=(!empty($cat_project['id']))?intval($cat_project['id']):"";
-                $data['product_name']=(!empty($cat_project['product_name']))?$cat_project['product_name']:"";
-                $data['product_image']=(!empty($cat_project['product_image']))?asset('public/product_image').'/'.$cat_project['product_image']:"";
-                $data['amount']=(!empty($cat_project['price']))?$cat_project['price']:"";
-                $data['offer']=(!empty($cat_project['offer']))?$cat_project['offer']:"";
-                $data['offer_type']=(!empty($cat_project['offer_type']))?$cat_project['offer_type']:"";
-                $data['product_qty']=intval($product_qty);
-                $dataa[] = $data;
+                    $user_id=$card->user_id;
+                    $product_id=$card->product_id;
+                    $product_qty=$card->product_qty;
+                    $address_id=$card->address_id;
+                    $cat_project=ProductModel::where('id',$product_id)->first();
+                    if(!empty($cat_project)){
+                        $category=CategoryModel::where('id',$product_id)->select('category_name')->first();
+                        $subcat_name=SubcategoryModel::where('id',$product_id)->select('subcategory_name')->first();
+                        $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
+                        $data['product_id']=(!empty($product_id))?intval($product_id):"";
+                        $data['product_name']=(!empty($cat_project['product_name']))?$cat_project['product_name']:"";
+                        $data['product_image']=(!empty($cat_project['product_image']))?asset('public/product_image').'/'.$cat_project['product_image']:"";
+                        $data['amount']=(!empty($cat_project['price']))?$cat_project['price']:"";
+                        $data['offer']=(!empty($cat_project['offer']))?$cat_project['offer']:"";
+                        $data['offer_type']=(!empty($cat_project['offer_type']))?$cat_project['offer_type']:"";
+                        $data['product_qty']=intval($product_qty);
+                        $dataa[] = $data;
+                    }
+                    else{
+                        return ApiResponse::ok('Invalid product id');
+                    }  
             }
             return ApiResponse::ok('Fetch Card Details',$dataa);
-
+           }
+           else{
+            return ApiResponse::ok('No data in cart');
+           }
+            
         }else{
             return ApiResponse::error('Unauthorise Request');
         }
