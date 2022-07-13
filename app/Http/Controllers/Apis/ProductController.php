@@ -27,6 +27,9 @@ class ProductController extends Controller
     public function discountedproduct(Request $request){
         if($request->isMethod('get')){
             $disc_prod=ProductModel::where('offer','!=','NULL')->whereDate('validate_date','>=',Carbon::today()->toDateString())->where('status',1)->where('del_status',1)->get();
+            $user_id=auth('api')->user()->id;
+            $wsdaata= auth('api')->user()->getFavrioutes;
+            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
             $dataa=[];
             $product_fav="";
             $discounted_price="";
@@ -34,10 +37,13 @@ class ProductController extends Controller
                 return ApiResponse::ok('Disscount Product are not Available',$dataa);
            }else{
             foreach($disc_prod as $key => $product){
-                if($product['product_fav'] ==0){
-                    $product_fav="False";
-                }else{
-                    $product_fav="True";
+
+                if(!empty($wishlist)){
+                    if(in_array($product->id,$wishlist)){
+                        $product_fav="True";
+                    }else{
+                        $product_fav="False";
+                    }
                 }
 
                 $offertype=$product->offer_type;
@@ -84,16 +90,21 @@ class ProductController extends Controller
             $productdata=OrderModel::limit(10)->pluck('product')->join(',');
             $order_p=explode(',',$productdata);
             $p_id=array_unique($order_p);
+            $user_id=auth('api')->user()->id;
+            $wsdaata= auth('api')->user()->getFavrioutes;
+            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
             $t_products=ProductModel::whereIn('id',$p_id)->where('status','1')->where('del_status',1)->get();
             $dataa=[];
             $product_fav="";
             if(!empty($t_products)){
                 foreach($t_products as $pro){
                    
-                    if($pro->product_fav ==0){
-                        $product_fav="False";
-                    }else{
-                        $product_fav="True";
+                    if(!empty($wishlist)){
+                        if(in_array($pro->id,$wishlist)){
+                            $product_fav="True";
+                        }else{
+                            $product_fav="False";
+                        }
                     }
                     
                     $offertype=$pro->offer_type;
@@ -145,15 +156,20 @@ class ProductController extends Controller
             $productdata=OrderModel::limit(10)->pluck('product')->join(',');
             $order_p=explode(',',$productdata);
             $res = collect(array_count_values($order_p))->sortDesc()->all();
+            $user_id=auth('api')->user()->id;
+            $wsdaata= auth('api')->user()->getFavrioutes;
+            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
             $p_id=array_keys($res);
             $t_products=ProductModel::whereIn('id',$p_id)->take('15')->where('status','1')->where('del_status','1')->get();
             $dataa=[];
             $product_fav="";
             foreach($t_products as $pro){
-                if($pro->product_fav ==0){
-                    $product_fav="False";
-                }else{
-                    $product_fav="True";
+                if(!empty($wishlist)){
+                    if(in_array($pro->id,$wishlist)){
+                        $product_fav="True";
+                    }else{
+                        $product_fav="False";
+                    }
                 }
                 $cat_id=$pro->category_id;
                 $subcat_id=$pro->subcategory_id;
@@ -272,21 +288,17 @@ class ProductController extends Controller
     public function show_wishlist(Request $request){
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
-            $get_prod=wishlistModel::where('user_id',$user_id)->value('product_id');
-            if($get_prod){
-                $explode_ids = explode(",",$get_prod);
-                $get_wishlist_prod=ProductModel::whereIn('id',$explode_ids)->get();
+            $wsdaata= auth('api')->user()->getFavrioutes;
+            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
+            if(!empty($wishlist)){
+                $get_wishlist_prod=ProductModel::whereIn('id',$wishlist)->get();
                 $dataa=[];
                 $prod_fav="";
-                if($get_wishlist_prod->isNotEmpty()){
-                    foreach($get_wishlist_prod as $prod){
-                    $cat_id=$prod->category_id;
 
-                    if($prod->product_fav =='1'){
-                        $prod_fav="True";
-                    }else{
-                        $prod_fav="False";
-                    }
+                if($get_wishlist_prod->isNotEmpty()){
+
+                foreach($get_wishlist_prod as $prod){
+                    $cat_id=$prod->category_id;
 
                     if($prod->status =='1'){
                         $status="Active";
@@ -298,7 +310,7 @@ class ProductController extends Controller
                     $data['category_name']=((!empty($cat_name))?(($cat_name['category_name'] != Null)?$cat_name['category_name']:""):"");
                     $data['product_name']=($prod->product_name != Null)?$prod->product_name:"";
                     $data['product_rating']=($prod->product_rating != Null)?$prod->product_rating:"";
-                    $data['product_fav']=$prod_fav;
+                    $data['product_fav']="True";
                     $data['product_id']=$prod->id;
                     $data['satus']=$status;
                     $data['product_image']=($prod->product_image != Null)?asset('public/product_image').'/'.$prod->product_image:"";
@@ -339,6 +351,8 @@ class ProductController extends Controller
             if(ProductModel::where('id',$product_id)->exists()){
                 if(!empty($product_id)){
                     $user_id=auth('api')->user()->id;
+                    $wsdaata= auth('api')->user()->getFavrioutes;
+                    $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
                     $getmaxprod = RecentProduct::where('user_id',$user_id)->get();
                     if(count($getmaxprod)>=5){
                         RecentProduct::where('user_id',$user_id)->where('id',$getmaxprod[0]['id'])->delete();
@@ -348,14 +362,16 @@ class ProductController extends Controller
                     }
                     $product_fav2='';
                     $get_product=ProductModel::where('id',$product_id)->first();
-                    if(!empty($get_product)){
-                        if($get_product['product_fav'] ==0){
-                            $product_fav2="No";
-                        }else{
-                            $product_fav2="Yes";
+                    if($get_product){
+                        if(!empty($wishlist)){
+                            if(in_array($get_product->id,$wishlist)){
+                                $product_fav2="True";
+                            }else{
+                                $product_fav2="False";
+                            }
                         }
                     }else{
-                        $product_fav2="No";
+                        $product_fav2="False";
                     }
                     $category_id=$get_product['category_id'];
                     $subcategory_id=$get_product['subcategory_id'];
@@ -389,10 +405,12 @@ class ProductController extends Controller
         
                     $similiar_prod=ProductModel::where('category_id',$category_id)->limit(10)->get();
                     foreach($similiar_prod as $dd){
-                        if($dd->product_fav ==0){
-                            $product_fav1="No";
-                        }else{
-                            $product_fav1="Yes";
+                        if(!empty($wishlist)){
+                            if(in_array($dd->id,$wishlist)){
+                                $product_fav1="True";
+                            }else{
+                                $product_fav1="False";
+                            }
                         }
                         $cat_name=CategoryModel::where('id',$category_id)->select('category_name')->first();
                         $dataa['category_name']=((!empty($cat_name))?(($cat_name['category_name'] != Null)?$cat_name['category_name']:""):"");
@@ -414,10 +432,12 @@ class ProductController extends Controller
                     
                     $t_products=ProductModel::whereIn('id',$p_id)->take('15')->where('status','1')->where('del_status','1')->get();
                     foreach($t_products as $pro){
-                        if($pro->product_fav ==0){
-                            $product_fav="No";
-                        }else{
-                            $product_fav="Yes";
+                        if(!empty($wishlist)){
+                            if(in_array($pro->id,$wishlist)){
+                                $product_fav="True";
+                            }else{
+                                $product_fav="False";
+                            }
                         }
                         $cat_id=$pro->category_id;
                         $subcat_id=$pro->subcategory_id;
@@ -457,14 +477,19 @@ class ProductController extends Controller
             if($validator->fails()){
                return $this->validation_error_response($validator);
             }
+            $user_id=auth('api')->user()->id;
+            $wsdaata= auth('api')->user()->getFavrioutes;
+            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
             $t_products=ProductModel::where('category_id',$request->category_id)->take('15')->where('status','1')->where('del_status','1')->get();
             $dataa=[];
             if(!empty($t_products)){
             foreach($t_products as $pro){
-                if($pro->product_fav ==0){
-                    $product_fav="False";
-                }else{
-                    $product_fav="True";
+                if(!empty($wishlist)){
+                    if(in_array($pro->id,$wishlist)){
+                        $product_fav="True";
+                    }else{
+                        $product_fav="False";
+                    }
                 }
                 $cat_id=$pro->category_id;
                 $subcat_id=$pro->subcategory_id;
@@ -494,16 +519,21 @@ class ProductController extends Controller
     public function recent_view(Request $request){
         if($request->isMethod('get')){
             $user_id=auth('api')->user()->id;
+            $wsdaata= auth('api')->user()->getFavrioutes;
+            $wishlist = !empty($wsdata)?explode(',',$wsdaata->product_id):[];
             $get_prod_id=RecentProduct::where('user_id',$user_id)->pluck('recent_product')->toArray();
             if(!empty($get_prod_id)){
                 $recent_prod=ProductModel::whereIn('id',$get_prod_id)->get();
                 if(!empty($recent_prod)){
                     foreach($recent_prod as $pro){
-                        if($pro->product_fav ==0){
-                            $product_fav="False";
-                        }else{
-                            $product_fav="True";
+                        if(!empty($wishlist)){
+                            if(in_array($pro->id,$wishlist)){
+                                $product_fav="True";
+                            }else{
+                                $product_fav="False";
+                            }
                         }
+                      
                         $cat_id=$pro->category_id;
                         $category=CategoryModel::where('id',$cat_id)->select('category_name')->first();
                         $data['category_name']=((!empty($category))?(($category['category_name'] != Null)?$category['category_name']:""):"");
