@@ -15,3 +15,4 @@ class ProductModel extends Model
     ];
 }
 
+    

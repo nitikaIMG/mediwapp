@@ -107,9 +107,11 @@ class CartController extends Controller
                 if($request->type == 'add'){
                     $newqnt = $cartdata->product_qty+1;
                 }else{
-                    if($cartdata->product_qty<=0)
+                    if($cartdata->product_qty==1)
                     { 
-                        return ApiResponse::ok('Product QTY is not less then zero');
+                        CartModel::where('user_id',$user_id)->where('product_id',$pid)->delete();
+                        
+                        return ApiResponse::ok('Item remove form card succesfully');
                     }
                     else{
                         $newqnt = $cartdata->product_qty-1;
