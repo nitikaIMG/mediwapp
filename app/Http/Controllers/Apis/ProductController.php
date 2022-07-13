@@ -37,11 +37,15 @@ class ProductController extends Controller
                 return ApiResponse::ok('Disscount Product are not Available',$dataa);
            }else{
             foreach($disc_prod as $key => $product){
+                if(!empty($wishlist)){
                     if(in_array($product->id,$wishlist)){
                         $product_fav="True";
                     }else{
                         $product_fav="False";
                     }
+                }else{
+                    $product_fav="False";
+                }
                 $offertype=$product->offer_type;
                 if(!empty($offertype)){
                         if($offertype =="cash"){
@@ -101,6 +105,8 @@ class ProductController extends Controller
                         }else{
                             $product_fav="False";
                         }
+                    }else{
+                        $product_fav="False";
                     }
                     
                     $offertype=$pro->offer_type;
@@ -166,6 +172,8 @@ class ProductController extends Controller
                     }else{
                         $product_fav="False";
                     }
+                }else{
+                    $product_fav="False";
                 }
                 $cat_id=$pro->category_id;
                 $subcat_id=$pro->subcategory_id;
@@ -409,6 +417,8 @@ class ProductController extends Controller
                             }else{
                                 $product_fav1="False";
                             }
+                        }else{
+                            $product_fav1="False";
                         }
                         $cat_name=CategoryModel::where('id',$category_id)->select('category_name')->first();
                         $dataa['category_name']=((!empty($cat_name))?(($cat_name['category_name'] != Null)?$cat_name['category_name']:""):"");
@@ -436,6 +446,8 @@ class ProductController extends Controller
                             }else{
                                 $product_fav="False";
                             }
+                        }else{
+                            $product_fav="False";
                         }
                         $cat_id=$pro->category_id;
                         $subcat_id=$pro->subcategory_id;
@@ -488,6 +500,8 @@ class ProductController extends Controller
                     }else{
                         $product_fav="False";
                     }
+                }else{
+                    $product_fav="False";
                 }
                 $cat_id=$pro->category_id;
                 $subcat_id=$pro->subcategory_id;
@@ -530,6 +544,8 @@ class ProductController extends Controller
                             }else{
                                 $product_fav="False";
                             }
+                        }else{
+                            $product_fav="False";
                         }
                       
                         $cat_id=$pro->category_id;
