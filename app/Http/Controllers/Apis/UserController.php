@@ -52,14 +52,16 @@ class UserController extends Controller
       if($validator->fails()){
          return $this->validation_error_response($validator);
       }
-
+      $user_id=auth('api')->user()->id;
       $address_data = $request->all();
+      $address_data['user_id'] = $user_id;
       $data = AddressModel::create($address_data); 
       return ApiResponse::ok("Address Added",$data);
    }
 
    public function  show_address(Request $request){
-      $adddress_show =AddressModel::all();
+      $user_id=auth('api')->user()->id;
+      $adddress_show =AddressModel::where('user_id',$user_id)->get();
       return ApiResponse::ok("User Address",$adddress_show);
    }
    public function edit_address(Request $request){
@@ -93,7 +95,6 @@ class UserController extends Controller
 
    public function edit_userprofile(Request $request){
       if($request->isMethod('post')){
-         // dd($user_id);
       $validator = Validator::make($request->all(),[
           'user_firstname' => 'required',
           'user_phonenumber' => 'required|digits:10',
@@ -106,9 +107,7 @@ class UserController extends Controller
           if($validator->fails()){
             return $this->validation_error_response($validator);
          }
-
           $user_data = $request->all();
-          
           if($request->hasfile('user_image')){
            $image = $request->file('user_image');
            $name = $image->getClientOriginalName();
@@ -152,6 +151,27 @@ class UserController extends Controller
                $add_user_feedback = $request->all();
                $data = UserFeedbackModel::create($add_user_feedback); 
                return ApiResponse::ok("Add User Feedback",$data);
+            }
+           
+      }
+
+      public  function update_profile(Request $request){
+         if($request->isMethod('post')){
+            $validator = Validator::make($request->all(),[
+                'user_image' => 'required',
+                ]);
+            if($validator->fails()){
+               return $this->validation_error_response($validator);
+            }
+            if($request->hasfile('user_image')){
+               $image = $request->file('user_image');
+               $name = $image->getClientOriginalName();
+               $image->move('/user_image/', $name);
+               $user_image = $name;
+              }
+               $user_id=auth('api')->user()->id;
+               $data = UserModel::where('id',$user_id)->update(['user_image'=>$user_image]);
+               return ApiResponse::ok("Update User Profile",$data);
             }
            
       }

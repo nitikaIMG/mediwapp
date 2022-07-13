@@ -11,6 +11,6 @@ class AddressModel extends Model
     protected $table = 'useraddress';
 
     protected $fillable =[
-        'name','mobile_no','pincode','house_no','landmark','city','state'
+        'name','mobile_no','pincode','house_no','landmark','city','state','user_id'
     ];
 }
