@@ -44,6 +44,7 @@ class UserController extends Controller
       'mobile_no' => 'required|digits:10',
       'pincode' =>'required',
       'house_no'=>'required',
+      'address_type'=>'required',
       'landmark' =>'required',
       'city' =>'required',
       'state'=>'required',
