@@ -13,6 +13,7 @@ use App\Models\UserModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Traits\ValidationTrait;
+use Svg\Tag\Rect;
 
 class UserController extends Controller
 {
@@ -92,6 +93,24 @@ class UserController extends Controller
          }
      
    } 
+   public function delete_address(Request $request){
+      if($request->isMethod('post')){
+         $validator = Validator::make($request->all(),[
+            'id' => 'required',
+            ]);
+            if($validator->fails()){
+               return $this->validation_error_response($validator);
+            }
+            $user_id=auth('api')->user()->id;
+            AddressModel::where([
+               'id'=>$request->id,
+               'user_id'=>$user_id
+               ])->delete();
+         return ApiResponse::ok("Address Deleted");
+      }else{
+         return ApiResponse::error("Unauthorise Request");
+      }
+   }
 
    public function edit_userprofile(Request $request){
       if($request->isMethod('post')){
