@@ -102,10 +102,7 @@ class UserController extends Controller
                return $this->validation_error_response($validator);
             }
             $user_id=auth('api')->user()->id;
-            AddressModel::where([
-               'id',$request->id,
-               'user_id',$user_id
-               ])->delete();
+            AddressModel::where('id',$request->id)->where('user_id',$user_id)->delete();
          return ApiResponse::ok("Address Deleted");
       }else{
          return ApiResponse::error("Unauthorise Request");
