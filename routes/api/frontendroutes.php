@@ -52,6 +52,7 @@ Route::post('/socialauthentication',[AuthController::class,'socialauthentication
     Route::post('update_profile',[UserController::class,'update_profile']);
     Route::get('get_user_feedback',[UserController::class,'get_user_feedback']);
     Route::post('add_user_feedback',[UserController::class,'add_user_feedback']);
+    Route::post('delete_address',[UserController::class,'delete_address']);
 
     // Route::post('add_item', [CartController::class,'add_item']);
     // Route::post('remove_item', [CartController::class,'remove_item']);
