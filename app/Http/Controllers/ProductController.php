@@ -233,13 +233,13 @@ class ProductController extends Controller
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item waves-light waves-effect" href="'.$edit_category.'">Edit</a></li>
                     <li>'.$statuss.'</li>
-                    <form action="'.$dele_category.'" method="post" id="form">
+                    <form action="'.$dele_category.'" method="post" id="form-'.$title->id.'">
                         <input type="hidden" name="_token" value="'.csrf_token().'" />
                         
                         <input type="hidden" name="_method" value="DELETE" />
                     </form>
                     <li>
-                        <a class="dropdown-item waves-light waves-effect curson-pointer" onclick="document.getElementById(`form`).submit();">Delete</a>
+                        <a class="dropdown-item waves-light waves-effect curson-pointer" onclick="document.getElementById(`form-'.$title->id.'`).submit();">Delete</a>
                     </li>
                 </ul>
             </div>';
