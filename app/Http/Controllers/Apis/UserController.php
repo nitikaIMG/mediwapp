@@ -103,8 +103,8 @@ class UserController extends Controller
             }
             $user_id=auth('api')->user()->id;
             AddressModel::where([
-               'id'=>$request->id,
-               'user_id'=>$user_id
+               'id',$request->id,
+               'user_id',$user_id
                ])->delete();
          return ApiResponse::ok("Address Deleted");
       }else{
