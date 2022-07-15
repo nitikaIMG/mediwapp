@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">EDIT PRODUCT</h4>
-       
+     
         <form class="forms-sample" method="POST" action="{{route('product.update',$edit_data['id'])}}" enctype="multipart/form-data">
             @csrf
             @method('PUT')

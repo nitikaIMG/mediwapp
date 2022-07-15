@@ -92,6 +92,7 @@ if(isset($_GET['user_phonenumber'])){
                 let arr=[];
                 var user_email=$('#user_email').val();
                 var user_name=$('#user_name').val();
+                var user_phonenumber=$('#user_phonenumber').val();
               $.fn.dataTable.ext.errMode = 'none';
                   $('#display_cat').DataTable({
                       'responsive': true,
@@ -100,7 +101,7 @@ if(isset($_GET['user_phonenumber'])){
                 
                     "serverSide": true,
                       "ajax":{
-                               "url": '{{route('display_user')}}?user_name='+user_name+'&user_email='+user_email,
+                               "url": '{{route('display_user')}}?user_name='+user_name+'&user_email='+user_email+'&user_phonenumber='+user_phonenumber,
                                "dataType": "json",
                                "type": "POST",
                                "data":{ _token: "{{csrf_token()}}"},

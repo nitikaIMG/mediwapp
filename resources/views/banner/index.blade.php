@@ -35,12 +35,12 @@
                               </button>
                               <ul class="dropdown-menu">
                                   <li><a class="dropdown-item waves-light waves-effect" href="{{route('banner.edit',$item->id)}}">Edit</a></li>
-                                  <form action="{{route('banner.destroy',$item->id)}}" method="post" id="form">
+                                  <form action="{{route('banner.destroy',$item->id)}}" method="post" id="form-'{{$item->id}}'">
                                     @csrf
                                     @method('DELETE')
                                   </form>
                                   <li>
-                                      <a class="dropdown-item waves-light waves-effect curson-pointer" onclick="document.getElementById(`form`).submit();">Delete</a>
+                                      <a class="dropdown-item waves-light waves-effect curson-pointer" onclick="document.getElementById(`form-'{{$item->id}}'`).submit();">Delete</a>
                                   </li>
                               </ul>
                           </div></td>

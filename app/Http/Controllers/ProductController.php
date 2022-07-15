@@ -89,7 +89,7 @@ class ProductController extends Controller
         $category=CategoryModel::all();
         $brand_name=BrandModel::all();
         $health_goal=HeathGoalModel::all();
-        $edit_data=ProductModel::join('subcategory','product.subcategory_id','subcategory.id')->where('product.id',$id)->first()->toArray();
+        $edit_data=ProductModel::join('subcategory','product.subcategory_id','subcategory.id')->where('product.id',$id)->select('product.*','subcategory.subcategory_name')->first()->toArray();
         $file=ProductModel::where('id',$id)->pluck('product_image');
         return view('product.edit',compact('edit_data','file','category','brand_name','health_goal'));
     }
@@ -97,7 +97,6 @@ class ProductController extends Controller
     
     public function update(Request $request, $id)
     {
-        // dd($id);
         $data =  $request->except('_token','_method');
         $validated = $request->validate([
             'product_name' => 'required|max:255',
@@ -134,7 +133,7 @@ class ProductController extends Controller
             $image = $request->file('product_image');
             foreach ($image as $files) {
                 $destinationPath = 'public/product_image/';
-                $file_name = time() . "." . $files->getClientOriginalName();
+                $file_name = time(). "." . $files->getClientOriginalName();
                 $files->move($destinationPath, $file_name);
                 $img[] = $file_name;
                 $data['product_image']=implode(',',$img);
@@ -143,6 +142,7 @@ class ProductController extends Controller
         }else{
             unset($data['product_image']);
         }
+        
         ProductModel::where('id',$id)->update($data);
         return redirect()->back()->with('success', 'Data Updated');
     }
@@ -233,13 +233,13 @@ class ProductController extends Controller
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item waves-light waves-effect" href="'.$edit_category.'">Edit</a></li>
                     <li>'.$statuss.'</li>
-                    <form action="'.$dele_category.'" method="post" id="form">
+                    <form action="'.$dele_category.'" method="post" id="form-'.$title->id.'">
                         <input type="hidden" name="_token" value="'.csrf_token().'" />
                         
                         <input type="hidden" name="_method" value="DELETE" />
                     </form>
                     <li>
-                        <a class="dropdown-item waves-light waves-effect curson-pointer" onclick="document.getElementById(`form`).submit();">Delete</a>
+                        <a class="dropdown-item waves-light waves-effect curson-pointer" onclick="document.getElementById(`form-'.$title->id.'`).submit();">Delete</a>
                     </li>
                 </ul>
             </div>';
