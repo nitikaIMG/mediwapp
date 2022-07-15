@@ -34,7 +34,7 @@ class CategoryController extends Controller
             'meta_title' => 'required',
             'meta_description' => 'required',
             'meta_keyword' => 'required',
-            'banner' => 'required',
+            // 'banner' => 'required',
             'cat_desc' => 'required',
         ],[
             'category_name.required' => 'The category name field is required.',
@@ -42,7 +42,7 @@ class CategoryController extends Controller
             'meta_title.required' => 'The meta title field is required.',
             'meta_description.required' => 'The meta description field is required.',
             'meta_keyword.required' => 'The meta keyword field is required.',
-            'banner.required' => 'The banner  field is required.',
+            // 'banner.required' => 'The banner  field is required.',
             'cat_desc.required' => 'The category Descripction field is required.',
         ]);
       
