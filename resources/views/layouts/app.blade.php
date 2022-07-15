@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{asset('public/vendors/typicons/typicons.css')}}">
     <link rel="stylesheet" href="{{asset('public/vendors/css/vendor.bundle.base.css')}}">
     <link rel="stylesheet" href="{{asset('public/css/vertical-layout-light/style.css')}}">
-    <link rel="shortcut icon" href="{{asset('public/images/favicon.png')}}" />
+    <link rel="shortcut icon" href="{{asset('public/images/mediwappicon.jpeg')}}" />
 
 </head>
 <body>

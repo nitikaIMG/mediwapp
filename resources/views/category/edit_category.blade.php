@@ -45,12 +45,12 @@
                      <img src="{{ asset('public/category_image/'.$img)}}" alt="Image Alternative text" title="Image Title" width="50" height="50">
                      @endforeach
                  </div>
-                <div class="form-group col-md-6">
+                {{-- <div class="form-group col-md-6">
                     <label for="formFileMultiple" class="form-label">Banner</label>
                     <input class="form-control" name="banner" type="file" id="formFileMultiple">
                     <img src="{{ asset('public/banner/'.$edit_data['banner'])}}" alt="Image Alternative text" title="Image Title" width="50" height="50">
 
-                </div>
+                </div> --}}
             </div>
             <div class="row">
                 <label for="exampleSelectGender">Category Description</label>
