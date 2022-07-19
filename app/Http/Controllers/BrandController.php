@@ -240,7 +240,12 @@ class BrandController extends Controller
         return $pdf->download('brand.pdf');
     }
     public function create_csv_brand(){
-        return Excel::download(new BrandModel(), 'category.xlsx');
+        $data=BrandModel::all()->toArray();
+        $handle = fopen('brands.csv', 'w');
+        collect($data)->each(fn ($row) => fputcsv($handle, $row));
+        fclose($handle);
+
+        // return Excel::download(new BrandModel(), 'category.xlsx');
     }
 
     public function brand_name(Request $request){

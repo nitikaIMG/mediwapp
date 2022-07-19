@@ -18,7 +18,7 @@
 <body>
 
 <div class="container">
-    <h2 class="header-title mb-0">Attroney</h2>        
+    <h2 class="header-title mb-0">Product</h2>        
   <table class="table table-bordered">
     <thead >
         <tr>

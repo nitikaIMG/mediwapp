@@ -7,6 +7,7 @@
               <div class="card">
                           <div class="col-md-1 pt-1">
                             <a class="btn" href="{{route('banner.create')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-plus text-white"></i></a>
+                            {{-- <a class="btn multiple_delete" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-trash text-white"></i></a> --}}
                           </div>
                 <h5 class="card-header">Banner</h5>
                 <div class="card-body">
