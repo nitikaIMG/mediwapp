@@ -293,7 +293,12 @@ class CategoryController extends Controller
         return $pdf->download('category.pdf');
     }
     public function create_csv_category(){
-        return Excel::download(new CategoryModel(), 'category.xlsx');
+        $data=CategoryModel::all()->toArray();
+        $handle = fopen('category.csv', 'w');
+        collect($data)->each(fn ($row) => fputcsv($handle, $row));
+        fclose($handle);
+
+        // return Excel::download(new CategoryModel(), 'category.xlsx');
     }
     
 }

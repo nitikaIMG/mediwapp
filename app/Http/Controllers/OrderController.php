@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Api\ApiResponse;
+use App\Models\CouponModel;
 use App\Models\OrderModel;
 use App\Models\UserModel;
 use Illuminate\Support\Str;
@@ -29,6 +30,7 @@ class OrderController extends Controller
     {
         //  dd($request->all());
         $unique_order_id='MED'.random_int(100000, 999999);
+        $new_coupon_code='MED'.Str::random(9);
         $data =  $request->except('_token');
         $validated = $request->validate([
             'product_name' => 'required|max:255',
@@ -57,15 +59,23 @@ class OrderController extends Controller
         }
         $image_string=implode(',',$img);
         
-        $model = new OrderModel();
-        $model->order_id=$unique_order_id;
-        $model->product=$product_name;
-        $model->prescription=$image_string;
-        $model->order_amount=$validated['order_amount'];
-        $model->address=$validated['user_address'];
-        $model->product_qty = $validated['product_qty'];
-        $model->user_id=$validated['user_id'];
-        $model->save();
+        if(isset($request['coupon_code'])){
+            dd('fff'); 
+        }
+        //insert data in order table
+        $validated['order_id']=$unique_order_id;
+        $validated['prescription']=$image_string;
+        $validated['user_id']=$validated['user_id'];
+        $validated['coupon']=$validated['coupon'];
+        OrderModel::create($validated);
+
+        //for coupon
+        $validated['coupon']=$new_coupon_code;
+        $validated['prescription']=$image_string;
+        $validated['user_id']=$validated['user_id'];
+        $validated['coupon']=$validated['coupon'];
+        CouponModel::create($validated);
+
         return redirect()->back()->with('success', 'Data Inserted');
     }
 
@@ -279,7 +289,11 @@ class OrderController extends Controller
         return $pdf->download('order.pdf');
     }
     public function create_csv_order(){
-        return Excel::download(new OrderModel(), 'category.xlsx');
+        $data=OrderModel::all()->toArray();
+        $handle = fopen('orders.csv', 'w');
+        collect($data)->each(fn ($row) => fputcsv($handle, $row));
+        fclose($handle);
+        // return Excel::download(new OrderModel(), 'category.xlsx');
     }
 
     

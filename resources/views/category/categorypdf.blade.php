@@ -18,14 +18,12 @@
 <body>
 
 <div class="container">
-    <h2 class="header-title mb-0">Attroney</h2>        
+    <h2 class="header-title mb-0">Category</h2>        
   <table class="table table-bordered">
     <thead >
         <tr>
-            <th class="all">Full Name</th>
+            <th class="all">Category Name</th>
             <th>Email Address</th>
-            <th>Meta title</th>
-            <th>Subcategory Id</th>
             {{-- <th>Category Images</th> --}}
         </tr>
     </thead>
@@ -34,8 +32,6 @@
         <tr >
             <td >{{$d['category_name']}}</td>
             <td >{{$d['category_image']}}</td>
-            <td >{{$d['meta_title']}}</td>
-            <td >{{$d['subcategory_id']}}</td>
         </tr> 
         @endforeach
     </tbody>

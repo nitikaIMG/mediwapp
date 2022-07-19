@@ -297,7 +297,12 @@ class UserController extends Controller
         return $pdf->download('user.pdf');
     }
     public function create_csv_user(){
-        return Excel::download(new UserModel(), 'category.xlsx');
+        $data=UserModel::all()->toArray();
+        $handle = fopen('users.csv', 'w');
+        collect($data)->each(fn ($row) => fputcsv($handle, $row));
+        fclose($handle);
+
+        // return Excel::download(new UserModel(), 'user.xlsx');
     }
 
 }

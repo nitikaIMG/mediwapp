@@ -299,7 +299,12 @@ class ProductController extends Controller
         return $pdf->download('product.pdf');
     }
     public function create_csv_product(){
-        return Excel::download(new ProductModel(), 'category.xlsx');
+        $data=ProductModel::all()->toArray();
+        $handle = fopen('products.csv', 'w');
+        collect($data)->each(fn ($row) => fputcsv($handle, $row));
+        fclose($handle);
+
+        // return Excel::download(new ProductModel(), 'category.xlsx');
     }
 
     public function get_subcat(Request $request){
