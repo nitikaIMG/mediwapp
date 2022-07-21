@@ -178,7 +178,7 @@ class ProductController extends Controller
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
-        $query =ProductModel::where('product.del_status','1');
+        $query =ProductModel::where('product.del_status','1')->join('category','category.id','product.category_id')->join('subcategory','subcategory.id','product.subcategory_id')->select('product.id','product_name','product.subcategory_id','subcategory.subcategory_name','category.category_name','product_image','product.category_id','product.status','price','package_type');
         if(isset($_GET['product_name'])){
            $name=$_GET['product_name'];
            if($name!=""){
@@ -188,13 +188,12 @@ class ProductController extends Controller
         if(isset($_GET['category_id'])){
             $category_id=$_GET['category_id'];
             if($category_id!=""){
-                 $query=  $query->where('category_id', 'LIKE', '%'.$category_id.'%');
+                 $query=  $query->where('category_name', 'LIKE', '%'.$category_id.'%');
              }
-         }
+        }
 
         $count = $query->count();
-        $titles = $query->join('category','category.id','product.category_id')->join('subcategory','subcategory.id','product.subcategory_id')->select('product.id','product_name','product.subcategory_id','subcategory.subcategory_name','category.category_name','product_image','product.category_id','product.status','price','package_type')
-                ->offset($start)
+        $titles = $query->offset($start)
                 ->limit($limit)
                 ->orderBy($order, 'DESC')
                 ->get();
@@ -267,6 +266,7 @@ class ProductController extends Controller
         );
         echo json_encode($json_data);
     }
+
     public function enable_disable_product($id){
         $cat_status=ProductModel::where('id',$id)->pluck('status')->toArray();
         if($cat_status[0] == '1'){

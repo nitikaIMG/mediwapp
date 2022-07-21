@@ -28,7 +28,6 @@ class OrderController extends Controller
     
     public function store(Request $request)
     {
-        //  dd($request->all());
         $unique_order_id='MED'.random_int(100000, 999999);
         $new_coupon_code='MED'.Str::random(9);
         $data =  $request->except('_token');
@@ -39,7 +38,6 @@ class OrderController extends Controller
             'priscription.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'user_id' => 'required',
             'user_address' => 'required',
-           
         ],[
             'product_name.required' => 'The Product name field is required.',
             'order_amount.required' => 'The Order amount name field is required.',
@@ -59,9 +57,9 @@ class OrderController extends Controller
         }
         $image_string=implode(',',$img);
         
-        if(isset($request['coupon_code'])){
-            dd('fff'); 
-        }
+        // if(isset($request['coupon_code']) && $request['coupon']){
+            
+        // }
         //insert data in order table
         $validated['order_id']=$unique_order_id;
         $validated['prescription']=$image_string;
