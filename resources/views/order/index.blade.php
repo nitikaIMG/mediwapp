@@ -20,7 +20,7 @@ if(isset($_GET['order_status'])){
                       <form>
                         <div class="row">
                           <div class="col">
-                            <input type="text" name="order_id"  id="order_id" value="{{$order_id}}" class="form-control" placeholder="Subcategory name">
+                            <input type="text" name="order_id"  id="order_id" value="{{$order_id}}" class="form-control" placeholder="Order Id">
                           </div>
                           <div class="form-group col-md-6">
                             <select name="order_status" class="form-control" id="order_status">

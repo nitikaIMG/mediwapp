@@ -195,7 +195,7 @@ class BrandController extends Controller
 
     public function destroy($id)
     {
-        $del_status=BrandModel::where('id',$id)->pluck('status');
+        $del_status=BrandModel::where('id',$id)->pluck('del_status');
         if(!empty($del_status)){
             foreach($del_status as $del){
                 if($del =='1'){
