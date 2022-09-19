@@ -22,9 +22,6 @@ if(isset($_GET['cat_type'])){
                         <div class="col">
                           <input type="text" name="cat_name"  id="cat_name" value="{{$cat_name}}" class="form-control" placeholder="Category name">
                         </div>
-                        {{-- <div class="col">
-                          <input type="text" name="cat_type" id="cat_type" value="{{$cat_type}}" class="form-control" placeholder="Category name">
-                        </div> --}}
                       </div>
                       <div class="row">
                         <div class="col-md-3 pt-4">

@@ -27,23 +27,11 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                   <label for="formFileMultiple" class="form-label">Multiple files input example</label>
+                   <label for="formFileMultiple" class="form-label">Subcategory Image</label>
                     <input class="form-control" name="subcategory_image" type="file" value="{{$edit_subcategory['subcategory_image']}}" id="formFileMultiple">
                     <img src="{{ asset('public/subcategory_image/'.$edit_subcategory['subcategory_image'])}}" alt="Image Alternative text" title="Image Title" width="50" height="50">
                 </div>
             </div>
-          
-            {{-- <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="exampleSelectGender">Category Status</label>
-                    <select name="status" class="form-control" id="exampleSelectGender">
-                        <option disabled selected value> -- select an option -- </option>
-                        <option value="1" {{$edit_subcategory['status']==1 ? 'selected':''}}>Active</option>
-                        <option value="0" {{$edit_subcategory['status']==0 ? 'selected':''}}>Deactive</option>
-                    </select>
-                    
-                </div>
-            </div> --}}
         <button type="submit" class="btn btn-primary mr-2 mt-2">Submit</button>
         </form>
       </div>

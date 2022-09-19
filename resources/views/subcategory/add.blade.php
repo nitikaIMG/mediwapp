@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="exampleInputName1">Subcategory Name</label>
-                    <input type="text" name="subcategory_name" class="form-control"  value="{{old('subcategory_name')}}" id="exampleInputName1"  placeholder=" Category Name">
+                    <input type="text" name="subcategory_name" class="form-control"  value="{{old('subcategory_name')}}" id="exampleInputName1"  placeholder=" Subcategory Name">
                     
                 </div>
                 <div class="form-group col-md-6">
@@ -27,8 +27,8 @@
             <div class="row">
                 <div class="form-group col-md-6">
                    
-                    <label for="formFileMultiple" class="form-label">Multiple files input example</label>
-                    <input class="form-control" name="subcategory_image" type="file" id="formFileMultiple" multiple>
+                    <label for="formFileMultiple" class="form-label">Subcategory Image</label>
+                    <input class="form-control" name="subcategory_image" type="file" id="formFileMultiple">
                     
                 </div>
             </div>
@@ -37,11 +37,4 @@
       </div>
     </div>
   </div>
-
-  {{-- <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
-  <script type="text/javascript">
-      $(document).ready(function() {
-         $('#ck').ckeditor();
-      });
-  </script> --}}
 @endsection

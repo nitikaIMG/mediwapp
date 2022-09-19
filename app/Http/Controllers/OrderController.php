@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Api\ApiResponse;
+use App\Exports\OrderExport;
 use App\Models\CouponModel;
 use App\Models\OrderModel;
 use App\Models\UserModel;
@@ -64,7 +65,7 @@ class OrderController extends Controller
         $validated['order_id']=$unique_order_id;
         $validated['prescription']=$image_string;
         $validated['user_id']=$validated['user_id'];
-        $validated['coupon']=$validated['coupon'];
+        $validated['coupon']=(!empty($validated['coupon']))?$validated['coupon']:"";
         OrderModel::create($validated);
 
         //for coupon
@@ -281,17 +282,14 @@ class OrderController extends Controller
         return redirect()->back()->with('success','Order Status Updated');      
     }
     public function create_pdf_order(Request $request){
-        $order_data=OrderModel::get()->toArray();
+        $order_data=OrderModel::where('del_status','1')->get()->toArray();
         view()->share('employee',$order_data);
         $pdf = PDF::loadView('order.orderpdf', compact('order_data'))->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->download('order.pdf');
     }
     public function create_csv_order(){
-        $data=OrderModel::all()->toArray();
-        $handle = fopen('orders.csv', 'w');
-        collect($data)->each(fn ($row) => fputcsv($handle, $row));
-        fclose($handle);
-        // return Excel::download(new OrderModel(), 'category.xlsx');
+        return Excel::download(new OrderExport, 'orders.xlsx');
+
     }
 
     

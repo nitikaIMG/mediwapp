@@ -55,9 +55,11 @@
            type:'post',
            datatype:'json',
            success:function(data){
-               $.each(data.data,function(index,subcategory){
-                   $('#sub_cat_id').append('<option value="'+subcategory.id+'">'+subcategory.subcategory_name+'</option>');
-               })
+              $('#sub_cat_id').html("");
+              $.each(data.data,function(index,subcategory){
+                $('#sub_cat_id').html("");
+                  $('#sub_cat_id').append('<option value="'+subcategory.id+'">'+subcategory.subcategory_name+'</option>');
+              })
            }
        });
     }

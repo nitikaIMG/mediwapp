@@ -23,15 +23,14 @@
     <thead >
         <tr>
             <th class="all">Category Name</th>
-            <th>Email Address</th>
-            {{-- <th>Category Images</th> --}}
+            <th>Category Images</th>
         </tr>
     </thead>
     <tbody>
         @foreach($category_data as $d)
         <tr >
             <td >{{$d['category_name']}}</td>
-            <td >{{$d['category_image']}}</td>
+            <td><img src="{{asset('public/category_image/'.$d['category_image'])}}"></td>
         </tr> 
         @endforeach
     </tbody>

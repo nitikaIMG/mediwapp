@@ -27,14 +27,8 @@ if(isset($_GET['user_name'])){
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-md-3 pt-4">
-                            <a class="btn" href="{{url('create_pdf_product')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-file-pdf-o text-white"></i></a>
-                            <a class="btn" href="{{url('create_csv_product')}}" style="background-color: #f16f23; margin:0%; padding:10px;"><i class="fa fa-file-excel-o text-white"></i></a>
-                          </div>
-                          <div class="col-md-6">
-                            {{-- blank --}}
-                          </div>
-                          <div class="col-md-3 text-right pt-4">
+                          
+                          <div class="text-right pt-4">
                             
                             <button type="submit" class="btn btn-primary">Search</button>
                             <button type="reset" class="btn btn-secondary">reset</button>

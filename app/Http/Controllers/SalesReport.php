@@ -131,9 +131,6 @@ class SalesReport extends Controller
             }
         }
         $count = $query->count();
-        // $order_p=OrderModel::pluck('product')->map(function($item,$key){
-        //     return json_decode($item,true);
-        // })->all();
         $productdata=OrderModel::pluck('product')->join(',');
         $order_p=explode(',',$productdata);
         $res = array_count_values($order_p);
@@ -199,6 +196,7 @@ class SalesReport extends Controller
         );
         echo json_encode($json_data);
     }
+    
     public function store(Request $request)
     {
         //

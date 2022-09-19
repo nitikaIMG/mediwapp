@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductExport;
 use App\Models\BrandModel;
 use App\Models\CategoryModel;
 use App\Models\ProductModel;
@@ -36,7 +37,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'product_name' => 'required|max:255',
             'category_id' => 'required',
-            'product_image.*' =>'required',
+            'product_image.*' =>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'subcategory_id' => 'required',
             'prod_desc' => 'required',
             'price' => 'required|numeric',
@@ -293,18 +294,13 @@ class ProductController extends Controller
         return response()->json(['success' => ' Data has been deleted!']);
     }
     public function create_pdf_product(Request $request){
-        $product=ProductModel::get()->toArray();
+        $product=ProductModel::join('category','product.category_id','category.id')->where('product.del_status','1')->get()->toArray();
         view()->share('employee',$product);
         $pdf = PDF::loadView('product.productpdf', compact('product'))->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->download('product.pdf');
     }
     public function create_csv_product(){
-        $data=ProductModel::all()->toArray();
-        $handle = fopen('products.csv', 'w');
-        collect($data)->each(fn ($row) => fputcsv($handle, $row));
-        fclose($handle);
-
-        // return Excel::download(new ProductModel(), 'category.xlsx');
+        return Excel::download(new ProductExport, 'product.xlsx');
     }
 
     public function get_subcat(Request $request){

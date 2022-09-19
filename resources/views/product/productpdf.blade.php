@@ -23,8 +23,9 @@
     <thead >
         <tr>
             <th class="all">Product Name</th>
-            <th>category Id</th>
-            <th>Min Quantity</th>
+            <th>Product Image</th>
+            <th>category Name</th>
+            <th>Package Type</th>
             <th>Opening Quantity</th>
             <th>Price</th>
         </tr>
@@ -33,13 +34,11 @@
         @foreach($product as $d)
         <tr >
             <td >{{$d['product_name']}}</td>
-            <td >{{$d['category_id']}}</td>
-            <td >{{$d['min_quantity']}}</td>
+            <td > <img src="{{ asset('public/category_image/'.$d['product_image'])}}" width="50" height="50"></td>
+            <td >{{$d['category_name']}}</td>
+            <td >{{$d['package_type']}}</td>
             <td >{{$d['opening_quantity']}}</td>
             <td >{{$d['price']}}</td>
-            {{-- <td > <img src="{{ asset('public/category_image/'.$d['category_image'])}}" width="50" height="50"></td> --}}
-      
-            {{-- <td style="border: 1px solid #100c09">{{$d['status']}}</td> --}}
         </tr> 
         @endforeach
     </tbody>

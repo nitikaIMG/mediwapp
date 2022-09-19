@@ -18,7 +18,7 @@
                 </div> --}}
                 <div class="form-group col-md-6">
                     <label for="formFileMultiple" class="form-label">Category Image</label>
-                    <input class="form-control" name="category_image[]" type="file" id="formFileMultiple" multiple>
+                    <input class="form-control" name="category_image" type="file" id="formFileMultiple">
                 </div>
             </div>
             <div class="row">

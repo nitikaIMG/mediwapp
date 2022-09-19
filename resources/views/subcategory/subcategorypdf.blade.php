@@ -22,15 +22,20 @@
   <table class="table table-bordered">
     <thead >
         <tr>
-            <th class="all">Subcategory Name</th>
-            <th>Category Id</th>
+          <th class="all">S.No</th>
+          <th class="all">Subcategory Name</th>
+          <th class="all">Subcategory Image</th>
+          <th>Category Name</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($subcategory_data as $d)
-        <tr >
-            <td >{{$d['subcategory_name']}}</td>
-            <td >{{$d['category_id']}}</td>
+      {{$i=1}}
+        @foreach($subcategory as $d)
+        <tr>
+            <td>{{$i++}}</td>
+            <td>{{$d['subcategory_name']}}</td>
+            <td><img src="{{asset('public/subcategory_image/'.$d['subcategory_name'])}}"></td>
+            <td>{{$d['category_name']}}</td>
         </tr> 
         @endforeach
     </tbody>

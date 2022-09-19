@@ -129,6 +129,7 @@ if(isset($_GET['catname'])){
             <script type="text/javascript">
               $(document).ready(function () {
                   $('#mult_del').on('click', function(e) {
+                    alert('dd');
                    if($(this).is(':checked',true))  
                    {
                       $(".sub_chk").prop('checked', true);  
@@ -136,7 +137,7 @@ if(isset($_GET['catname'])){
                       $(".sub_chk").prop('checked',false);  
                    }  
                   });
-                  $('.multiple_delete').on('click', function(e) {
+                  $('.delete_all').on('click', function(e) {
                       var allVals = [];  
                       $(".sub_chk:checked").each(function() {  
                           allVals.push($(this).attr('data-id'));

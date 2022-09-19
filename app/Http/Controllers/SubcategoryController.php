@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SubcategoryExport;
 use App\Models\CategoryModel;
 use App\Models\SubcategoryModel;
 use category;
@@ -173,13 +174,12 @@ class SubcategoryController extends Controller
         $validated = $request->validate([
             'subcategory_name' => 'required|max:255',
             'category_id' => 'required',
-            'subcategory_image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'subcategory_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],[
             'subcategory_name.required' => 'The category name field is required.',
             'category_id.required' => 'The Subcategory name field is required.',
             'subcategory_image.required' => 'Please Select Image',
         ]);
-
        $img=[];
        if ($request->hasFile('subcategory_image')) {
         $image = $request->file('subcategory_image');
@@ -240,7 +240,7 @@ class SubcategoryController extends Controller
         return redirect()->back()->with('success','Status Updated');
     }
     public function create_pdf_subcategory(Request $request){
-        $subcategory=SubcategoryModel::get()->toArray();
+        $subcategory=SubcategoryModel::join('category','subcategory.category_id','category.id')->where('subcategory.del_status','1')->where('category.del_status','1')->get()->toArray();
         if(!empty($subcategory)){
             view()->share('employee',$subcategory);
             $pdf = PDF::loadView('subcategory.subcategorypdf', compact('subcategory'))->setOptions(['defaultFont' => 'sans-serif']);
@@ -251,6 +251,6 @@ class SubcategoryController extends Controller
         
     }
     public function create_csv_subcategory(){
-        return Excel::download(new SubcategoryModel(), 'category.xlsx');
+        return Excel::download(new SubcategoryExport, 'subcategory.xlsx');
     }
 }

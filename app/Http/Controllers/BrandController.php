@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Exports\BannerExport;
+use App\Exports\BrandExport;
 use App\Models\BrandModel;
 use App\Models\CategoryModel;
 use Illuminate\Http\Request;
@@ -158,7 +161,7 @@ class BrandController extends Controller
     public function edit($id)
     {
         $category=CategoryModel::all();
-        $edit_brand=BrandModel::where('id',$id)->first();
+        $edit_brand=BrandModel::join('subcategory','brand.subcategory_id','subcategory.id')->where('brand.id',$id)->first();
         return view('brand.edit_brand',compact('edit_brand','category'));
     }
 
@@ -206,7 +209,7 @@ class BrandController extends Controller
                 }
             }
         }
-        return redirect()->back()->with('warning','Category Deleted');
+        return redirect()->back()->with('warning','Brand Deleted');
     }
 
     public function enable_disable_brand($id){
@@ -231,21 +234,16 @@ class BrandController extends Controller
                 }
             }
         }
-        return response()->json(['success' => ' Data has been deleted!']);
+        return response()->json(['success' => ' Brand has been deleted!']);
     }
     public function create_pdf_brand(Request $request){
-        $brand_data=BrandModel::get()->toArray();
+        $brand_data=BrandModel::where('del_status','1')->get()->toArray();
         view()->share('employee',$brand_data);
         $pdf = PDF::loadView('brand.brandpdf', compact('brand_data'))->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->download('brand.pdf');
     }
     public function create_csv_brand(){
-        $data=BrandModel::all()->toArray();
-        $handle = fopen('brands.csv', 'w');
-        collect($data)->each(fn ($row) => fputcsv($handle, $row));
-        fclose($handle);
-
-        // return Excel::download(new BrandModel(), 'category.xlsx');
+        return Excel::download(new BrandExport, 'BrandData.xlsx');
     }
 
     public function brand_name(Request $request){

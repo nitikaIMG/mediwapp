@@ -34,7 +34,7 @@
                 
                 <div class="form-group col-md-6">
                     <label for="formFileMultiple" class="form-label">Category Image</label>
-                     <input class="form-control" name="category_image[]" type="file" value="{{$edit_data['category_image']}}" id="formFileMultiple" multiple>
+                     <input class="form-control" name="category_image" type="file" value="{{$edit_data['category_image']}}" id="formFileMultiple" multiple>
                      @php
                          if(!empty($file)){
                              $data = $file[0];

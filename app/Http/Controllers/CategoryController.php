@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Exports\StudentExport;
 use Illuminate\Http\Request;
 use App\Models\CategoryModel;
 use App\Models\CategoryModel as ModelsCategoryModel;
@@ -47,36 +47,21 @@ class CategoryController extends Controller
         ]);
       
        $img=[];
-       $banner_img=[];
         if ($request->hasFile('category_image')) {
             $image = $request->file('category_image');
-            foreach ($image as $files) {
                 $destinationPath = 'public/category_image/';
-                $file_name = time() . "." . $files->getClientOriginalName();
-                $files->move($destinationPath, $file_name);
+                $file_name = time() . "." . $image->getClientOriginalName();
+                $image->move($destinationPath, $file_name);
                 $img[] = $file_name;
-            }
         }
         $image_string=implode(',',$img);
-
-        if ($request->hasFile('banner')) {
-            $banner_image = $request->file('banner');
-            $destination = 'public/banner/';
-            $banner_file_name = time() . "." . $banner_image->getClientOriginalName();
-            $banner_image->move($destination, $banner_file_name);
-            $banner_img[] = $banner_file_name;
-        }
-        $banner_image_string=implode(',',$banner_img);
         $model = new CategoryModel;
         $model->category_name=$validated['category_name'];
         $model->category_image=$image_string;
-        $model->banner=$banner_image_string;
-        // $model->category_type=$validated['category_type'];
         $model->cat_desc=$validated['cat_desc'];
         $model->meta_title=$validated['meta_title'];
         $model->meta_keyword=$validated['meta_keyword'];
         $model->meta_description=$validated['meta_description'];
-        // $model->cat_status=$validated['cat_status'];
         $model->save();
         return redirect()->back()->with('success', 'Data Inserted');   
 
@@ -119,14 +104,11 @@ class CategoryController extends Controller
        $img=[];
         if ($request->hasFile('category_image')) {
             $image = $request->file('category_image');
-            foreach ($image as $files) {
                 $destinationPath = 'public/category_image/';
-                $file_name = time() . "." . $files->getClientOriginalName();
-                $files->move($destinationPath, $file_name);
+                $file_name = time() . "." . $image->getClientOriginalName();
+                $image->move($destinationPath, $file_name);
                 $img[] = $file_name;
                 $data['category_image']=implode(',',$img);
-
-            }
         }else{
             unset($data['category_image']);
         }
@@ -287,18 +269,14 @@ class CategoryController extends Controller
         return response()->json(['success' => ' Data has been deleted!']);
     }
     public function create_pdf_category(Request $request){
-        $category_data=CategoryModel::get()->toArray();
+        $category_data=CategoryModel::where('del_status','1')->get()->toArray();
         view()->share('employee',$category_data);
         $pdf = PDF::loadView('category.categorypdf', compact('category_data'))->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->download('category.pdf');
     }
     public function create_csv_category(){
-        $data=CategoryModel::all()->toArray();
-        $handle = fopen('category.csv', 'w');
-        collect($data)->each(fn ($row) => fputcsv($handle, $row));
-        fclose($handle);
 
-        // return Excel::download(new CategoryModel(), 'category.xlsx');
+        return Excel::download(new StudentExport, 'Categorydata.xlsx');
     }
     
 }
